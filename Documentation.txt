@@ -1,0 +1,625 @@
+
+.: General usage notes and concepts overview :.
+=================================================================================================================================
+
+Note: >> When working with audio it's often very useful to turn on 'Run In Background' in player settings to keep audio running when switching out of the Editor.
+
+
+
+=================================================================================================================================
+AudioStream Usage instructions:
+=================================================================================================================================
+
+AudioStream provides two main ways to stream audio - the first completely bypasses Unity audio (playing at stream specified sample rate), but is capable of playing just the audio signal from the stream 1:1, while the second one
+behaves like a standard AudioSource enabling all usual functionality such as Unity 3D spatialisation, effecting and mixing with other Unity audio sources.
+
+First component is
+  AudioStreamMinimal,
+  component for 'normal' Unity AudioSource is called AudioStream.
+
+Both consume (compressed) audio data retrieved either from network via UnityWebRequest, or directly from file system 
+
+The 'infinite' radio streams are limited to 4 GB download ( which amounts to about 20 hours of playback of 2 channel, 44100 Hz audio )
+
+You can pick either MEMORY, or DISK for incoming data caching:
+- MEMORY uses small in-memory buffer for playback, DISK caches all data and stream is seekable up to the download point in that case if the file being played has finite size
+
+Each component further provides selective Console logging and UnityEvent messages.
+
+As a source a http/s link to a PLS or M3U/8 playlist distributed commonly by web/net radio stations, a direct link to a remote file such as podcast which is then streamed in full,
+or a local filesystem path to a file can be specified.
+
+::: by default FMOD autodetects format of the stream automatically. This works reliably on desktops and Android, but iOS requires selecting correct audio format for each respective stream manually.
+It is important to select correct audio type, though - if wrong format is selected ( for example mpeg for Ogg Vorbis radio/stream ), FMOD will probably not play it and might run unrecoverable problems when starting/Playing and Stopping/releasing the stream.
+
+:::
+Filesystem relative paths: you can reference file in e.g. StreamingAssets using relative paths such as ./Assets/StreamingAssets/FILE.mp3 as url
+
+::: the first entry from playlist is played. This is usually the correct stream, but if there are more than one streams specified
+you'd have to extract desired stream/link from the downloaded playlist manually.
+
+Note that M3U/8 support limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
+
+:::
+UnityWebRequest by default accepts all certificates/their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
+
+::: Any necessary resampling is done by Unity automatically as needed.
+
+::: AudioStreamMinimal uses less resources since it deesn't go through Unity AudioSourcem, so if all Unity audio features are not needed I generally recommend using it for just for 1:1 playback.
+
+::: The amount of independent AudioStreamMinimal components created at the same time is limited though, since each creates its own FMOD system currently.
+There is no limit for the amount of AudioStream components (all share the same system).
+
+
+For networking enabled component see notes below.
+
+Streaming was tested on iOS, Android, Windows and OS X, and user project on HoloLens.
+
+:::::: Be sure to have have 'Run in Background' turned on in Player settings and you need to switch to another application while still needing audio being processed by the Editor/application.
+
+====
+NOTE: All components - except AudioSourceOutputDevice and FMOD direct (Minimal/Media) components - can be used as input for Unity Mixer since they produce usual Unity AudioClip
+AudioSourceOutputDevice bypasses it completely (since it redirects signal to a device Unity has no knowledge of currently) - but can be attached to main listener in which case the whole application audio (and final mix) ends up on chosen device.
+
+====
+	The whole system is designed to be modular with each module being independent - you should be able to e.g. delete any folder in AudioStream/Scripts (except AudioStreamSupport) - with associated demo scene/s -
+if not needed, without impacting the rest.
+
+
+====
+! iOS NOTE: If you want to use Bluetooth connected devices for playback you have to enable iOS player for recording and set project #define symbol
+Please see iOS recording specific notes below
+
+
+===========================================
+Network proxy support:
+===========================================
+1.8.0.2 added proxy support for UnityWebRequest (playlist retrieval) and FMOD/AudioStream sounds - both use the same proxy settings, although each in its own separate way:
+- Unity networking (UnityWebRequests for playlist retrieval, UNET) considers 'UNITY_PROXYSERVER' user environment variable, which is set automatically if needed at startup by AudioStream_ProxyConfiguration ScriptableObject. If this is changed generally a restart of the application/editor is needed.
+- FMOD uses proxy settings more directly and does not mind runtime changes
+
+Proxy settings:
+- are configured by changing parameters on AudioStream_ProxyConfiguration scriptable object found in AudioStream\Scripts\AudioStream\Resources
+- shared by all components which can stream from network
+- can be overriden at runtime by user code, call UpdateProxySettings on AudioStream_ProxyConfiguration instance to do so after changing them.
+(generally is advised to restart eidtor/application if changed as mentioned above)
+
+Demo application stores user proxy settings in PlayerPrefs, which are loaded (and override SO editor values by calling UpdateProxySettings) and saved automatically by the application - see AudioStreamMainScene.cs and AudioStreamProxySettingsDemo.cs
+
+Note: sometimes it takes a while, or second restart for changes in proxy settings to be picked up by Editor.
+
+
+===========================================
+Supported formats:
+===========================================
+
+AudioStream can stream all formats FMOD recognises with the exceptions below for audio streamed from network. For complete list see https://en.wikipedia.org/wiki/FMOD#File_formats
+RAW format is supported also by exposing format values in the AudioStream/AudioStreamMinimal Inspector since these must be set explicitly by user.
+For Resonance specific formats see below.
+
+'Blockalign' and 'Blockalign download multiplier':
+	- 'Blockalign' defines chunk size for the decoder to read (smaller values help initial latency), ['Blockalign' times 'Blockalign download multiplier'] defines how much data has to be downloaded prior playback attempt -
+	make this as small as possible until the stream still starts, e.g. for common netradios 2-4k times 1 - 2 should work
+	Some (mp3) files with embedded artwork need this to be read completely so for them 64k times 10 or higher might be needed.
+
+!! Currently ( 2.0 ) there is a format limitation though:
+Ogg/Vorbis format can't be played until the whole file/media is accessible. This means that the whole file has to be downloaded first in order to successfully play it.
+Please set 'blockalign' to physical (compressed) file size and 'blockalignDownloadMultiplier' to 1 for Ogg/Vorbis files.
+I tried to resolve this with FMOD, but the situation is unresolved for the time being.
+
+Using legacy AudioStreamLegacy/Minimal component/s is also an option for 'some' Ogg/Vorbis streams (probably will work with netradios, but not for files)
+
+Note that the above applies only for audio streamed from network - local files are not affected.
+
+*AAC format*:
+there's no special setup or any special considerations regarding this format. The *ONLY* actual difference compared to other formats is that the media *must* be played on an actual physical device (e.g. iOS/Andoid phone) which has hardware decoding capability for this format. That means that you will not be able to test it in e.g. Editor or standalone builds.
+One thing might be necessary (although sometimes FMOD can cope without it) - you might want to set 'Stream Type' to 'AUTODETECT'.
+It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
+
+
+*MIDI format*:
+- please use AudioStream* legacy components to stream this format from network for now
+
+
+===========================================
+(Advanced/Custom) Speaker mode :
+===========================================
+
+When RAW speaker mode is selected for custom setups you should also provide No. of speakers, and consider providing custom mix matrix, if needed.
+See https://www.fmod.com/docs/api/content/generated/FMOD_SPEAKERMODE.html and https://www.fmod.com/docs/api/content/generated/FMOD_Channel_SetMixMatrix.html for details.
+Good place to call setMixMatrix on opened channel is in 'OnPlaybackStarted' event.
+
+
+=========================================================
+Non system default audio output -
+- Unity AudioSource	+ AudioSourceOutputDevice component :
+
+=========================================================
+
+As of 1.3 it is possible to specify other than system default audio output for AudioStreamMinimal component directly and for AudioStream ( or any AudioSource ) via
+AudioSourceOutputDevice component.
+
+AudioSourceOutputDevice can be used separately from AudioStream for any AudioSource. It runs autonomously, picks up whatever is currently being played on AudioSource and sends it to desired output.
+You can use any AudioSource / AudioClip - this means you can use this also with Timeline, if it references an AudioSource which has AudioSourceOutputDevice attached on it.
+
+The output is set by Output Driver ID - 0 means current system default output. For all driver IDs currently recognised by FMOD in your system please run the OutputDeviceDemo demo scene and see
+its Start() method where all outputs are evaluated and printed to Console.
+
+If you don't need output redirection it is better to not attach AudioSourceOutputDevice as it has non zero performance and latency implications even when outputting to default device ( driver with id 0 ).
+
+Note: AudioSourceOutputDevice allows chaining of audio filters, the last one in the chain should have 'Mute After Routing' enabled.
+As a side-effect it is therefore possible to output single AudioSource to default, and selected non default output simultaneously at the same time.
+
+Note: this component introduces some latency since it needs to effectively sample OAFR buffer before passing it on to FMOD. You can set desired/reasonable latency on the component, until it sill works on your system.
+(FMOD by default uses 400 ms, which is too high, but beware that although the sound migh be playing with very low latency set, it might be skipped entirely without warning if it's too low for your system, so reasonable values are aroudn 25-50 ms)
+For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
+
+Note also that Default Unity output speaker mode bandwidth should not exceed system default output bandwidth (in other words no. of speakers/channels of Unity default speaker mode <= no. of system default output speakers), otherwise there's not enough audio data from Unity audio to be passed on continuosly.
+This is reported as Warning at runtime when encountered, and lower/actual HW channel count is used.
+
+Important: it's recommended to restart the Editor when Default Speaker Mode is changed in AudioSettings.
+- in general it's safer to restart the Editor upon any change of system default device, or AudioSettings for it to match the environment correctly -
+
+Note: at least version 1.08.11 of FMOD Unity Integration is needed as it contains a bug fix for AudioSourceOutputDevice to work.
+
+FMOD systems are created only one per system output as needed - that means although FMOD has hard limit on number of FMOD system allowed to be created, you can run hundreds on sounds (AudioSourceOutputDevice instances) on a single system output without problems - see e.g. OutputDevicePrefabDemo demo
+Each output can be configured separately via 'OutputDevicesConfiguration' scriptable object in AudioStream/Scripts/AudioSourceOutputDevice/Resources, if needed.
+Currently speaker mode and no. of speakers can be configured, DSP buffer settings were removed in 1.8 (might re-add them later on if needed)
+- each list member configuration corresponds to output device ID on that index
+
+
+Note about AudioSourceOutputDevice and Unity AudioManager 'Best latency' setting:
+---------------------------------------------------------------------------------
+
+Depending on your hardware and drivers this might be problematic on Windows - OnAudioFilterRead buffer might be too small to feed FMOD PCM callback consistently without (occasional) dropouts in audio -
+
+When using AudioClip it can be mitigated to some extend by setting correct import settings on the AudioClip: PCM compression format, (Preload Audio Data) and Compressed In Memory,
+but for consistent low latency playback on Windows you need ASIO drivers, for which there's no support in Unity, and _very_ limited in AudioStream - see 'ASIO on Windows notes' section below
+
+Best latency with AudioSourceOutputDevice should work on macOS and iOS without problems.
+
+- other than Best latency settings should be fine on all platforms -
+
+
+
+=========================================================
+Non system default audio output -
+- FMOD only + MediaSourceOutputDevice component :
+
+=========================================================
+
+MediaSourceOutputDevice works similarly as AudioSourceOutputDevice, but doesn't use Unity audio, it instead plays the sound on selected output device directly via FMOD only.
+Currently it supports opening and playing audio files in supported formats from disk, or net location (using FMOD network support only)
+E.g. demo scene - MediaSourceOutputDeviceDemo - plays them from application's StreamingAssets
+
+This was added to adress the problem of targeting multiple output channels on the same output device with multiple audio files simultaneously - read below in 'Multichannel separation of output' section
+
+See MediaSourceOutputDeviceDemo scene for example how to play a file on selected output using this component
+
+
+'hotplugging':
+------------------------
+	Hotplugging - dynamic updates of attached output devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
+	Devices are checked for changes every ~ 0.1 sec
+	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableOutputs' again.
+
+=========================================================
+Non system default audio output - 
+- AudioPluginAudioStreamOutputDevice AudioMixer plugin :
+
+=========================================================
+
+It's also possible to redirect audio signal directly from Unity AudioMixer
+Please see 'AudioStreamOutputDevice mixer effect usage instructions' at the end
+
+
+
+
+
+============================================================================================
+Multichannel separation of output using AudioSourceOutputDevice and MediaSourceOutputDevice:
+============================================================================================
+
+Using AudioSourceOutputDevice and MediaSourceOutputDevice it's possible to play audio on selected destination output device present in the system for Unity AudioSources and for audio files opened by FMOD directly.
+Further, it's possible to address specific output channels/speakers of given output using FMOD's mix matrix [see e.g. https://fmod.com/resources/documentation-api?version=2.0&page=core-api-channelcontrol.html#channelcontrol_setmixmatrix].
+
+The mix matrix control works on a playing channel, so there is a difference between AudioSourceOutputDevice and MediaSourceOutputDevice since they both use channels in different way -
+- AudioSourceOutputDevice creates one FMOD sound/channel per output device - therefore all (Unity) audio being played by this component, on a given output, share the same matrix (set of output channels) - so it's not possible to play many AudioSources/AudioClips with different output channels simultaneously -
+So in case when e.g. more clips are needed to be played, they must be prepared beforehand only with present appropriate channels (and optionally set a mix matrix for given output)
+
+- MediaSourceOutputDevice has not this limiation, but doesn't go through Unity audio system:
+it uses FMOD for playback directly - so needs a media URL/URI to be opened and played - after sound/channel is created, a mix matrix can be set for each single playing audio independently -
+The component has only programming API available currently with minimal Inspector interaction - please see 'MediaSourceOutputDeviceDemo' scene on how to use it.
+
+Note that since FMOD channels effectively disappear from the sound once they are finished playing (and FMOD can rearrange/steal them at any time, too), all playback calls of the component can potentially return a new channel which a user should keep track of if they want to use it at runtime -
+again please see 'MediaSourceOutputDeviceDemo' how this can be done.
+Internally the asset links created sound and user channel in 1:1 fashion automatically so all user calls use channel only to identify the user sound
+
+
+===========================================
+AudioStreamDownload:
+===========================================
+
+Since 1.7.8 it is possible to used this newly added component to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normal while still going via FMOD decoder first.
+AudioStreamDownload is almost identical to AudioStream component, except that it allows setting the size of download buffer and network thread max timeout manually.
+This is important to set to match actual available network/originating stream bandwidth, otherwise it will lead to significant buffer underruns which can cause application stalls (mainly on Windows).
+
+As an example: common internet radio stream should be set to cca 2048 b buffer size and 11 ms timeout, on LAN/filesystem it's possible to go (much) faster - it's possible to set very high buffer capacity ( e.g. several MB ) and 1ms timeout -
+- with 20000000 buffer size and 1ms timeout a 19MB mp3 file is processed in about 10 seconds when reading from local filesystem -
+(processed means the whole file is decoded by FMOD, an AudioClip is constructed and played; note that higher buffer size values probably won't affect it much since it still needs to go via decoder).
+
+This way it's also possible to create an AudioClip from audio files which formats Unity normally doesn't but FMOD does support.
+
+- Tags are supported the same way as in normal streaming components
+
+- Download progress is being reported via decoded_bytes and file_size public members, note that:
+1] file_size is the size of the encoded file (either on the filesystem or as reported from the network), streamed content reports -1
+2] decoded_bytes are actual bytes decoded by FMOD
+That means that decoded_bytes will be usually much higher than the size of the file (so you get no proper upper bound for the download progress currently unfortunately)
+
+Downloaded data is progressively cached in application's cache directory (Application.temporaryCachePath)
+- it's filename is derived from hash of AudioStreamDownload's url, with appended '.raw' extension as returned by AudioStreamSupport.CachedFilePath() [in other words a given url, or filepath is saved to the same, its own cache]
+- original samplerate and channels are saved at the beginning of the file, so raw format can be played back later
+- (samplerate and channels occupy 8 bytes together so this has no impact on playback)
+- these are followed by raw interleaved stream of PCMFLOAT serialized as bytes (sizeof(float) bytes per sample)
+
+
+If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamDownload's url is found in the cache, instead AudioClip is constructed and played immediately.
+AudioClip can be set to automatically start playback after the download stopped - either because end fo file was reached, cached file was found, or user stopped the download manually.
+
+AudioStreamDownload can run without an AudioSource. Only cached data is saved in that case as described above and no AudioClip is created.
+
+To better sync with realtime streams it's possible to enable 'realTimeDecoding' - in that case the decoder will run at stream rate and thus e.g. allow to save netradios
+If realtime streaming/downloading is enabled it's possible to play back the stream while it's being downloaded - enable 'playWhileDownloading' and specify your AudioSource which will be used for playback.
+An audio clip will be automatically created and played on it.
+
+
+See AudioStreamDownloadDemo scene for example usage.
+
+
+===========================================
+AudioStreamMemory:
+===========================================
+
+Added in 1.8.2 this component allows to decode an audio file from a memory buffer: set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
+Once done it creates a new AudioClip on its AudioSource and optionally plays it (since it's common AudioClip it just calls Play() on AudioSource).
+
+All features of AudioStream such as choosing audio type, tags, logging and Unity events are supported.
+Similarly as above for AudioStreamDownload it has adjustable decoder thread buffer size which should not exceed cca half of the overall decoded bytes and which directly affects decoding speed.
+
+Decoded data are progressively cached in application's temp directory (data is not reused, each Play() call overwrites any existing/previous run).
+
+See AudioStreamMemoryDemo scene for example usage.
+
+
+
+===========================================
+Audio input:
+===========================================
+
+As of version 1.4 it is possible to stream audio from any available system recording input - just attach AudioSourceInput component to an empty game object and from custom script access audio buffer data of AudioSource which it automatically creates.
+See how to interact with it in the AudioStreamInputDemo scene.
+Latency is rather high for spatializable input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioSourceInput2D component since 1.5.2. - with downside that it is 2D only.
+
+Currently this is best option I could come up with, for even lower latency native plugin is needed ( such as https://github.com/keijiro/Lasp ), with but the same 2D limitation since it uses just OnAudioFilterRead
+[ OnAudioFilterRead has limitation of not being able to support 3D sound ]. For LASP interop with AudioSource see this gist: https://gist.github.com/r618/d74f07b6049fce20f1dc0dfa546bda89 ( LASP have to be patched though currently since it can't be run not from main thread, and frequency is not exposed - those are just minor changes).
+AudioSourceInput2D latency is very usable though and e.g. on iOS and recent phones it has almost immediate response to audio input in the scene.
+
+AudioSourceInput* components will use default DSP buffer setting if not overriden (via Inspector)
+If you use more than one AudioStreamInput* component, any custom DSP settings per specific input are taken only from one - the one started first - since a single FMOD system is used for all input sounds of a concrete device and DSP buffers need to be set before the system initialization.
+DSP buffer settings are taken into account only before the FMOD system creation so they're not changeable at runtime (updated in 2.4.2)
+
+For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
+
+It is possible to capture and listen to the system output - for Windows, see this forum post: https://forum.unity.com/threads/audiostream-an-audio-streaming-solution-for-all-and-everywhere.412029/page-3#post-3120495
+Windows specific: any device/s which can be opened for recording, not designated as a micophone/audio input by system, is prefixed with "[loopback]" in their name by FMOD
+On macOS it's possible to configure new recording device using e.g. Soundflower (or newer stuff from RogueAmoeba)
+Note that device customisation like this is only possible on desktops.
+
+Multichannel input/microphones are supported as opposed to Unity's Microphone class.
+
+Since the way the resampling of input signal by just setting the pitch on the AudioSource was handled led to big drifting over longer time if input and output sample rates were significantly different,
+in 1.7.7 I added option to not use Unity's built AudioSource resampling and channel conversion this way.
+Speex resampler is used directly, with possibility to specify custom mix matrix to provide mapping between input and output channels.
+See demo scene for reference, and call SetCustomMixMatrix on component before starting the recording, if needed. A default automatic mix matrix which tries to map inputs to outputs is created otherwise, but it might not be ideal for all circumstances.
+Input signal is mapped to outputs based on mix matrix - so # of channels Speex works with == # of channels on chosen output.
+
+Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
+will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
+
+
+! For iOS/mobiles please see specific recording notes below.
+
+With ResonanceInput it's possible to capture any input device and play it back in 3D - see below in 3D spatialisation.
+
+
+About Andoid permissions:
+-------------------------
+	there is a Microphone class referenced in Android specific code of AudioStreamInputBase.cs, which causes Unity to automatically include recording permission in the manifest
+If you don't want/need this permission and recording in your Android build, please delete the whole 'Scripts/AudioStreamInput' folder and demos in 'Demo/AudioStreamInput' folder.
+
+
+'resampleInput' setting:
+------------------------
+	In 2.1 I included new setting to AudioStreamInput* for better interoperability with other plugins/assets which need original sample rate of the input signal preserved (such as AVProMediaRecorder at that time) when they want to do their own resampling/encoding.
+Default is ON and the input signal is resampled to current output sample rate so it can be e.g. heard normally on speakers. When OFF no resampling is done and input signal can be manually forwarded as needed - for this custom scripting is needed if it is e.g. not being captured from attached AudioSource though.
+
+
+'hotplugging':
+------------------------
+	Hotplugging - dynamic updates of attached input devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
+	Devices are checked for changes in Update
+	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableInputs' again.
+
+===========================================
+ASIO on Windows notes:
+===========================================
+: I was able to get at least _some_ audio out of single device ASIO exposes when recording ( you can see commented out sections of code before system initialization, passing ASIO type of output to FMOD's setOutput call (which is applicable also for recording) - 
+but suitable ony for e.g. energy reading - the audio itself was not of enough quality for unknown reasons
+: the ASIO4ALL settings panel shows up correctly upon passing FMOD.OUTPUTTYPE.ASIO to setOutput, but I was unable to get any audio from playback device ASIO provides and FMOD is able to recognize when enumerating them
+: the whole setup is rather error prone and clunky, therefore I decided to probably not support ASIO going further; - it has probably little of value for redirection (ASIO provides just one default device for playback), and AudioStreamInput2D has rather good latency even without using it anyway
+ 
+
+===========================================
+3D spatialisation
+===========================================
+
+As of 1.5 all streams including input can be fully spatialised by Unity by adjusting Spatial Blend on AudioSource.
+Possibly the most simple usage is demonstrated in the UnitySpatializerDemo scene together with AudioStream, and AudioStreamInput.
+AudioStreamInput has 3D support, but higher latency - see above.
+
+1.6 introduced support for FMOD's provided GoogleVR spatializer plugin, later (from 2.0) replaced by Google Resonance - see ResonanceSourceDemo, ResonanceSoundfieldDemo and ResonanceInput scenes how to use it.
+No special setup is needed - just provide source link/path on the component as usual, and modify exposed [3D] parameters.
+You can set your own listener transform, or it defaults to main camera transform if not specified. The sound is being played on the GameObject's position the component is attached to.
+
+*ResonanceSource* accepts all formats as normal AudioStream/FMOD component.
+*ResonanceSoundfield* can play only a-, and b-format ambisonic files.
+*ResonanceInput* added in 2.0 can stream from any input similarly to AudioStreamInput* and plays the input at GameObject's location after being processed by Resonance.
+
+All Resonance playback is currently via FMOD exclusively bypassing Unity, so in the same category as AudioStreamMinimal i.e. no AudioSource support/Unity audio interop.
+
+
+Google is now providing its own proper 3D audio Unity integration in the form of Resonance Audio package that can be used instead (https://developers.google.com/resonance-audio/ , Unity 2017.1 and up)
+AudioStream can be used just like any other AudioSource, so it's sufficient to just add AudioStream component to Resonance enabled game object and everything will just work.
+Compared to the full Resonance package from Google AudioStream Resonance* components lack some features such as Room properties, room transitions and sound materials.
+
+Other 3D spatializers such as Oculus Integration for Unity ( https://developer.oculus.com/downloads/package/unity-integration/ ) and Steam Audio ( https://valvesoftware.github.io/steam-audio/ )
+work with AudioStream in similar fashion, though latency might not be as low as when using provided AudioStream Resonance* components directly.
+
+
+===========================================
+GOAudioSaveToFile:
+===========================================
+
+- utility script that allows automatic or manual saving of audio being played on a Game Object to a file in WAV PCM16 format
+- file is saved into StreamingAssets, except on iOS, Android and WSA where Application.persistentDataPath is used (also see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)
+
+You can drive it also externally by passing write data yourself - just uncheck useThisGameObjectAudio in that case and call 'AddToSave' on it periodically [at OnAudioFilterRead rate] after it's started via 'StartSaving'.
+
+On iOS you can enable 'Application supports iTunes file sharing' entitlement to (more easily) retrieve/access the application data container and saved files.
+
+===========================================
+iOS Build notes:
+===========================================
+
+- Since FMOD Version 1.09 added support for Google VR, later replaced by Google Resonance, and the respective plugin is not Bitcode enabled it is necessary to not build Xcode project with Bitcode support - or, if you don't need Resonance plugin, simply delete libresonanceaudio plugin/library.
+- arbitrary loads for app transport security settings should be enabled ( newer versions of Unity handle this automatically via Allow HTTP downloads in Player settings ) in order to stream internet content via HTTP.
+- Resonance plugin have to be manually enabled in fmodpluing.cpp source : https://www.fmod.com/docs/api/content/generated/engine_new_unity/ios_plugins.html
+
+
+===========================================
+iOS recording notes:
+===========================================
+
+- check 'Prepare iOS For Recording' in iOS Player Settings / Other settings
+
+- ensure that DSP Bufer Size in Project Settings - Audio is set to 'Best latency' and/or possibly adjust the DSP buffer size on AudioStreamInput* component/s (the defaults work across all tested platforms, though) - otherwise recording might not work
+
+- add 'Privacy - Microphone Usage Description' ( raw value NSMicrophoneUsageDescription ) key and its value to Info.plist ( Target / Info ) in generated Xcode project.
+Newer versions of Unity allow you to specify this key in iOS Player Settings via 'Microphone usage description' ( this is needed due to privacy concerns, iOS will ask for confirmation before first usage of the microphone ).
+
+- when 'Prepare iOS For Recording' is selected - from the manual: 'When selected, the microphone recording APIs are initialised. This makes recording latency lower, though on iPhones it re-routes audio output via earphones only.' ( note: here 'earphones' should be more likely 'earspeaker' )
+Since 1.4.1 AudioStream provides 'fix' for this situation with included iOS plugin which requests an audio route override for normal playback to be on speaker/headset; recording uses normal route, i.e. recorded output is on earspeaker/default.
+Newer ( 2017.1 and up ) versions of Unity provide setting for this in iOS Player Settings - 'Force iOS Speakers when Recording'; for 2017.1 and up the fix above is skipped
+
+- FMOD currently does not provide any way of recording from other than default recording device (iPhone Microphone) - that means that it can't record from e.g. AirPods / connected Bluetooth headsets etc.
+But since AudioStream 2.0 there is another iOS native plugin which should allow to record from any connected aduio device - it's demo is in AudioStreamInput_iOSDemo which shows all currently connected devices and allows any of them to be selected and to be record from.
+
+------------------------ !
+If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
+[ the audio session category used for BT playback is tied to recording - that's why it needs to have also recording enabled ]
+Default to speaker - which was needed in older versions of Unity - is still enabled by default ( should be possible to set it in iOS Player settings too )
+
+You don't need to do any of this if you just want to play audio on default/normal device output as per Unity set audio session.
+------------------------ !
+
+
+The input audio is routed to an AudioSource so can be processed as any usual Unity audio (the cubes in the scene react to an actual Unity sound as usual).
+Note it supports hotplugging (you should be able to dis/connect device while running and the change should be reflected in selectable devices), but hotplugging is not 100% reliable - initiate session update via 'Update audio session' to update device in that case
+Note that the scene will work only when run on an actual iOS device
+
+You can unmute the AudioSource but note that you'll get small echo in that case since the audio is by default played on earspeaker/speaker by iOS and then by Unity with small delay.
+
+
+===========================================
+Basic background audio mode on mobiles:
+===========================================
+
+iOS:
+====
+
+	On all relatively recent versions of iOS this should be sufficient to properly enable basic background audio mode:
+
+	- In Unity, iOS Player Settings:
+
+		- set 'Behavior in Background': Custom
+		- enable 'Audio, AirPlay, PiP'
+
+		this generates appropriate entries in Xcode project:
+			- Application does not run in background    NO
+			- Required background modes
+					- Item 0                                App plays audio or streams audio/video using AirPlay
+
+		(you can inspect them manually if needed)
+
+	- In Xcode modify UnityApplicationController.mm:
+
+                #import <AVFoundation/AVAudioSession.h>
+
+				In
+
+                - (void)applicationWillResignActive:(UIApplication*)application
+                OR
+                - (void)applicationDidEnterBackground:(UIApplication*)application
+                OR
+                - (void)startUnity:(UIApplication*)application
+
+				add:
+
+				[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+				[[AVAudioSession sharedInstance] setActive: YES error: nil];
+
+
+				- you can use other appropriate category if needed, such as  AVAudioSessionCategoryRecord, or AVAudioSessionCategoryPlayAndRecord
+
+	- the application's audio should now not be interrupted when entering background.
+
+	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed, but I had no luck enabling this with Unity audio so far.
+
+Android:
+========
+
+	AudioStreamMinimal seems to be more or less working out of the box on several device/OS combinations encountered
+	AudioStream component needs custom build, but note that it has severe caveats mentioned below
+
+	Proper support for background audio mode on Android requires implementing a service - see e.g. here as to why: https://forum.unity.com/threads/android-app-is-actually-running-in-background-it-work.443436/#post-3005700
+
+	This is a partial solution which breaks activity cycle and is not correct, is at least tested and works to _some_ extent; the correct one is above:
+
+	- Gradle build system and Android Studio are needed
+
+	- In Unity, Build Settings:
+		- select Build System: Gradle
+		- Export Project checked
+
+	- Android Studio:
+		- import Project/Gradle build script
+		- find and open UnityPlayerActivity.java in src/main/java folder
+		- comment out onPause method
+
+	As in the case of iOS above these are the basics - you won't get music controls available for the user on the lock screen for example.
+
+
+===========================================
+AudioStream and network audio:
+===========================================
+
+LAN distributed streaming/playback:
+===================================
+
+Version 1.7.3 introduced two new components that enable streaming and receiving audio via local network using UNET (Unity networking): AudioStreamUNETSource and AudioStreamUNETClient.
+The audio is encoded and decoded using C# port of Opus codec by Logan Stromberg: https://github.com/lostromb/concentus
+Server's IP address is needed on the client currently in order to connect, playback starts immediately on source - see AudioStreamUNETSourceDemo and AudioStreamUNETClientDemo demo scenes in Network/AudioStreamUNETDemo/
+also for options available for encoder and decoder.
+Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency is very small, usable for realtime changes on the server (e.g. using a microphone over LAN).
+Opus/Concentus support _only_ 1 or 2 channels audio for now, though and sampling rate of input signal (of Unity audio) must be one of 8000, 12000, 16000, 24000, or 48000.
+
+Notes for DSP buffer size, frame size and MTU:
+----------------------------------------------
+	Since reliable sequenced packet distribution is needed, fragmented messages cannot be sent and this poses some restriction on the network, mainly on responsible routers and their/usual MTU (or Maximum transmission unit), which is usually around 1500 bytes on common home networks.
+This implies size for Opus encoder ( 960 for 1 channel, both channel encoded are below the 1500 MTU limit ), and in turn size of the audio buffer on Unity client: in order to be able to seamlessly play received packets back OnAudioFilterRead
+buffer needs to fit below the size limit - therefore 'Best Latency' audio setting in Unity is recommended for both client and source.
+
+The selected defaults should be overall enough to send and receive without problems on common LAN (provided that Unity project has 'Best Latency' selected in Audio Settings).
+
+Also, in order to successfully receive all packets the network reactor has to perform reliably and quickly enough which was not the case on e.g. lower end phones / device such as iPhone 7 had no problems /
+
+By default maximum of 10 clients are allowed to connect to one source - this is configurable and with higher number should run without problems on sufficient hardware.
+
+Be sure to have have 'Run in Background' turned on in Player settings when running source and client at the same time.
+
+
+* In 1.9 UNET transport was replaced with NetMQ networking library for LAN streaming, the above should roughly apply still.
+
+	The included NetMQ library is targeted for .NET 3.5 since 2017 LTS has 3.5 runtime as default, but can be used with 4.6 runtime.
+Due to that it has a small drawback though in that the server IP on client must be reachable, otherwise it deadlocks when connecting.
+Be aware that it's absolutetly necessary to run it with Best Latency audio setting. too.
+NetMQ is much more robust though, it can e.g. seamlessly reconnect after either server or client drops the connection.
+Be sure to compile with 4.x runtime when on iOS.
+
+
+===============
+Icecast source:
+===============
+
+As of 1.7.1 AudioStream includes support for making any AudioSource to become an Icecast source via IcecastSource component.
+IcecastSource processes OnAudioFilterRead signal, optionally encodes it, and pushes result to opened source connection to Icecast, which can be then connected to by any streaming client.
+IcecastSource configuration should match Icecast source and mountpoint definition - all fields are hopefully comprehensibly annotated in the Editor with tooltips.
+Icecast 2.4.0 + is supported.
+
+Icecast settings are reasonably well documented directly in the xml configuration file; for common testing it is enough to set 
+<hostname> (for server URL) and in <listen-socket> section <bind-address> (for IP the source to connect to) and optionally <shoutcast-mount>
+- these should match IcecastSource fields and it should then automatically connect and start pushing whatever content is being played in OnAudioFilterRead.
+
+In the IcecastSourceDemo scene is an example configuration for a site specific local Icecast server with an AudioStream radio being as source.
+
+
+Currently OGGVORBIS can be chosen as audio codec for the signal (default), or raw PCM without any encoding.
+PCM data is fast, but has rather significant disadvantage in occupying very high network bandwidth - between 100 - 200 kB/s depending on Unity audio settings.
+For OGGVORBIS encoding a custom modified MIT licensed library is used, available here: https://github.com/r618/.NET-Ogg-Vorbis-Encoder .
+Note: this is very likely not an ideal implementation and I'm not entirely satisfied with it - I made it run much faster than original, but it still barely fits into OnAudioFilterRead timeslot.
+If you know of any other C# only Vorbis encoding library, please let me know!
+
+For PCM server/source:
+	- make sure the AudioStream client uses exactly the same audio properties, i.e. samplerate, channels, and byte format as originating machine with IcecastSource
+	( this means not the format of the audio it is playing, but properties of its audio output as reported e.g. by AudioSettings.outputSampleRate, byte format should be PCM16 under most cirumstances),
+	otherwise the signals won't match and connection will be dropped.
+
+	Note: Icecast admin might not show complete mountpoint information and sound preview/player in the browser might be missing, but if you connect to the mountpoint with properly configured client (i.e. with same byte format, channels and samplerate as mentioned above) the stream will still be played by the client (not all common audio players support this)
+
+For OGGVORBIS server/source:
+	- Default or Best Performance DSP Buffer Size in Audio Settings is recommended to provide larger audio buffer
+	- Currently only supports 40k+ Stereo VBR encoding
+	- bitrate is currently determined automatically by Icecast; I haven't found a reliable way to explicitly set/influence this on Icecast source so far; on my setup it is anywhere between 300-500 kbps.
+	- any common streaming client/webbrowser (including AudioStream) can play this source by connecting to the Icecast mountpoint/instance.
+	- currently, AudioStream client seems to have better performance with this stream than AudioStreamMinimal. It is necessary to set rather high (~ 300k) Stream Block Alignment on AudioStreamMinimal to connect and stream from this source due to probably higher bitrate and its refresh rate not being ideal for it.
+
+OGGOPUS source:
+	- supports only 1-, or 2- channel audio, quality of the encoder is set to be highest possible
+	- Sampling rate of input signal (of Unity audio) must be one of 8000, 12000, 16000, 24000, or 48000
+	- entered bitrate is considered when creating the encoder
+	- FMOD/AudioStream does not support OPUS familty of codecs, so you won't be able to connect to Icecast server with AudioStream when using this encoder, but common audio players/browsers can play it.
+	- OPUS has much favorable bitrate and performance
+	
+
+===============================================
+Building with turned off IL2CPP runtime checks:
+===============================================
+ 
+Code running most audio loops can be optionally built with null and array bounds checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that build is running correctly with them being turned off first):
+
+- you need to manually copy attribute definition source file Il2CppSetOptionsAttribute.cs from your Editor installation folder into project, please see e.g. https://docs.unity3d.com/2018.4/Documentation/Manual/IL2CPP-CompilerOptions.html
+(and/or page for your/respective Editor version how to do that)
+- if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
+
+
+=================================================================================================================================
+AudioStreamOutputDevice mixer effect usage instructions:
+=================================================================================================================================
+
+Once you add 'AudioStream OutputDevice' effect to a mixer/group it runs autonomously outputting any input signal to its configured output ID.
+If you misconfigure output ID by specifying ID non existent in the system, the plugin should fall back to output 0 (default).
+The effect by default silences output on its mixer group/bus/master/output - you can change this by setting Passthru to true (all the way to the right) - although note that latency between plugin and Unity mixer will differ.
+
+You can currently Mute signal on mixer/group, Solo and Bypass probably won't work.
+
+For macOS:
+	- macOS version has unresolved limitation that it can't output to default - output 0 - currently.
+	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
+	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
+
+The signal is outputted 'as is' - so any channel mapping is non existent - in other words it's not possible to set/provide a custom mix matrix yet
+
+Otherwise you can use it e.g. for distributing signal to many output devices at once as demonstrated on the demo mixer, and use as any other mixer plugin - just be aware the above mentioned limitations and specifics.
+
+
