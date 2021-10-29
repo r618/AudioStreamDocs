@@ -185,7 +185,6 @@ Best latency with AudioSourceOutputDevice should work on macOS and iOS without p
 =========================================================
 Non system default audio output -
 - FMOD only + MediaSourceOutputDevice component :
-
 =========================================================
 
 MediaSourceOutputDevice works similarly as AudioSourceOutputDevice, but doesn't use Unity audio, it instead plays the sound on selected output device directly via FMOD only.
@@ -197,22 +196,23 @@ This was added to adress the problem of targeting multiple output channels on th
 See MediaSourceOutputDeviceDemo scene for example how to play a file on selected output using this component
 
 
+=========================================================
 'hotplugging':
-------------------------
-	Hotplugging - dynamic updates of attached output devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
-	Devices are checked for changes every ~ 0.1 sec
+=========================================================
+
+	Hotplugging notifications - dynamic updates about dis/connecting of audio output devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
 	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableOutputs' again.
+	A given component which outputs audio to configured non default output will generally try to stay on its user setr device when devices change
+	- please see AudioSourceOutputDeviceDemo how the behaviour can be customized in user callback - demo just selects correct new device position in new devices list based on its new output ID.
+
 
 =========================================================
 Non system default audio output - 
 - AudioPluginAudioStreamOutputDevice AudioMixer plugin :
-
 =========================================================
 
 It's also possible to redirect audio signal directly from Unity AudioMixer
 Please see 'AudioStreamOutputDevice mixer effect usage instructions' at the end
-
-
 
 
 
@@ -592,9 +592,9 @@ OGGOPUS source:
 	- OPUS has much favorable bitrate and performance
 	
 
-===============================================
-Building with turned off IL2CPP runtime checks:
-===============================================
+=================================================================
+IL2CPP builds and building with turned off IL2CPP runtime checks:
+=================================================================
  
 Code running most audio loops can be optionally built with null and array bounds checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that build is running correctly with them being turned off first):
 
@@ -621,5 +621,3 @@ For macOS:
 The signal is outputted 'as is' - so any channel mapping is non existent - in other words it's not possible to set/provide a custom mix matrix yet
 
 Otherwise you can use it e.g. for distributing signal to many output devices at once as demonstrated on the demo mixer, and use as any other mixer plugin - just be aware the above mentioned limitations and specifics.
-
-

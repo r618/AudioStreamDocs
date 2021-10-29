@@ -463,3 +463,22 @@ Updates/fixes:
 - tested with FMOD 2.01.07
 - native plugins compiled against FMOD 2.01.07
 - should properly support and run on Apple Silicon
+
+===============================================================================
+2.5 112021 No/v
+
+Updates/fixes:
+- AudioStreamDevicesChangedNotify	: significant updates and fixes for outputs/inputs notification component, and all components which use output/record driver id and all demo scenes which display and access system outputs and inputs
+- more user friendly messaging for redirection running 
+- excluded DivideByZeroChecks Il2CppSetOption too for callbacks 
+- completely decoupled iOS parts of the asset from the rest, so AVAudioSession output/input can be used separately if needed (i.e. no FMOD dependency required)
+
+demo scenes:
+- more scoll areas
+- updates devices lists + selection correctly based on changed to notification
+
+- Several bugfixes and refactors, #define updates to reflect changed in recent Unity versions
+- Updated documentation and tooltips where appropriate
+
+- tested with FMOD 2.01.11 (latest Unity Verified),
+- native plugins compiled against FMOD 2.01.11
