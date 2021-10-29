@@ -482,3 +482,8 @@ demo scenes:
 
 - tested with FMOD 2.01.11 (latest Unity Verified),
 - native plugins compiled against FMOD 2.01.11
+
+PSA/WARNING: It looks like sounds created via FMOD networking (i.e. all Legacy components which stream from network) fail with 'ERR_FILE_EOF - End of file unexpectedly reached while trying to read essential data (truncated?).' when opening URLs which worked before.
+I'm not sure when this started happening, but it's in 2.01.07 already (the FMOD provided core API network streaming example fails with the same error w/ a common MPEG stream URL which worked before).
+I've replaced legacy components in scenes which were using them as leftover, but at this point there's probably nothing I can do
+[ streaming from network would require new asset without FMOD dependency, will try to figure something out ]
