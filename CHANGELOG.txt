@@ -477,7 +477,7 @@ demo scenes:
 - more scoll areas
 - updates devices lists + selection correctly based on changed to notification
 
-- Several bugfixes and refactors, #define updates to reflect changed in recent Unity versions
+- Several bugfixes and refactors, #define updates to reflect changes in recent Unity versions
 - Updated documentation and tooltips where appropriate
 
 - tested with FMOD 2.01.11 (latest Unity Verified),
@@ -487,3 +487,11 @@ PSA/WARNING: It looks like sounds created via FMOD networking (i.e. all Legacy c
 I'm not sure when this started happening, but it's in 2.01.07 already (the FMOD provided core API network streaming example fails with the same error w/ a common MPEG stream URL which worked before).
 I've replaced legacy components in scenes which were using them as leftover, but at this point there's probably nothing I can do
 [ streaming from network would require new asset without FMOD dependency, will try to figure something out ]
+
+===============================================================================
+2.5.1 122021 /|\
+
+FMOD 2.02.04 ( asset Store version )
+- updated Resonance interface + demos (not compatible with previous FMOD versions)
+
+
