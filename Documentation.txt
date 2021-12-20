@@ -4,6 +4,9 @@
 
 Note: >> When working with audio it's often very useful to turn on 'Run In Background' in player settings to keep audio running when switching out of the Editor.
 
+(For 2022 and up -> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
+| Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.)
+
 
 
 =================================================================================================================================

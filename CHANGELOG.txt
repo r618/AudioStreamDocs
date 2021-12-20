@@ -491,7 +491,15 @@ I've replaced legacy components in scenes which were using them as leftover, but
 ===============================================================================
 2.5.1 122021 /|\
 
-Updates/fixes, concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store
-- fixed AudioStream (main audio streaming component) behaviour
-- updated Resonance interface + demos (not compatible with previous FMOD versions)
-- updated mixer effect plugins
+Updates/fixes, concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store:
+
+	- fixed AudioStream (main audio streaming component) behaviour
+	- updated Resonance interface + demos (no longer compatible with previous FMOD versions)
+	- updated mixer effect plugins w/ FMOD 2.02.04
+	- small stability fixes
+
+Tested for Unity 2022.1(beta) compatibility
+-> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
+| Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.
+
+- demo scenes display notice when running on 2022 and up and not having 'Allow downloads over HTTP' enabled
