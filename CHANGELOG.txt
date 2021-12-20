@@ -491,7 +491,7 @@ I've replaced legacy components in scenes which were using them as leftover, but
 ===============================================================================
 2.5.1 122021 /|\
 
-FMOD 2.02.04 ( asset Store version )
+Updates/fixes, concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store
+- fixed AudioStream (main audio streaming component) behaviour
 - updated Resonance interface + demos (not compatible with previous FMOD versions)
-
-
+- updated mixer effect plugins
