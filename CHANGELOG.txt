@@ -498,10 +498,12 @@ Updates/fixes, concerning mainly latest official FMOD 2.02.04 release for Unity/
 	- updated mixer effect plugins w/ FMOD 2.02.04
 	- small stability fixes
 
+New demo scene:
+- AudioStreamDownloadRealtimeDemo			: shows how to handle progressive playback while audio is being downloaded from netradio
+
 Tested for Unity 2022.1(beta) compatibility:
 	-> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
-	| Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.
-
+	- Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.
 	- demo scenes display notice when running on 2022 and up and not having 'Allow downloads over HTTP' enabled
 
 Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
