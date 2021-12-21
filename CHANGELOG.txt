@@ -477,7 +477,7 @@ demo scenes:
 - more scoll areas
 - updates devices lists + selection correctly based on changed to notification
 
-- Several bugfixes and refactors, #define updates to reflect changed in recent Unity versions
+- Several bugfixes and refactors, #define updates to reflect changes in recent Unity versions
 - Updated documentation and tooltips where appropriate
 
 - tested with FMOD 2.01.11 (latest Unity Verified),
@@ -487,3 +487,28 @@ PSA/WARNING: It looks like sounds created via FMOD networking (i.e. all Legacy c
 I'm not sure when this started happening, but it's in 2.01.07 already (the FMOD provided core API network streaming example fails with the same error w/ a common MPEG stream URL which worked before).
 I've replaced legacy components in scenes which were using them as leftover, but at this point there's probably nothing I can do
 [ streaming from network would require new asset without FMOD dependency, will try to figure something out ]
+
+===============================================================================
+2.6 122021 /|\
+
+Updates/fixes:
+	concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store
+
+	- fixed AudioStream (main audio streaming component) behaviour - should now be playing/streaming correctly without running out of data
+	- updated Resonance interface + demos (no longer compatible with previous FMOD versions)
+	- updated mixer effect plugins w/ FMOD 2.02.04
+	- small stability fixes
+
+New:
+	- AudioStreamDownloadRealtimeDemo			: shows how to handle progressive playback of audio while it is being downloaded from netradio
+	- new 'RuntimeSettings' configuration object:
+		- ScriptableObject in 'AudioStream\Scripts\AudioStreamSupport\Resources'
+		- has user customizable field 'Cache Path' which allows entering a path to a directory which will be used as temporary storage for all components which use disk as cache
+		(currently it means AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache).
+
+Tested for Unity 2022.1(beta) compatibility:
+	-> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
+	- Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.
+	- demo scenes display notice when running on 2022 and up and not having 'Allow downloads over HTTP' enabled
+
+Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
