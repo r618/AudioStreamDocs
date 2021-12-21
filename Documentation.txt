@@ -26,6 +26,7 @@ The 'infinite' radio streams are limited to 4 GB download ( which amounts to abo
 
 You can pick either MEMORY, or DISK for incoming data caching:
 - MEMORY uses small in-memory buffer for playback, DISK caches all data and stream is seekable up to the download point in that case if the file being played has finite size
+- please also see 'Customizable cache location' below
 
 Each component further provides selective Console logging and UnityEvent messages.
 
@@ -260,12 +261,12 @@ This way it's also possible to create an AudioClip from audio files which format
 2] decoded_bytes are actual bytes decoded by FMOD
 That means that decoded_bytes will be usually much higher than the size of the file (so you get no proper upper bound for the download progress currently unfortunately)
 
-Downloaded data is progressively cached in application's cache directory (Application.temporaryCachePath)
+Downloaded data is progressively cached in application's set cache directory
 - it's filename is derived from hash of AudioStreamDownload's url, with appended '.raw' extension as returned by AudioStreamSupport.CachedFilePath() [in other words a given url, or filepath is saved to the same, its own cache]
 - original samplerate and channels are saved at the beginning of the file, so raw format can be played back later
 - (samplerate and channels occupy 8 bytes together so this has no impact on playback)
 - these are followed by raw interleaved stream of PCMFLOAT serialized as bytes (sizeof(float) bytes per sample)
-
+- please also see 'Customizable cache location' below
 
 If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamDownload's url is found in the cache, instead AudioClip is constructed and played immediately.
 AudioClip can be set to automatically start playback after the download stopped - either because end fo file was reached, cached file was found, or user stopped the download manually.
@@ -291,6 +292,7 @@ All features of AudioStream such as choosing audio type, tags, logging and Unity
 Similarly as above for AudioStreamDownload it has adjustable decoder thread buffer size which should not exceed cca half of the overall decoded bytes and which directly affects decoding speed.
 
 Decoded data are progressively cached in application's temp directory (data is not reused, each Play() call overwrites any existing/previous run).
+- please also see 'Customizable cache location' below
 
 See AudioStreamMemoryDemo scene for example usage.
 
@@ -604,6 +606,15 @@ Code running most audio loops can be optionally built with null and array bounds
 - you need to manually copy attribute definition source file Il2CppSetOptionsAttribute.cs from your Editor installation folder into project, please see e.g. https://docs.unity3d.com/2018.4/Documentation/Manual/IL2CPP-CompilerOptions.html
 (and/or page for your/respective Editor version how to do that)
 - if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
+
+
+=================================================================
+Customizable cache location:
+=================================================================
+
+2.6 and up - added new 'RuntimeSettings' scriptable object to 'AudioStream\Scripts\AudioStreamSupport\Resources' with customizable path to cache folder
+- enter full path to a cache directory, or leave empty to use dafault (Application.temporaryCachePath) location
+AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache will use this location to save all its cached data.
 
 
 =================================================================================================================================

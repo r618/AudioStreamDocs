@@ -491,15 +491,20 @@ I've replaced legacy components in scenes which were using them as leftover, but
 ===============================================================================
 2.6 122021 /|\
 
-Updates/fixes, concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store:
+Updates/fixes:
+	concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store
 
-	- fixed AudioStream (main audio streaming component) behaviour
+	- fixed AudioStream (main audio streaming component) behaviour - should now be playing/streaming correctly without running out of data
 	- updated Resonance interface + demos (no longer compatible with previous FMOD versions)
 	- updated mixer effect plugins w/ FMOD 2.02.04
 	- small stability fixes
 
-New demo scene:
-- AudioStreamDownloadRealtimeDemo			: shows how to handle progressive playback while audio is being downloaded from netradio
+New:
+	- AudioStreamDownloadRealtimeDemo			: shows how to handle progressive playback of audio while it is being downloaded from netradio
+	- new 'RuntimeSettings' configuration object:
+		- ScriptableObject in 'AudioStream\Scripts\AudioStreamSupport\Resources'
+		- has user customizable field 'Cache Path' which allows entering a path to a directory which will be used as temporary storage for all components which use disk as cache
+		(currently it means AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache).
 
 Tested for Unity 2022.1(beta) compatibility:
 	-> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
