@@ -519,4 +519,5 @@ Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
 Updates/fixes:
 	- fixed AudioStreamNetworkSource / AudioStreamNetworkClient when running under default/system samplerate
 	- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
+	- removed Best latency setting for audio requirement
 	- optimized float[] en/decoding ?
