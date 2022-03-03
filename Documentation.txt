@@ -526,8 +526,8 @@ Version 1.7.3 introduced two new components that enable streaming and receiving 
 The audio is encoded and decoded using C# port of Opus codec by Logan Stromberg: https://github.com/lostromb/concentus
 Server's IP address is needed on the client currently in order to connect, playback starts immediately on source - see AudioStreamUNETSourceDemo and AudioStreamUNETClientDemo demo scenes in Network/AudioStreamUNETDemo/
 also for options available for encoder and decoder.
-Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency is very small, usable for realtime changes on the server (e.g. using a microphone over LAN).
-Opus/Concentus support _only_ 1 or 2 channels audio for now, though and sampling rate of input signal (of Unity audio) must be one of 8000, 12000, 16000, 24000, or 48000.
+Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receing end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
+Opus/Concentus support _only_ 1 or 2 channels audio for now.
 
 Notes for DSP buffer size, frame size and MTU:
 ----------------------------------------------
@@ -537,7 +537,7 @@ buffer needs to fit below the size limit - therefore 'Best Latency' audio settin
 
 The selected defaults should be overall enough to send and receive without problems on common LAN (provided that Unity project has 'Best Latency' selected in Audio Settings).
 
-Also, in order to successfully receive all packets the network reactor has to perform reliably and quickly enough which was not the case on e.g. lower end phones / device such as iPhone 7 had no problems /
+Also, in order to successfully receive all packets the network endcoder has to perform reliably and quickly enough which was not the case on e.g. lower end phones / device such as iPhone 7 had no problems /
 
 By default maximum of 10 clients are allowed to connect to one source - this is configurable and with higher number should run without problems on sufficient hardware.
 
