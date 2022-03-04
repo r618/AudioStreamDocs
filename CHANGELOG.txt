@@ -517,7 +517,9 @@ Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
 2.6.1 032022 St.Javelin
 
 Updates/fixes:
-	- fixed AudioStreamNetworkSource / AudioStreamNetworkClient when running under default/system samplerate
-	- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
-	- removed Best latency setting for audio requirement
-	- optimized float[] en/decoding ?
+	AudioStream:
+		-  ignore 'too small' Content-Lenght in some request responses to more likely handle media lenght correctly
+	AudioStreamNetworkSource / AudioStreamNetworkClient
+		- fixed running under default/system samplerate when samplerates of source and client differ significantly (ex. mobile<->PC)
+		- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
+		- removed Best latency setting as requirement
