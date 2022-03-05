@@ -518,7 +518,7 @@ Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
 
 Updates/fixes:
 	AudioStream:
-		-  ignore 'too small' Content-Lenght in some request responses to more likely handle media lenght correctly
+		-  ignore 'too small' Content-Length in some request responses to more likely handle media length correctly
 	AudioStreamNetworkSource / AudioStreamNetworkClient
 		- fixed running under default/system samplerate when samplerates of source and client differ significantly (ex. mobile<->PC)
 		- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
