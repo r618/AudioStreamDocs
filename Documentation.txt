@@ -332,6 +332,7 @@ Input signal is mapped to outputs based on mix matrix - so # of channels Speex w
 Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
 will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
 
+FMOD has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is 32 for no. of channels of input device.
 
 ! For iOS/mobiles please see specific recording notes below.
 

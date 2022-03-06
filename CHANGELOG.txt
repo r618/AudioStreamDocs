@@ -523,3 +523,11 @@ Updates/fixes:
 		- fixed running under default/system samplerate when samplerates of source and client differ significantly (ex. mobile<->PC)
 		- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
 		- removed Best latency setting as requirement
+
+===============================================================================
+2.6.2
+
+Updates/fixes:
+	AudioStreamInputBase
+		FMOD input system can max. FMOD.CONSTANTS.MAX_CHANNEL_WIDTH - 32 - channels
+
