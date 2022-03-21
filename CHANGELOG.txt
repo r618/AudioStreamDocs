@@ -525,9 +525,31 @@ Updates/fixes:
 		- removed Best latency setting as requirement
 
 ===============================================================================
-2.6.2
+2.6.2 032022 St.Nilwa
 
 Updates/fixes:
-	AudioStreamInputBase
-		FMOD input system can max. FMOD.CONSTANTS.MAX_CHANNEL_WIDTH - 32 - channels
+	AudioStreamInputBase:
+		- system is initialized with FMOD.CONSTANTS.MAX_CHANNEL_WIDTH allowed channels/speakers when initializing it
+		this was max./default also before, only now it's explicit - the constant is currently 32 output channels, this is mentioned also in Docs for Audio input.
+	IL2CPP:
+		Marked remaining OnAudioFilterRead and PCMReadCallback callbacks for IL2CPP optimization
 
+New components:
+	Simple (hard) separation of channels of playing input device, AudioSource, and AudioClip:
+		(these were originally intended as demo scenes only, but I added them as separate components, too)
+	
+	AudioStreamInputChannelsSeparation:
+		- splits recording channels of audio being recorded from an AudioStreamInput* into separate single channel AudioSources prefabs and instantiates them in the scene
+		please see AudioStreamInputChannelsSeparationDemo for example usage
+
+	AudioSourceChannelsSeparation:
+		- splits audio of an AudioSource/AudioClip being played on current Unity output into separate single channel AudioSources prefabs and instantiates them in the scene
+		please see AudioSourceChannelsSeparationDemo for example usage
+
+	AudioClipChannelsSeparation:
+		- splits original channels of (a multichannel) AudioSource/AudioClip being played into separate single channel AudioSources prefabs and instantiates them in the scene
+		please see AudioClipChannelsSeparationDemo for example usage
+
+	- basic usage only is currently implemented, e.g. all components play automatically, they don't have complete user facing API yet, but they're usable even in this state.
+
+	For all of the above please see 'Separating AudioSource, AudioClip and AudioStreamInput* channels' in Documentation
