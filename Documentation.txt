@@ -240,6 +240,28 @@ again please see 'MediaSourceOutputDeviceDemo' how this can be done.
 Internally the asset links created sound and user channel in 1:1 fashion automatically so all user calls use channel only to identify the user sound
 
 
+============================================================================================
+Separating AudioSource, AudioClip and AudioStreamInput* channels:
+============================================================================================
+
+2.6.2 added three simple components for basic channels separation and their playback:
+
+	AudioStreamInputChannelsSeparation:
+		this separates an input device channels into separate single channel AudioSources before them reaching Unity up/mixing - so they are played directly from the input buffer via streamed single channel AudioSources
+		which are placed into scene automatically.
+
+	AudioSourceChannelsSeparation:
+		this plays an AudioSource on current Unity default output and splits these channels similarly as above.
+		AudioSource can be 'anything' playable, each single channel is streamed
+
+	AudioClipChannelsSeparation:
+		this splits AudioClip's original channels based on its Import Serttings similarly as above. Note for this to work the AudioClip has to have its 'Load Type' set to 'Decompress On Load' in order to use GetData on it -
+		- the AudioClip needs processing for splitting before playback begins which is currently done automatically on Start
+		only AudioClips imported via Unity are supported.
+
+	Public user friendly API, e.g. for starting/stopping is missing yet, will be added over time; currently playback is started via normal Unity Start events.
+
+
 ===========================================
 AudioStreamDownload:
 ===========================================
@@ -332,7 +354,7 @@ Input signal is mapped to outputs based on mix matrix - so # of channels Speex w
 Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
 will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
 
-FMOD has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is 32 for no. of channels of input device.
+FMOD has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is 32 for no. of channels of its system's software format/device channels.
 
 ! For iOS/mobiles please see specific recording notes below.
 
@@ -615,6 +637,7 @@ Customizable cache location:
 2.6 and up - added new 'RuntimeSettings' scriptable object to 'AudioStream\Scripts\AudioStreamSupport\Resources' with customizable path to cache folder
 - enter full path to a cache directory, or leave empty to use dafault (Application.temporaryCachePath) location
 AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache will use this location to save all its cached data.
+
 
 
 =================================================================================================================================
