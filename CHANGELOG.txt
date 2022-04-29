@@ -553,3 +553,20 @@ New components:
 	- basic usage only is currently implemented, e.g. all components play automatically, they don't have complete user facing API yet, but they're usable even in this state.
 
 	For all of the above please see 'Separating AudioSource, AudioClip and AudioStreamInput* channels' in Documentation
+
+
+===============================================================================
+2.6.3 042022 Not a special operation
+
+Updates/fixes for AudioMixer effect:
+	- built using 2.02.04 - latest Unity verified version
+	- updates from Unity official Native Audio Plugins SDK
+	- solo/mute/bypass on the effect should now work
+	- updated devices/output switching
+	- the plugins listens for devices changes now and updates its internal outputs as needed
+	^ see 'AudioStreamOutputDevice mixer effect usage instructions' in main documetation
+
+New demo scene for the above
+	OutputDeviceUnityMixerHotpluggingDemo:
+		- displays current output device list and plays audio on user chosen device via mixer effect
+		- listens for devices changes using AudioStreamDevicesChangedNotify's event in the scene, updates device list accordingly and switches playback to user selected output

@@ -645,16 +645,29 @@ AudioStreamOutputDevice mixer effect usage instructions:
 =================================================================================================================================
 
 Once you add 'AudioStream OutputDevice' effect to a mixer/group it runs autonomously outputting any input signal to its configured output ID.
-If you misconfigure output ID by specifying ID non existent in the system, the plugin should fall back to output 0 (default).
+(If you misconfigure output ID by specifying ID non existent in the system, the plugin should fall back to output 0 (default)).
 The effect by default silences output on its mixer group/bus/master/output - you can change this by setting Passthru to true (all the way to the right) - although note that latency between plugin and Unity mixer will differ.
-
-You can currently Mute signal on mixer/group, Solo and Bypass probably won't work.
 
 For macOS:
 	- macOS version has unresolved limitation that it can't output to default - output 0 - currently.
 	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
 	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
 
-The signal is outputted 'as is' - so any channel mapping is non existent - in other words it's not possible to set/provide a custom mix matrix yet
+The signal is outputted 'as is' - so any channel mapping customization (i.e. custom mix matrix) is not supported (yet) and relies on default FMOD up/down mixing of channels
 
 Otherwise you can use it e.g. for distributing signal to many output devices at once as demonstrated on the demo mixer, and use as any other mixer plugin - just be aware the above mentioned limitations and specifics.
+
+	---------------------------------------------------------
+	Hotplugging - system audio devices changes notifications:
+	---------------------------------------------------------
+
+	The effect listens for system audio devices changes and updates its audio output as follows:
+		- the output driver ID will stay the same, only will be pointing to the new/updated devices list
+		- for example if outputID was #1, pointing to system output #A, its new outputID will still be #1, only pointing to potentially different device #B in new device list when a device is added/removed, or default is changed
+		(it might still point to output #A if its position is the same even in the new updated device list).
+		- if you want to keep track of playing output and always point to e.g. device #D, please subscribe to OnDevicesChanged event of AudioStreamDevicesChangedNotify component in the scene
+		(see e.g. AudioSourceOutputDeviceDemo or OutputDeviceUnityMixerHotpluggingDemo scene), expose effect parameter and call 'SetFloat' on the mixer with desired output -
+		- for an example please also see OutpuDeviceUnityMixerChangesDemo scene
+
+	Please note that since there is no way of updating the plugin state except when running in the mixer (which updates are needed to process notifications from the system)
+	the mixer plugin will be notified of devices changes only when running/playing the scene, i.e. actually processing audio.
