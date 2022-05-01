@@ -563,8 +563,8 @@ Updates/fixes for AudioMixer effect:
 	- updates from Unity official Native Audio Plugins SDK
 	- solo/mute/bypass on the effect should now work
 	- updated devices/output switching
-	- the plugins listens for devices changes now and updates its internal outputs as needed
-	^ see 'AudioStreamOutputDevice mixer effect usage instructions' in main documetation
+	- the plugin listens for devices changes now and updates its internal outputs as needed when in the mix
+	^ see 'AudioStreamOutputDevice mixer effect usage instructions' in main documetation (macOS is limited in this regard)
 
 New demo scene for the above
 	OutputDeviceUnityMixerHotpluggingDemo:
