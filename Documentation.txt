@@ -649,7 +649,8 @@ Once you add 'AudioStream OutputDevice' effect to a mixer/group it runs autonomo
 The effect by default silences output on its mixer group/bus/master/output - you can change this by setting Passthru to true (all the way to the right) - although note that latency between plugin and Unity mixer will differ.
 
 For macOS:
-	- macOS version has unresolved limitation that it can't output to default - output 0 - currently.
+	- macOS version has currently unresolved limitation in that it doesn't support devices hotplugging correctly (due to a bug while releasing FMOD system)
+	it should work normally with all available outputs while they're not changed at runtime.
 	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
 	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
 
