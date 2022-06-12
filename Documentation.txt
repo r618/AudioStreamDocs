@@ -76,21 +76,18 @@ Please see iOS recording specific notes below
 
 
 ===========================================
-Network proxy support:
+Network/web proxy support:
 ===========================================
-1.8.0.2 added proxy support for UnityWebRequest (playlist retrieval) and FMOD/AudioStream sounds - both use the same proxy settings, although each in its own separate way:
-- Unity networking (UnityWebRequests for playlist retrieval, UNET) considers 'UNITY_PROXYSERVER' user environment variable, which is set automatically if needed at startup by AudioStream_ProxyConfiguration ScriptableObject. If this is changed generally a restart of the application/editor is needed.
-- FMOD uses proxy settings more directly and does not mind runtime changes
 
-Proxy settings:
-- are configured by changing parameters on AudioStream_ProxyConfiguration scriptable object found in AudioStream\Scripts\AudioStream\Resources
-- shared by all components which can stream from network
-- can be overriden at runtime by user code, call UpdateProxySettings on AudioStream_ProxyConfiguration instance to do so after changing them.
-(generally is advised to restart eidtor/application if changed as mentioned above)
+All UnityWebRequests used in the asset should follow system setting for webproxy, so there's no configuration for this.
+FMOD itself has an extra config for this - this now concerns only legacy AudioStream components.
 
-Demo application stores user proxy settings in PlayerPrefs, which are loaded (and override SO editor values by calling UpdateProxySettings) and saved automatically by the application - see AudioStreamMainScene.cs and AudioStreamProxySettingsDemo.cs
+FMOD webproxy settings:
+- are configured by changing parameters on 'AudioStream_FMODWebProxyConfiguration' scriptable object found in 'AudioStream\Scripts\AudioStream\_LegacyUsingFMODNetworking\Resources'
+- shared by all legacy components which stream from network
+- can be overriden at runtime by user code by calling UpdateProxySettings on AudioStream_FMODWebProxyConfiguration instance.
 
-Note: sometimes it takes a while, or second restart for changes in proxy settings to be picked up by Editor.
+Demo application stores these proxy settings in PlayerPrefs, which are loaded (and overriden SO editor values by calling UpdateProxySettings) and saved automatically by the application - see AudioStreamMainScene.cs and AudioStreamProxySettingsDemo.cs
 
 
 ===========================================

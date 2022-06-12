@@ -570,3 +570,12 @@ New demo scene for the above
 	OutputDeviceUnityMixerHotpluggingDemo:
 		- displays current output device list and plays audio on user chosen device via mixer effect
 		- listens for devices changes using AudioStreamDevicesChangedNotify's event in the scene, updates device list accordingly and switches playback to user selected output
+
+===============================================================================
+2.6.4 062022 Three days
+
+Updates/fixes:
+	- cleaned up usage of web proxy for networking requests:
+	- web proxy usage is removed for all UnityWebRequest - all UWRs should follow system settings for web proxy
+	- used now only by FMOD networking - legacy components
+	- Note: FMOD networking support is not stable from version to version, right now it looks like it's not functional. all legacy/FMOD networking most likekly won't work. The original sources are being left in the asset for now.
