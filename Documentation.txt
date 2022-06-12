@@ -448,7 +448,7 @@ Since 1.4.1 AudioStream provides 'fix' for this situation with included iOS plug
 Newer ( 2017.1 and up ) versions of Unity provide setting for this in iOS Player Settings - 'Force iOS Speakers when Recording'; for 2017.1 and up the fix above is skipped
 
 - FMOD currently does not provide any way of recording from other than default recording device (iPhone Microphone) - that means that it can't record from e.g. AirPods / connected Bluetooth headsets etc.
-But since AudioStream 2.0 there is another iOS native plugin which should allow to record from any connected aduio device - it's demo is in AudioStreamInput_iOSDemo which shows all currently connected devices and allows any of them to be selected and to be record from.
+Since AudioStream 2.0 the asset provides iOS native plugin which should allow to record from any connected audio device - its demo is in AudioStreamInput_iOSDemo which shows all currently connected devices and allows any of them to be selected and to be record from.
 
 ------------------------ !
 If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
