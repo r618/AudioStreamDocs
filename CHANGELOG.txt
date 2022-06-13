@@ -575,7 +575,18 @@ New demo scene for the above
 2.6.4 062022 Three days
 
 Updates/fixes:
-	- cleaned up usage of web proxy for networking requests:
-	- web proxy usage is removed for all UnityWebRequest - all UWRs should follow system settings for web proxy
-	- used now only by FMOD networking - legacy components
-	- Note: FMOD networking support is not stable from version to version, right now it looks like it's not functional. all legacy/FMOD networking most likekly won't work. The original sources are being left in the asset for now.
+	Added assembly definition files:
+		- the asset's code is now entirely asmdef based
+
+	Cleaned up usage of web proxy for networking requests:
+		- web proxy usage is removed for all UnityWebRequest - all UWRs should follow system settings for web proxy
+		- used now only by FMOD networking - legacy components
+		- Note: FMOD networking support is not stable from version to version, right now it looks like it's not functional. all legacy/FMOD networking most likekly won't work. The original sources are being left in the asset for now.
+
+	Updated demo app menu:
+		- all scenes are grouped into logical categories by funcionality
+
+	Fixed AudioStreamStressTest demo scene: was using wrong/old component
+
+	Removed & updated code:
+		- removed old/unused/obsolete parts, moved parts common with AudioStreamIce asset into separate Scripts/Support assembly.
