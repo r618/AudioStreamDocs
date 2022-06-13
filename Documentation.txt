@@ -623,7 +623,7 @@ IL2CPP builds and building with turned off IL2CPP runtime checks:
 Code running most tight audio loops can be optionally built with null, array bounds and division by zero checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that build is running correctly with them being turned off first)
 
 The needed attributes for this are included in the package, but you are advised to verify this, i.e. check for your Unity version, see e.g. https://docs.unity3d.com/2018.4/Documentation/Manual/IL2CPP-CompilerOptions.html (and your/respective Editor version) how to do that.
-The file 'Il2CppSetOptionAttribute.cs' must be placed into project's 'AudioStream/Scripts' folder (or any of its subfolders) - must be part of the 'AudioStream' assembly definition
+The file 'Il2CppSetOptionAttribute.cs' must be placed into project's 'AudioStream/Support' folder (or any of its subfolders) - must be part of the 'AudioStreamSupport' assembly definition
 
 - if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
 
