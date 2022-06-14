@@ -584,7 +584,7 @@ Updates/fixes:
 		- Note: FMOD networking support is not stable from version to version, right now it looks like it's not functional. All legacy/FMOD networking components most likekly won't work, the original sources are being left in the asset for now.
 
 	Updated demo app:
-		- menu facelift - all scenes are grouped into logical categories by funcionality
+		- menu facelift - all scenes are grouped into logical categories by functionality
 
 	Fixed AudioStreamStressTest demo scene: was using wrong/old component
 
