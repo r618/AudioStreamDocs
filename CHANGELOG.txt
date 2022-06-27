@@ -590,3 +590,9 @@ Updates/fixes:
 
 	Removed & updated code:
 		- removed old/unused/obsolete parts, moved parts common with AudioStreamIce asset into separate Scripts/Support assembly.
+
+===============================================================================
+2.6.4.1 062022 Three days
+
+Updates/fixes:
+	fixed iOS build
