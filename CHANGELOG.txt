@@ -595,4 +595,5 @@ Updates/fixes:
 2.6.4.1 062022 Three days
 
 Updates/fixes:
-	fixed iOS build
+	- fixed iOS build
+	- moved menu definition for demo into Resources to ensure it's always included in build
