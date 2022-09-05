@@ -605,10 +605,9 @@ Updates/fixes:
 	- updated for FMOD 2.02.08 (currently version on the AssetStore)
 
 	AudioMixer plugin:
-		- set samplerate of the system to Unity project rate
+		- set samplerate of the system to Unity project rate (should help if the output device has different rate than Unity project)
 		- built w/ 2.02.08
 		- turned off tests - should load faster
 
 	NetMQSource/Client:
 		- added server channels and endianess to the config payload
-
