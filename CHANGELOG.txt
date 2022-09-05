@@ -597,3 +597,18 @@ Updates/fixes:
 Updates/fixes:
 	- fixed iOS build
 	- moved menu definition for demo into Resources to ensure it's always included in build
+
+===============================================================================
+2.6.5 092022 St. Himars
+
+Updates/fixes:
+	- updated for FMOD 2.02.08 (currently version on the AssetStore)
+
+	AudioMixer plugin:
+		- set samplerate of the system to Unity project rate
+		- built w/ 2.02.08
+		- turned off tests - should load faster
+
+	NetMQSource/Client:
+		- added server channels and endianess to the config payload
+

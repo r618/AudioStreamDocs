@@ -546,7 +546,7 @@ Version 1.7.3 introduced two new components that enable streaming and receiving 
 The audio is encoded and decoded using C# port of Opus codec by Logan Stromberg: https://github.com/lostromb/concentus
 Server's IP address is needed on the client currently in order to connect, playback starts immediately on source - see AudioStreamUNETSourceDemo and AudioStreamUNETClientDemo demo scenes in Network/AudioStreamUNETDemo/
 also for options available for encoder and decoder.
-Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receing end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
+Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receiving end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
 Opus/Concentus support _only_ 1 or 2 channels audio for now.
 
 
@@ -652,7 +652,8 @@ For macOS:
 	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
 	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
 
-The signal is outputted 'as is' - so any channel mapping customization (i.e. custom mix matrix) is not supported (yet) and relies on default FMOD up/down mixing of channels
+The signal is outputted 'as is' - so any channel mapping customization (i.e. custom mix matrix) and/or speaker mode is not supported (yet) and relies on default FMOD up/down mixing of channels
+Plugin uses samplerate of Unity project samplerate for its sound and default speakers/speaker mode for given output - currently this means that ideally your ouptut device has the same speaker/count/mode as Unity project.
 
 Otherwise you can use it e.g. for distributing signal to many output devices at once as demonstrated on the demo mixer, and use as any other mixer plugin - just be aware the above mentioned limitations and specifics.
 
