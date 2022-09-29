@@ -619,3 +619,5 @@ Updates/fixes:
 
 	    public AudioTexture_OutputData audioTexture_OutputData;
 	    public AudioTexture_SpectrumData audioTexture_SpectrumData;
+
+	AudioStreamInput 3D + WASD
