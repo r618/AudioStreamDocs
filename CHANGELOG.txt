@@ -611,3 +611,11 @@ Updates/fixes:
 
 	NetMQSource/Client:
 		- added server channels and endianess to the config payload
+
+===============================================================================
+2.6.6 102022
+
+	most demo scenes with AudioSources <= +
+
+	    public AudioTexture_OutputData audioTexture_OutputData;
+	    public AudioTexture_SpectrumData audioTexture_SpectrumData;
