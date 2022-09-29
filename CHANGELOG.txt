@@ -621,3 +621,6 @@ Updates/fixes:
 	    public AudioTexture_SpectrumData audioTexture_SpectrumData;
 
 	AudioStreamInput 3D + WASD
+
+
+	AudioStreamInput_iOS -> audioStreamInput_IOS_ExternalDevices
