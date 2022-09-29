@@ -624,3 +624,7 @@ Updates/fixes:
 
 
 	AudioStreamInput_iOS -> audioStreamInput_IOS_ExternalDevices
+
+
+	updated source files (c)s of independent components
+
