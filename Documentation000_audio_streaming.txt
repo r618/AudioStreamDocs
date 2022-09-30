@@ -1,0 +1,177 @@
+::written@::v2.6.6::1o.2o22::2019.4.0::
+
+===============================================================================
+AudioStream Usage instructions:
+===============================================================================
+
+AudioStream provides two main ways to stream audio - the first completely bypasses Unity audio (playing at stream specified sample rate), but is capable of playing just the audio signal from the stream 1:1, while the second one
+behaves like a standard AudioSource enabling all usual functionality such as Unity 3D spatialisation, effecting and mixing with other Unity audio sources.
+
+First component is
+  AudioStreamMinimal,
+  component for 'normal' Unity AudioSource is called AudioStream.
+
+Both consume (compressed) audio data retrieved either from network via UnityWebRequest, or directly from file system 
+
+The 'infinite' radio streams are limited to 4 GB download ( which amounts to about 20 hours of playback of 2 channel, 44100 Hz audio )
+
+You can pick either MEMORY, or DISK for incoming data caching:
+- MEMORY uses small in-memory buffer for playback, DISK caches all data and stream is seekable up to the download point in that case if the file being played has finite size
+- please also see 'Customizable cache location' below
+
+Each component further provides selective Console logging and UnityEvent messages.
+
+As a source a http/s link to a PLS or M3U/8 playlist distributed commonly by web/net radio stations, a direct link to a remote file such as podcast which is then streamed in full,
+or a local filesystem path to a file can be specified.
+
+::: by default FMOD autodetects format of the stream automatically. This works reliably on desktops and Android, but iOS requires selecting correct audio format for each respective stream manually.
+It is important to select correct audio type, though - if wrong format is selected ( for example mpeg for Ogg Vorbis radio/stream ), FMOD will probably not play it and might run unrecoverable problems when starting/Playing and Stopping/releasing the stream.
+
+:::
+Filesystem relative paths: you can reference file in e.g. StreamingAssets using relative paths such as ./Assets/StreamingAssets/FILE.mp3 as url
+
+::: the first entry from playlist is played. This is usually the correct stream, but if there are more than one streams specified
+you'd have to extract desired stream/link from the downloaded playlist manually.
+
+Note that M3U/8 support limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
+
+:::
+UnityWebRequest by default accepts all certificates/their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
+
+::: Any necessary resampling is done by Unity automatically as needed.
+
+::: AudioStreamMinimal uses less resources since it deesn't go through Unity AudioSourcem, so if all Unity audio features are not needed I generally recommend using it for just for 1:1 playback.
+
+::: The amount of independent AudioStreamMinimal components created at the same time is limited though, since each creates its own FMOD system currently.
+There is no limit for the amount of AudioStream components (all share the same system).
+
+
+For networking enabled component see notes below.
+
+Streaming was tested on iOS, Android, Windows and OS X, and user project on HoloLens.
+
+:::::: Be sure to have have 'Run in Background' turned on in Player settings and you need to switch to another application while still needing audio being processed by the Editor/application.
+
+====
+NOTE: All components - except AudioSourceOutputDevice and FMOD direct (Minimal/Media) components - can be used as input for Unity Mixer since they produce usual Unity AudioClip
+AudioSourceOutputDevice bypasses it completely (since it redirects signal to a device Unity has no knowledge of currently) - but can be attached to main listener in which case the whole application audio (and final mix) ends up on chosen device.
+
+====
+	The whole system is designed to be modular with each module being independent - you should be able to e.g. delete any folder in AudioStream/Scripts (except AudioStreamSupport) - with associated demo scene/s -
+if not needed, without impacting the rest.
+
+
+====
+! iOS NOTE: If you want to use Bluetooth connected devices for playback you have to enable iOS player for recording and set project #define symbol
+Please see iOS recording specific notes in 'Documentation_mobiles.txt' next to this file
+
+
+===============================================================================
+Network/web proxy support:
+===============================================================================
+
+All UnityWebRequests used in the asset should follow system setting for webproxy, so there's no configuration for this.
+FMOD itself has an extra config for this - this now concerns only legacy AudioStream components.
+
+FMOD webproxy settings:
+- are configured by changing parameters on 'AudioStream_FMODWebProxyConfiguration' scriptable object found in 'AudioStream\Scripts\AudioStream\_LegacyUsingFMODNetworking\Resources'
+- shared by all legacy components which stream from network
+- can be overriden at runtime by user code by calling UpdateProxySettings on AudioStream_FMODWebProxyConfiguration instance.
+
+Demo application stores these proxy settings in PlayerPrefs, which are loaded (and overriden SO editor values by calling UpdateProxySettings) and saved automatically by the application - see AudioStreamMainScene.cs and AudioStreamProxySettingsDemo.cs
+
+
+===============================================================================
+Supported formats:
+===============================================================================
+
+AudioStream can stream all formats FMOD recognises with the exceptions below for audio streamed from network. For complete list see https://en.wikipedia.org/wiki/FMOD#File_formats
+RAW format is supported also by exposing format values in the AudioStream/AudioStreamMinimal Inspector since these must be set explicitly by user.
+For Resonance specific formats see below.
+
+'Blockalign' and 'Blockalign download multiplier':
+	- 'Blockalign' defines chunk size for the decoder to read (smaller values help initial latency), ['Blockalign' times 'Blockalign download multiplier'] defines how much data has to be downloaded prior playback attempt -
+	make this as small as possible until the stream still starts, e.g. for common netradios 2-4k times 1 - 2 should work
+	Some (mp3) files with embedded artwork need this to be read completely so for them 64k times 10 or higher might be needed.
+
+!! Currently ( 2.0 ) there is a format limitation though:
+Ogg/Vorbis format can't be played until the whole file/media is accessible. This means that the whole file has to be downloaded first in order to successfully play it.
+Please set 'blockalign' to physical (compressed) file size and 'blockalignDownloadMultiplier' to 1 for Ogg/Vorbis files.
+I tried to resolve this with FMOD, but the situation is unresolved for the time being.
+
+Using legacy AudioStreamLegacy/Minimal component/s is also an option for 'some' Ogg/Vorbis streams (probably will work with netradios, but not for files)
+
+Note that the above applies only for audio streamed from network - local files are not affected.
+
+*AAC format*:
+there's no special setup or any special considerations regarding this format. The *ONLY* actual difference compared to other formats is that the media *must* be played on an actual physical device (e.g. iOS/Andoid phone) which has hardware decoding capability for this format. That means that you will not be able to test it in e.g. Editor or standalone builds.
+One thing might be necessary (although sometimes FMOD can cope without it) - you might want to set 'Stream Type' to 'AUTODETECT'.
+It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
+
+
+*MIDI format*:
+- please use AudioStream* legacy components to stream this format from network for now
+
+===============================================================================
+(Advanced/Custom) Speaker mode :
+===============================================================================
+
+When RAW speaker mode is selected for custom setups you should also provide No. of speakers, and consider providing custom mix matrix, if needed.
+See https://www.fmod.com/docs/api/content/generated/FMOD_SPEAKERMODE.html and https://www.fmod.com/docs/api/content/generated/FMOD_Channel_SetMixMatrix.html for details.
+Good place to call setMixMatrix on opened channel is in 'OnPlaybackStarted' event.
+
+===============================================================================
+AudioStreamDownload:
+===============================================================================
+
+Since 1.7.8 it is possible to used this newly added component to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normal while still going via FMOD decoder first.
+AudioStreamDownload is almost identical to AudioStream component, except that it allows setting the size of download buffer and network thread max timeout manually.
+This is important to set to match actual available network/originating stream bandwidth, otherwise it will lead to significant buffer underruns which can cause application stalls (mainly on Windows).
+
+As an example: common internet radio stream should be set to cca 2048 b buffer size and 11 ms timeout, on LAN/filesystem it's possible to go (much) faster - it's possible to set very high buffer capacity ( e.g. several MB ) and 1ms timeout -
+- with 20000000 buffer size and 1ms timeout a 19MB mp3 file is processed in about 10 seconds when reading from local filesystem -
+(processed means the whole file is decoded by FMOD, an AudioClip is constructed and played; note that higher buffer size values probably won't affect it much since it still needs to go via decoder).
+
+This way it's also possible to create an AudioClip from audio files which formats Unity normally doesn't but FMOD does support.
+
+- Tags are supported the same way as in normal streaming components
+
+- Download progress is being reported via decoded_bytes and file_size public members, note that:
+1] file_size is the size of the encoded file (either on the filesystem or as reported from the network), streamed content reports -1
+2] decoded_bytes are actual bytes decoded by FMOD
+That means that decoded_bytes will be usually much higher than the size of the file (so you get no proper upper bound for the download progress currently unfortunately)
+
+Downloaded data is progressively cached in application's set cache directory
+- it's filename is derived from hash of AudioStreamDownload's url, with appended '.raw' extension as returned by AudioStreamSupport.CachedFilePath() [in other words a given url, or filepath is saved to the same, its own cache]
+- original samplerate and channels are saved at the beginning of the file, so raw format can be played back later
+- (samplerate and channels occupy 8 bytes together so this has no impact on playback)
+- these are followed by raw interleaved stream of PCMFLOAT serialized as bytes (sizeof(float) bytes per sample)
+- please also see 'Customizable cache location' below
+
+If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamDownload's url is found in the cache, instead AudioClip is constructed and played immediately.
+AudioClip can be set to automatically start playback after the download stopped - either because end fo file was reached, cached file was found, or user stopped the download manually.
+
+AudioStreamDownload can run without an AudioSource. Only cached data is saved in that case as described above and no AudioClip is created.
+
+To better sync with realtime streams it's possible to enable 'realTimeDecoding' - in that case the decoder will run at stream rate and thus e.g. allow to save netradios
+If realtime streaming/downloading is enabled it's possible to play back the stream while it's being downloaded - enable 'playWhileDownloading' and specify your AudioSource which will be used for playback.
+An audio clip will be automatically created and played on it.
+
+
+See AudioStreamDownloadDemo scene for example usage.
+
+
+===============================================================================
+AudioStreamMemory:
+===============================================================================
+
+Added in 1.8.2 this component allows to decode an audio file from a memory buffer: set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
+Once done it creates a new AudioClip on its AudioSource and optionally plays it (since it's common AudioClip it just calls Play() on AudioSource).
+
+All features of AudioStream such as choosing audio type, tags, logging and Unity events are supported.
+Similarly as above for AudioStreamDownload it has adjustable decoder thread buffer size which should not exceed cca half of the overall decoded bytes and which directly affects decoding speed.
+
+Decoded data are progressively cached in application's temp directory (data is not reused, each Play() call overwrites any existing/previous run).
+- please also see 'Customizable cache location' below
+
+See AudioStreamMemoryDemo scene for example usage.

@@ -1,0 +1,121 @@
+::written@::v2.6.6::1o.2o22::2019.4.0::
+
+=========================================================
+Non system default audio output -
+- Unity AudioSource	+ AudioSourceOutputDevice component :
+
+=========================================================
+
+As of 1.3 it is possible to specify other than system default audio output for AudioStreamMinimal component directly and for AudioStream ( or any AudioSource ) via
+AudioSourceOutputDevice component.
+
+AudioSourceOutputDevice can be used separately from AudioStream for any AudioSource. It runs autonomously, picks up whatever is currently being played on AudioSource and sends it to desired output.
+You can use any AudioSource / AudioClip - this means you can use this also with Timeline, if it references an AudioSource which has AudioSourceOutputDevice attached on it.
+
+The output is set by Output Driver ID - 0 means current system default output. For all driver IDs currently recognised by FMOD in your system please run the OutputDeviceDemo demo scene and see
+its Start() method where all outputs are evaluated and printed to Console.
+
+If you don't need output redirection it is better to not attach AudioSourceOutputDevice as it has non zero performance and latency implications even when outputting to default device ( driver with id 0 ).
+
+Note: AudioSourceOutputDevice allows chaining of audio filters, the last one in the chain should have 'Mute After Routing' enabled.
+As a side-effect it is therefore possible to output single AudioSource to default, and selected non default output simultaneously at the same time.
+
+Note: this component introduces some latency since it needs to effectively sample OAFR buffer before passing it on to FMOD. You can set desired/reasonable latency on the component, until it sill works on your system.
+(FMOD by default uses 400 ms, which is too high, but beware that although the sound migh be playing with very low latency set, it might be skipped entirely without warning if it's too low for your system, so reasonable values are aroudn 25-50 ms)
+For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
+
+Note also that Default Unity output speaker mode bandwidth should not exceed system default output bandwidth (in other words no. of speakers/channels of Unity default speaker mode <= no. of system default output speakers), otherwise there's not enough audio data from Unity audio to be passed on continuosly.
+This is reported as Warning at runtime when encountered, and lower/actual HW channel count is used.
+
+Important: it's recommended to restart the Editor when Default Speaker Mode is changed in AudioSettings.
+- in general it's safer to restart the Editor upon any change of system default device, or AudioSettings for it to match the environment correctly -
+
+Note: at least version 1.08.11 of FMOD Unity Integration is needed as it contains a bug fix for AudioSourceOutputDevice to work.
+
+FMOD systems are created only one per system output as needed - that means although FMOD has hard limit on number of FMOD system allowed to be created, you can run hundreds on sounds (AudioSourceOutputDevice instances) on a single system output without problems - see e.g. OutputDevicePrefabDemo demo
+Each output can be configured separately via 'OutputDevicesConfiguration' scriptable object in AudioStream/Scripts/AudioSourceOutputDevice/Resources, if needed.
+Currently speaker mode and no. of speakers can be configured, DSP buffer settings were removed in 1.8 (might re-add them later on if needed)
+- each list member configuration corresponds to output device ID on that index
+
+
+Note about AudioSourceOutputDevice and Unity AudioManager 'Best latency' setting:
+---------------------------------------------------------------------------------
+
+Depending on your hardware and drivers this might be problematic on Windows - OnAudioFilterRead buffer might be too small to feed FMOD PCM callback consistently without (occasional) dropouts in audio -
+
+When using AudioClip it can be mitigated to some extend by setting correct import settings on the AudioClip: PCM compression format, (Preload Audio Data) and Compressed In Memory,
+but for consistent low latency playback on Windows you need ASIO drivers, for which there's no support in Unity, and _very_ limited in AudioStream - see 'ASIO on Windows notes' section below
+
+Best latency with AudioSourceOutputDevice should work on macOS and iOS without problems.
+
+- other than Best latency settings should be fine on all platforms -
+
+
+
+=========================================================
+Non system default audio output -
+- FMOD only + MediaSourceOutputDevice component :
+=========================================================
+
+MediaSourceOutputDevice works similarly as AudioSourceOutputDevice, but doesn't use Unity audio, it instead plays the sound on selected output device directly via FMOD only.
+Currently it supports opening and playing audio files in supported formats from disk, or net location (using FMOD network support only)
+E.g. demo scene - MediaSourceOutputDeviceDemo - plays them from application's StreamingAssets
+
+This was added to adress the problem of targeting multiple output channels on the same output device with multiple audio files simultaneously - read below in 'Multichannel separation of output' section
+
+See MediaSourceOutputDeviceDemo scene for example how to play a file on selected output using this component
+
+
+=========================================================
+'hotplugging':
+=========================================================
+
+	Hotplugging notifications - dynamic updates about dis/connecting of audio output devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
+	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableOutputs' again.
+	A given component which outputs audio to configured non default output will generally try to stay on its user set device when devices change
+	- please see AudioSourceOutputDeviceDemo how the behaviour can be customized in user callback - demo just selects correct new device position in new devices list based on its new output ID.
+
+
+=========================================================
+Non system default audio output - 
+- AudioPluginAudioStreamOutputDevice AudioMixer plugin :
+=========================================================
+
+It's also possible to redirect audio signal directly from Unity AudioMixer
+Please see 'AudioStreamOutputDevice mixer effect usage instructions' at the end
+
+
+
+=================================================================================================================================
+AudioStreamOutputDevice mixer effect usage instructions:
+=================================================================================================================================
+
+Once you add 'AudioStream OutputDevice' effect to a mixer/group it runs autonomously outputting any input signal to its configured output ID.
+(If you misconfigure output ID by specifying ID non existent in the system, the plugin should fall back to output 0 (default)).
+The effect by default silences output on its mixer group/bus/master/output - you can change this by setting Passthru to true (all the way to the right) - although note that latency between plugin and Unity mixer will differ.
+
+For macOS:
+	- macOS version has currently unresolved limitation in that it doesn't support devices hotplugging correctly (due to a bug while releasing FMOD system)
+	it should work normally with all available outputs while they're not changed at runtime.
+	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
+	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
+
+The signal is outputted 'as is' - so any channel mapping customization (i.e. custom mix matrix) and/or speaker mode is not supported (yet) and relies on default FMOD up/down mixing of channels
+Plugin uses samplerate of Unity project samplerate for its sound and default speakers/speaker mode for given output - currently this means that ideally your ouptut device has the same speaker/count/mode as Unity project.
+
+Otherwise you can use it e.g. for distributing signal to many output devices at once as demonstrated on the demo mixer, and use as any other mixer plugin - just be aware the above mentioned limitations and specifics.
+
+	---------------------------------------------------------
+	Hotplugging - system audio devices changes notifications:
+	---------------------------------------------------------
+
+	The effect listens for system audio devices changes and updates its audio outputs as follows:
+		- the output driver ID will stay the same, only will be pointing to the new/updated devices list
+		- for example if outputID was #1, pointing to system output #A, its new outputID will still be #1, only pointing to potentially different device #B in new device list when a device is added/removed, or default is changed
+		(it might still point to output #A if its position is the same even in the new updated device list).
+		- if you want to keep track of playing output and always point to e.g. device #D, please subscribe to OnDevicesChanged event of AudioStreamDevicesChangedNotify component in the scene
+		(see e.g. AudioSourceOutputDeviceDemo or OutputDeviceUnityMixerHotpluggingDemo scene), expose effect parameter and call 'SetFloat' on the mixer with desired output there -
+
+	Please note that since there is no way of updating the plugin state except when running in the mixer (which updates are needed to process notifications from the system)
+	the mixer plugin will be notified of devices changes only when running/playing the scene, i.e. actually processing audio.
+

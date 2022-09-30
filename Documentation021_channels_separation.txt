@@ -1,0 +1,42 @@
+::written@::v2.6.6::1o.2o22::2019.4.0::
+
+============================================================================================
+Multichannel separation of output using AudioSourceOutputDevice and MediaSourceOutputDevice:
+============================================================================================
+
+Using AudioSourceOutputDevice and MediaSourceOutputDevice it's possible to play audio on selected destination output device present in the system for Unity AudioSources and for audio files opened by FMOD directly.
+Further, it's possible to address specific output channels/speakers of given output using FMOD's mix matrix [see e.g. https://fmod.com/resources/documentation-api?version=2.0&page=core-api-channelcontrol.html#channelcontrol_setmixmatrix].
+
+The mix matrix control works on a playing channel, so there is a difference between AudioSourceOutputDevice and MediaSourceOutputDevice since they both use channels in different way -
+- AudioSourceOutputDevice creates one FMOD sound/channel per output device - therefore all (Unity) audio being played by this component, on a given output, share the same matrix (set of output channels) - so it's not possible to play many AudioSources/AudioClips with different output channels simultaneously -
+So in case when e.g. more clips are needed to be played, they must be prepared beforehand only with present appropriate channels (and optionally set a mix matrix for given output)
+
+- MediaSourceOutputDevice has not this limiation, but doesn't go through Unity audio system:
+it uses FMOD for playback directly - so needs a media URL/URI to be opened and played - after sound/channel is created, a mix matrix can be set for each single playing audio independently -
+The component has only programming API available currently with minimal Inspector interaction - please see 'MediaSourceOutputDeviceDemo' scene on how to use it.
+
+Note that since FMOD channels effectively disappear from the sound once they are finished playing (and FMOD can rearrange/steal them at any time, too), all playback calls of the component can potentially return a new channel which a user should keep track of if they want to use it at runtime -
+again please see 'MediaSourceOutputDeviceDemo' how this can be done.
+Internally the asset links created sound and user channel in 1:1 fashion automatically so all user calls use channel only to identify the user sound
+
+
+============================================================================================
+Separating AudioSource, AudioClip and AudioStreamInput* channels:
+============================================================================================
+
+2.6.2 added three simple components for basic channels separation and their playback:
+
+	AudioStreamInputChannelsSeparation:
+		this separates an input device channels into separate single channel AudioSources before them reaching Unity up/mixing - so they are played directly from the input buffer via streamed single channel AudioSources
+		which are placed into scene automatically.
+
+	AudioSourceChannelsSeparation:
+		this plays an AudioSource on current Unity default output and splits these channels similarly as above.
+		AudioSource can be 'anything' playable, each single channel is streamed
+
+	AudioClipChannelsSeparation:
+		this splits AudioClip's original channels based on its Import Serttings similarly as above. Note for this to work the AudioClip has to have its 'Load Type' set to 'Decompress On Load' in order to use GetData on it -
+		- the AudioClip needs processing for splitting before playback begins which is currently done automatically on Start
+		only AudioClips imported via Unity are supported.
+
+	Public user friendly API, e.g. for starting/stopping is missing yet, will be added over time; currently playback is started via normal Unity Start events.

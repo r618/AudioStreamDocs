@@ -1,0 +1,60 @@
+::written@::v2.6.6::1o.2o22::2019.4.0::
+
+===========================================
+Audio input:
+===========================================
+
+As of version 1.4 it is possible to stream audio from any available system recording input - just attach AudioSourceInput component to an empty game object and from custom script access audio buffer data of AudioSource which it automatically creates.
+See how to interact with it in the AudioStreamInputDemo scene.
+Latency is rather high for spatializable input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioSourceInput2D component since 1.5.2. - with downside that it is 2D only.
+
+Currently this is best option I could come up with, for even lower latency native plugin is needed ( such as https://github.com/keijiro/Lasp ), with but the same 2D limitation since it uses just OnAudioFilterRead
+[ OnAudioFilterRead has limitation of not being able to support 3D sound ]. For LASP interop with AudioSource see this gist: https://gist.github.com/r618/d74f07b6049fce20f1dc0dfa546bda89 ( LASP have to be patched though currently since it can't be run not from main thread, and frequency is not exposed - those are just minor changes).
+AudioSourceInput2D latency is very usable though and e.g. on iOS and recent phones it has almost immediate response to audio input in the scene.
+
+AudioSourceInput* components will use default DSP buffer setting if not overriden (via Inspector)
+If you use more than one AudioStreamInput* component, any custom DSP settings per specific input are taken only from one - the one started first - since a single FMOD system is used for all input sounds of a concrete device and DSP buffers need to be set before the system initialization.
+DSP buffer settings are taken into account only before the FMOD system creation so they're not changeable at runtime (updated in 2.4.2)
+
+For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
+
+It is possible to capture and listen to the system output - for Windows, see this forum post: https://forum.unity.com/threads/audiostream-an-audio-streaming-solution-for-all-and-everywhere.412029/page-3#post-3120495
+Windows specific: any device/s which can be opened for recording, not designated as a micophone/audio input by system, is prefixed with "[loopback]" in their name by FMOD
+On macOS it's possible to configure new recording device using e.g. Soundflower [https://github.com/mattingalls/Soundflower] (or newer stuff from RogueAmoeba), or BlackHole virtual audio driver/s [https://github.com/ExistentialAudio/BlackHole]
+Note that device customisation like this is only possible on desktops.
+
+Multichannel input/microphones are supported as opposed to Unity's Microphone class.
+
+Since the way the resampling of input signal by just setting the pitch on the AudioSource was handled led to big drifting over longer time if input and output sample rates were significantly different,
+in 1.7.7 I added option to not use Unity's built AudioSource resampling and channel conversion this way.
+Speex resampler is used directly, with possibility to specify custom mix matrix to provide mapping between input and output channels.
+See demo scene for reference, and call SetCustomMixMatrix on component before starting the recording, if needed. A default automatic mix matrix which tries to map inputs to outputs is created otherwise, but it might not be ideal for all circumstances.
+Input signal is mapped to outputs based on mix matrix - so # of channels Speex works with == # of channels on chosen output.
+
+Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
+will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
+
+FMOD has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is 32 for no. of channels of its system's software format/device channels.
+
+! For iOS/mobiles please see specific recording notes below.
+
+With ResonanceInput it's possible to capture any input device and play it back in 3D - see below in 3D spatialisation.
+
+
+About Andoid permissions:
+-------------------------
+	there is a Microphone class referenced in Android specific code of AudioStreamInputBase.cs, which causes Unity to automatically include recording permission in the manifest
+If you don't want/need this permission and recording in your Android build, please delete the whole 'Scripts/AudioStreamInput' folder and demos in 'Demo/AudioStreamInput' folder.
+
+
+'resampleInput' setting:
+------------------------
+	In 2.1 I included new setting to AudioStreamInput* for better interoperability with other plugins/assets which need original sample rate of the input signal preserved (such as AVProMediaRecorder at that time) when they want to do their own resampling/encoding.
+Default is ON and the input signal is resampled to current output sample rate so it can be e.g. heard normally on speakers. When OFF no resampling is done and input signal can be manually forwarded as needed - for this custom scripting is needed if it is e.g. not being captured from attached AudioSource though.
+
+
+'hotplugging':
+------------------------
+	Hotplugging - dynamic updates of attached input devices - can be enabled by including separate 'AudioStreamDevicesChangedNotify' component anywhere in the scene
+	Devices are checked for changes in Update
+	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableInputs' again.
