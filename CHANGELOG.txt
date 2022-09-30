@@ -628,3 +628,6 @@ Updates/fixes:
 
 	updated source files (c)s of independent components
 
+
+	input - w/ speex using FMOD computed mix matrix now
+
