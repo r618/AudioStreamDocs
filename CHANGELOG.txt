@@ -626,12 +626,10 @@ Updates/fixes:
 	AudioStreamInput_iOS -> audioStreamInput_IOS_ExternalDevices
 
 
-	updated source files (c)s of independent components
-
-
 	input - w/ speex using FMOD computed mix matrix now
-
 
 	Documentation - split into files by topic
 
 	ASIO
+
+	rm all legacy components and scenes which were using FMOD networking

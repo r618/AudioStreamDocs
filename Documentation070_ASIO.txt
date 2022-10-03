@@ -1,4 +1,4 @@
-::written@::v2.6.6::1o.2o22::2019.4.0::
+::v2.6.6::1o.2o22::2019.4.0::
 
 ===============================================================================
 ASIO on Windows:
@@ -7,3 +7,6 @@ ASIO on Windows:
 -
 	https://github.com/dechamps/FlexASIO/releases
 	https://github.com/flipswitchingmonkey/FlexASIO_GUI/releases
+
+
+	Scripts\Resources\DevicesConfiguration

@@ -1,4 +1,4 @@
-::written@::v2.6.6::1o.2o22::2019.4.0::
+::v2.6.6::1o.2o22::2019.4.0::
 
 ===============================================================================
 AudioStream Usage instructions:
@@ -67,18 +67,11 @@ Please see iOS recording specific notes in 'Documentation_mobiles.txt' next to t
 
 
 ===============================================================================
-Network/web proxy support:
+Network/web proxy:
 ===============================================================================
 
-All UnityWebRequests used in the asset should follow system setting for webproxy, so there's no configuration for this.
-FMOD itself has an extra config for this - this now concerns only legacy AudioStream components.
-
-FMOD webproxy settings:
-- are configured by changing parameters on 'AudioStream_FMODWebProxyConfiguration' scriptable object found in 'AudioStream\Scripts\AudioStream\_LegacyUsingFMODNetworking\Resources'
-- shared by all legacy components which stream from network
-- can be overriden at runtime by user code by calling UpdateProxySettings on AudioStream_FMODWebProxyConfiguration instance.
-
-Demo application stores these proxy settings in PlayerPrefs, which are loaded (and overriden SO editor values by calling UpdateProxySettings) and saved automatically by the application - see AudioStreamMainScene.cs and AudioStreamProxySettingsDemo.cs
+All UnityWebRequests used by components should follow operating system setting for proxy.
+(see Unity manual e.g. https://docs.unity3d.com/2019.4/Documentation/ScriptReference/Networking.UnityWebRequest.html)
 
 
 ===============================================================================
