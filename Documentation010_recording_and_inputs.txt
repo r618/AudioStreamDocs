@@ -7,6 +7,13 @@ Audio input:
 Scripts\Resources\DevicesConfiguration
 0 - also for recording
 
+
+Android:
+	Start() on AudioStreamInput* first
+	- system needs to be opened with OPENSL support
+	script execution order or enable others afterwards
+
+
 As of version 1.4 it is possible to stream audio from any available system recording input - just attach AudioSourceInput component to an empty game object and from custom script access audio buffer data of AudioSource which it automatically creates.
 See how to interact with it in the AudioStreamInputDemo scene.
 Latency is rather high for spatializable input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioSourceInput2D component since 1.5.2. - with downside that it is 2D only.
