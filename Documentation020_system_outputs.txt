@@ -6,6 +6,9 @@ Non system default audio output -
 
 =========================================================
 
+Scripts\Resources\DevicesConfiguration
+
+
 As of 1.3 it is possible to specify other than system default audio output for AudioStreamMinimal component directly and for AudioStream ( or any AudioSource ) via
 AudioSourceOutputDevice component.
 

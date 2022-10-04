@@ -4,6 +4,10 @@
 AudioStream and network audio:
 ===========================================
 
+local network
+see also AudioStreamNetCode https://assetstore.unity.com/packages/slug/233329?aid=1100l7sC8
+
+
 LAN distributed streaming/playback:
 ===================================
 
