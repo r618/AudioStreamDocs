@@ -110,7 +110,7 @@ It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
 ===============================================================================
 
 When RAW speaker mode is selected for custom setups you should also provide No. of speakers, and consider providing custom mix matrix, if needed.
-See https://www.fmod.com/docs/api/content/generated/FMOD_SPEAKERMODE.html and https://www.fmod.com/docs/api/content/generated/FMOD_Channel_SetMixMatrix.html for details.
+See https://www.fmod.com/docs/api/content/generated/FMOD_SPEAKERMODE.html and https://www.fmod.com/docs/2.02/api/core-api-channelcontrol.html#channelcontrol_setmixmatrix for details.
 Good place to call setMixMatrix on opened channel is in 'OnPlaybackStarted' event.
 
 ===============================================================================

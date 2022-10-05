@@ -625,10 +625,10 @@ Updates/fixes:
 
 	AudioStreamInput_iOS -> audioStreamInput_IOS_ExternalDevices
 
-
 	input - w/ speex using FMOD computed mix matrix now
 
 	Documentation - split into files by topic
+		updated guides
 
 	ASIO
 
@@ -637,3 +637,5 @@ Updates/fixes:
 	Output + Input + ASOD + notif -> new FMOD_System
 
 	demo - added ASIO toggle on Windows
+
+	all devices config per output in 'AudioStream\Scripts\Resources\DevicesConfiguration'

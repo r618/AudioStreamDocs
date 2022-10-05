@@ -9,7 +9,7 @@ iOS Build notes:
 
 - Since FMOD Version 1.09 added support for Google VR, later replaced by Google Resonance, and the respective plugin is not Bitcode enabled it is necessary to not build Xcode project with Bitcode support - or, if you don't need Resonance plugin, simply delete libresonanceaudio plugin/library.
 - arbitrary loads for app transport security settings should be enabled ( newer versions of Unity handle this automatically via Allow HTTP downloads in Player settings ) in order to stream internet content via HTTP.
-- Resonance plugin have to be manually enabled in fmodpluing.cpp source : https://www.fmod.com/docs/api/content/generated/engine_new_unity/ios_plugins.html
+- Resonance plugin have to be manually enabled in fmodpluing.cpp source - see there for reference
 
 
 ===============================================================================
@@ -93,23 +93,21 @@ iOS:
 
 Android:
 ========
+	Background running and Media Controls on Android are normally implemented via a service, which interacts with OS audio spearately from main app/activity (Unity player), - so the asset doesn't implement this.
 
-	AudioStreamMinimal seems to be more or less working out of the box on several device/OS combinations encountered
-	AudioStream component needs custom build, but note that it has severe caveats mentioned below
+	For at least some functionality of the main app's background audio you can comment out onPause method of Unity player activity in Gradle build:
+	(
+		- Gradle build system and Android Studio are needed
+		- In Unity, Build Settings:
+			- select Build System: Gradle
+			- Export Project checked
+		- Android Studio:
+			- import Project/Gradle build script
+			- find and open UnityPlayerActivity.java in src/main/java folder
+			- comment out onPause method
+	)
+	but note that
+		- OS might (and probably will) kill the app while it's in the background
+		- is not entirely correct way of doing things overall
 
-	Proper support for background audio mode on Android requires implementing a service - see e.g. here as to why: https://forum.unity.com/threads/android-app-is-actually-running-in-background-it-work.443436/#post-3005700
-
-	This is a partial solution which breaks activity cycle and is not correct, is at least tested and works to _some_ extent; the correct one is above:
-
-	- Gradle build system and Android Studio are needed
-
-	- In Unity, Build Settings:
-		- select Build System: Gradle
-		- Export Project checked
-
-	- Android Studio:
-		- import Project/Gradle build script
-		- find and open UnityPlayerActivity.java in src/main/java folder
-		- comment out onPause method
-
-	As in the case of iOS above these are the basics - you won't get music controls available for the user on the lock screen for example.
+		As in the case of iOS above these are the basics - you won't get music controls available for the user on the lock screen for example.
