@@ -613,7 +613,7 @@ Updates/fixes:
 		- added server channels and endianess to the config payload
 
 ===============================================================================
-2.6.6 102022 oblast annexed x4
+3.0 102022 annex + 4
 
 	most demo scenes with AudioSources <= +
 
