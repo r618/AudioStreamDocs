@@ -11,10 +11,12 @@ ASIO on Windows:
 
 	Scripts\Resources\DevicesConfiguration
 
-	ASIO created systems might not be fully stable when using 'Outpu devices' (AudioSourceOutputDevice, MediaSourceOutputDevice) components
+	ASIO created systems might not be fully stable when using 'Output devices' (AudioSourceOutputDevice, MediaSourceOutputDevice) components
 	1 input and 1 output
+	also mixer plugin
 
 
 	channels:
 	https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_max_channel_width
 	MAX_CHANNEL_WIDTH = 32;
+

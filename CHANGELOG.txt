@@ -639,3 +639,5 @@ Updates/fixes:
 	demo - added ASIO toggle on Windows
 
 	all devices config per output in 'AudioStream\Scripts\Resources\DevicesConfiguration'
+
+	2.02.09
