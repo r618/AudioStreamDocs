@@ -1,27 +1,24 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-===========================================
-AudioStream and network audio:
-===========================================
+================================================================================
+Audio over LAN:
+================================================================================
 
-local network
-see also AudioStreamNetCode https://assetstore.unity.com/packages/slug/233329?aid=1100l7sC8
+	There are two components based on NetMQ messaging library that enable streaming and receiving audio via local network (LAN):
+AudioStreamNetMQSource and AudioStreamNetMQClient,
+		which function as connectors of two AudioSources over a network.
 
+	Audio is encoded and decoded using C# port of Opus codec by Logan Stromberg: [https://github.com/lostromb/concentus]
+Server's IP address and port are needed on the client in order to connect, playback starts immediately on source - see AudioStreamNetMQSourceDemo and AudioStreamNetMQClientDemo demo scenes in Network/AudioStreamNetMQDemo/ - also for options available for encoder and decoder.
 
-LAN distributed streaming/playback:
-===================================
+	Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receiving end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
+	Opus/Concentus support _only_ 1 or 2 channels audio for now.
 
-Version 1.7.3 introduced two new components that enable streaming and receiving audio via local network using UNET (Unity networking): AudioStreamUNETSource and AudioStreamUNETClient.
-The audio is encoded and decoded using C# port of Opus codec by Logan Stromberg: https://github.com/lostromb/concentus
-Server's IP address is needed on the client currently in order to connect, playback starts immediately on source - see AudioStreamUNETSourceDemo and AudioStreamUNETClientDemo demo scenes in Network/AudioStreamUNETDemo/
-also for options available for encoder and decoder.
-Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receiving end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
-Opus/Concentus support _only_ 1 or 2 channels audio for now.
-
+	(Note: for more comfortable audio transfer over LAN based on Unity Netcode for GameObjects see also AudioStreamNetCode [https://assetstore.unity.com/packages/slug/233329?aid=1100l7sC8])
 
 
 Notes on frame size and MTU:
-----------------------------------------------
+--------------------------------------------------------------------------------
 	
 	Since reliable sequenced packet distribution is needed, fragmented messages cannot be sent and this poses some restriction on the network, mainly on routers and their/usual MTU (or Maximum transmission unit), which is usually around 1500 bytes on common home networks.
 This implies size for Opus encoder ( 960 for 1 channel, both channel encoded are below the 1500 MTU limit ), buffer should to fit below the size limit.
@@ -33,9 +30,12 @@ By default maximum of 10 clients are allowed to connect to one source - this is 
 
 Be sure to have have 'Run in Background' turned on in Player settings when running source and client at the same time.
 
-* In 1.9 UNET transport was replaced with NetMQ networking library for LAN streaming, the above should roughly apply still.
 
-	The included NetMQ library is targeted for .NET 3.5 since 2017 LTS has 3.5 runtime as default, but can be used with 4.6 runtime.
-Due to that it has a small drawback though in that the server IP on client must be reachable, otherwise it deadlocks when connecting.
-NetMQ is much more robust though, it can e.g. seamlessly reconnect after either server or client drops the connection.
-Be sure to compile with 4.x runtime when on iOS.
+NetMQ messaging library:
+--------------------------------------------------------------------------------
+
+	NetMQ.dll is included as prebuilt assembly, together with its dependency AsyncIO.dll - these are replaceable with any other more recent/other versions if needed.
+
+	It is targeted for .NET 3.5 since 2017 LTS has 3.5 runtime as default, but can be used with 4.6 runtime.
+Due to that it has a drawback though in that the server IP on client must be reachable, otherwise it can deadlock when connecting.
+	(iOS required this to be compiled with 4.x runtime, but this should now be always the case)

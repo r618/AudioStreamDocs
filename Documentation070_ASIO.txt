@@ -1,22 +1,58 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-===============================================================================
+================================================================================
 ASIO on Windows:
-===============================================================================
-:
--
-	https://github.com/dechamps/FlexASIO/releases
-	https://github.com/flipswitchingmonkey/FlexASIO_GUI/releases
+================================================================================
 
+	When enabled via 'Asio' checkbox on 'AudioStream\Scripts\Resources\DevicesConfiguration' Scriptable Object
+	all sounds/resources created by the asset on Windows use a special ASIO enabled system - (this includes "all" input and output functionality)
 
-	Scripts\Resources\DevicesConfiguration
+	Settings for output #0 configured here also apply for ASIO, except its buffers which are configured separately:
+	'ASIO buffer Size'	must match ASIO config (see below)
+	'ASIO buffer Count'	is set to 4 by default (you can try lower values)
 
-	ASIO created systems might not be fully stable when using 'Output devices' (AudioSourceOutputDevice, MediaSourceOutputDevice) components
-	1 input and 1 output
-	also mixer plugin
+	// max. number of speakers is 32
+	// see also 'Devices config' in Documentation.txt
 
+	ASIO was tested w/
+		FlexASIO [https://github.com/dechamps/FlexASIO/releases] driver, and configured via 
+		FlexASIO_GUI [https://github.com/flipswitchingmonkey/FlexASIO_GUI/releases]
 
-	channels:
-	https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_max_channel_width
-	MAX_CHANNEL_WIDTH = 32;
+	ASIO config is rather sensitive, so you should try various combinations suitable for your system.
+	Example configuration of FlexASIO which worked while developing it:
 
+	Backend:						Windows DirectSound
+	Set Buffer Size					On
+	Buffer Size						e.g. 512 ('ASIO buffer Size' on DevicesConfiguration has to match)
+	Input Device					pick one
+	Output Device					pick one
+	Latency
+		Set Input Latency			On
+		Input Latency				0.1
+		Set Output Latency			On
+		Output Latency				0.1
+
+	WASAPI
+		Input
+			Set						On
+			Exclusive				On
+			AutoConvert				Off
+		Output						On
+			Set Exclusive			Off
+			AutoConvert				Off
+
+	Channels
+		- set correct # of input and output channels for devices selected above
+
+	Save to Default FlexASIO.toml
+	- this config will be picked up by FlexASIO when running a scene which uses one of the AudioStream's components with ASIO enabled.
+
+	It *might* work with any other ASIO drivers, but this was not tested yet.
+
+	ASIO created systems might not be fully stable when using 'Output devices' (AudioSourceOutputDevice, MediaSourceOutputDevice) components,
+	though it makes little sense to be using them, since there are only 1 input and 1 output devices configured as per above.
+	(wasn't tested with multiinput/output)
+
+	For example with
+		ASIO buffer 256 b large, 2 buffers is computed total latency on AudioStreamInput2D component in demo scene 10.66 ms
+		with 128, 2 buffers is total latency 5.33 ms

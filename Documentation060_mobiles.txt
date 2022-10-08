@@ -1,20 +1,17 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-
-for better iOS intergration see also AudioStreamIce https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8
-
-===============================================================================
+================================================================================
 iOS Build notes:
-===============================================================================
+================================================================================
 
 - Since FMOD Version 1.09 added support for Google VR, later replaced by Google Resonance, and the respective plugin is not Bitcode enabled it is necessary to not build Xcode project with Bitcode support - or, if you don't need Resonance plugin, simply delete libresonanceaudio plugin/library.
 - arbitrary loads for app transport security settings should be enabled ( newer versions of Unity handle this automatically via Allow HTTP downloads in Player settings ) in order to stream internet content via HTTP.
-- Resonance plugin have to be manually enabled in fmodpluing.cpp source - see there for reference
+- Resonance plugin have to be manually enabled in fmodpluing.cpp source - see there for further reference
 
 
-===============================================================================
+================================================================================
 iOS recording notes:
-===============================================================================
+================================================================================
 
 - check 'Prepare iOS For Recording' in iOS Player Settings / Other settings
 
@@ -28,27 +25,27 @@ Since 1.4.1 AudioStream provides 'fix' for this situation with included iOS plug
 Newer ( 2017.1 and up ) versions of Unity provide setting for this in iOS Player Settings - 'Force iOS Speakers when Recording'; for 2017.1 and up the fix above is skipped
 
 - FMOD currently does not provide any way of recording from other than default recording device (iPhone Microphone) - that means that it can't record from e.g. AirPods / connected Bluetooth headsets etc.
-Since AudioStream 2.0 the asset provides iOS native plugin which should allow to record from any connected audio device - its demo is in 'AudioStreamInput_iOS_ExternalDevicesDemo' which shows all currently connected devices and allows any of them to be selected and to be record from.
 
------------------------- !
-If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
-[ the audio session category used for BT playback is tied to recording - that's why it needs to have also recording enabled ]
-Default to speaker - which was needed in older versions of Unity - is still enabled by default ( should be possible to set it in iOS Player settings too )
+Since AudioStream 2.0 the asset provides iOS native plugin which should allow to record from any connected audio device - its demo is in 'AudioStreamInput_iOS_ExternalDevicesDemo' which shows all currently connected devices and allows any of them to be selected and to be record from:
 
-You don't need to do any of this if you just want to play audio on default/normal device output as per Unity set audio session.
------------------------- !
+	------------------------ !
+	If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
+	[ the audio session category used for BT playback is tied to recording - that's why it needs to have also recording enabled ]
+	Default to speaker - which was needed in older versions of Unity - is still enabled by default ( should be possible to set it in iOS Player settings too )
+
+	You don't need to do any of this if you just want to play audio on default/normal device output as per Unity set audio session.
+	------------------------ !
+
+	The input audio is routed to an AudioSource so can be processed as any usual Unity audio (the cubes in the scene react to an actual Unity sound as usual).
+	Note it supports hotplugging (you should be able to dis/connect device while running and the change should be reflected in selectable devices), but hotplugging is not 100% reliable - initiate session update via 'Update audio session' to update device in that case
+	Note that the scene will work only when run on an actual iOS device
+
+	You can unmute the AudioSource but note that you'll get small echo in that case since the audio is by default played on earspeaker/speaker by iOS and then by Unity with small delay.
 
 
-The input audio is routed to an AudioSource so can be processed as any usual Unity audio (the cubes in the scene react to an actual Unity sound as usual).
-Note it supports hotplugging (you should be able to dis/connect device while running and the change should be reflected in selectable devices), but hotplugging is not 100% reliable - initiate session update via 'Update audio session' to update device in that case
-Note that the scene will work only when run on an actual iOS device
-
-You can unmute the AudioSource but note that you'll get small echo in that case since the audio is by default played on earspeaker/speaker by iOS and then by Unity with small delay.
-
-
-===============================================================================
+================================================================================
 Basic background audio mode on mobiles:
-===============================================================================
+================================================================================
 
 iOS:
 ====
@@ -89,7 +86,9 @@ iOS:
 
 	- the application's audio should now not be interrupted when entering background.
 
-	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed, but I had no luck enabling this with Unity audio so far.
+	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed.
+
+	The above are manual instructions for now which work; - AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8] has better implementation based on Unity App Controller customization, but this is not yet added.
 
 Android:
 ========

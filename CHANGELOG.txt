@@ -612,32 +612,37 @@ Updates/fixes:
 	NetMQSource/Client:
 		- added server channels and endianess to the config payload
 
+Updates/fixes:
+- iOS AVAudioSessionWrapper			: moved alongside other input components for better/proper asmdef compatibility
+
+New Components:
+- AudioSourceCaptureBuffer			: to ease the retrieval of filter audio data between game objects (must be in sync with OnAudioFilterRead)
+									: not used in demo scenes - needs to be attached on a game object with AudioSource
+
+New demo scene:
+- MediaSourcePlaybackDemo			: plays an audio file (from StreamingAssets) directly by FMOD via MediaSourceOutputDevice component
+
+
 ===============================================================================
-3.0 102022 annex + 4
+3.0 102022 annex + 4 bridge - 1
 
-	most demo scenes with AudioSources <= +
+Updates/fixes:
+	- AudioStreamInput_iOS		: component has been renamed to 'AudioStreamInput_IOS_ExternalDevices'
+	- AudioStreamInput2D		: an automatic mix matrix when using Speex resamples is now computed by FMOD
+	- ! removed *all* _Legacy components and demos which were using FMOD networking
+	- audio MIDI files playback	: fixed tags handling
+	- Documentation				: split into several text files by topic
+								: updated to be up to date overall
+	- tested with latest official FMOD 2.02.09
 
-	    public AudioTexture_OutputData audioTexture_OutputData;
-	    public AudioTexture_SpectrumData audioTexture_SpectrumData;
+Demos:
+	- removed not used Rigidbody component from demo objects -> the package doesn't depend on built-in 'Physics' package after importing
+	- most scenes which use AudioSource(s) have added audio visualization textures of wave and spectrum data 
+	- AudioStreamInputDemo scene has AudioStreamInput's Game Object Spatial Blend set to 3D and can be moved in horizontal plane w/ [W/A/S/D] ([R] to reset its position)
 
-	AudioStreamInput 3D + WASD
-
-
-	AudioStreamInput_iOS -> audioStreamInput_IOS_ExternalDevices
-
-	input - w/ speex using FMOD computed mix matrix now
-
-	Documentation - split into files by topic
-		updated guides
-
-	ASIO
-
-	rm all legacy components and scenes which were using FMOD networking
-
-	Output + Input + ASOD + notif -> new FMOD_System
-
-	demo - added ASIO toggle on Windows
-
-	all devices config per output in 'AudioStream\Scripts\Resources\DevicesConfiguration'
-
-	2.02.09
+New:
+	- ASIO support on Windows
+	- use 'AudioStream\Scripts\Resources\DevicesConfiguration' to enable it
+		- this resource is alebo the only place in the asset where all (output/input) devices are configured now
+	- systems' backend has been rewritten with connection to the above - should be more performant and stable, esp. wrt error recovery (which should be rare)
+	- Demo app has a toggle to en/disable ASIO on Windows

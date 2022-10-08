@@ -1,10 +1,10 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-===============================================================================
+================================================================================
 Icecast source:
-===============================================================================
+================================================================================
 
-As of 1.7.1 AudioStream includes support for making any AudioSource to become an Icecast source via IcecastSource component.
+This provides support for any AudioSource to become an Icecast source via IcecastSource component.
 IcecastSource processes OnAudioFilterRead signal, optionally encodes it, and pushes result to opened source connection to Icecast, which can be then connected to by any streaming client.
 IcecastSource configuration should match Icecast source and mountpoint definition - all fields are hopefully comprehensibly annotated in the Editor with tooltips.
 Icecast 2.4.0 + is supported.
@@ -16,7 +16,7 @@ Icecast settings are reasonably well documented directly in the xml configuratio
 In the IcecastSourceDemo scene is an example configuration for a site specific local Icecast server with an AudioStream radio being as source.
 
 
-Currently OGGVORBIS can be chosen as audio codec for the signal (default), or raw PCM without any encoding.
+Currently OGGVORBIS or OGGOPUS can be chosen as audio codec for the signal, or raw PCM without any encoding.
 PCM data is fast, but has rather significant disadvantage in occupying very high network bandwidth - between 100 - 200 kB/s depending on Unity audio settings.
 For OGGVORBIS encoding a custom modified MIT licensed library is used, available here: https://github.com/r618/.NET-Ogg-Vorbis-Encoder .
 Note: this is very likely not an ideal implementation and I'm not entirely satisfied with it - I made it run much faster than original, but it still barely fits into OnAudioFilterRead timeslot.
@@ -34,7 +34,7 @@ For OGGVORBIS server/source:
 	- Currently only supports 40k+ Stereo VBR encoding
 	- bitrate is currently determined automatically by Icecast; I haven't found a reliable way to explicitly set/influence this on Icecast source so far; on my setup it is anywhere between 300-500 kbps.
 	- any common streaming client/webbrowser (including AudioStream) can play this source by connecting to the Icecast mountpoint/instance.
-	- currently, AudioStream client seems to have better performance with this stream than AudioStreamMinimal. It is necessary to set rather high (~ 300k) Stream Block Alignment on AudioStreamMinimal to connect and stream from this source due to probably higher bitrate and its refresh rate not being ideal for it.
+		- currently, AudioStream client seems to have better performance with this stream than AudioStreamMinimal. It is necessary to set rather high (~ 300k) Stream Block Alignment on AudioStreamMinimal to connect and stream from this source due to probably higher bitrate and its refresh rate not being ideal for it.
 
 OGGOPUS source:
 	- supports only 1-, or 2- channel audio, quality of the encoder is set to be highest possible

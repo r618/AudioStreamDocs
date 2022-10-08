@@ -1,12 +1,12 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-===========================================
+================================================================================
 3D spatialisation
-===========================================
+================================================================================
 
-As of 1.5 all streams including input can be fully spatialised by Unity by adjusting Spatial Blend on AudioSource.
+All streams using Unity AudioSource can be fully spatialised by Unity by adjusting Spatial Blend on AudioSource.
 Possibly the most simple usage is demonstrated in the UnitySpatializerDemo scene together with AudioStream, and AudioStreamInput.
-AudioStreamInput has 3D support, but higher latency - see above.
+(AudioStreamInput has 3D support, but higher latency than just 2D component AudioStreamInput2D)
 
 1.6 introduced support for FMOD's provided GoogleVR spatializer plugin, later (from 2.0) replaced by Google Resonance - see ResonanceSourceDemo, ResonanceSoundfieldDemo and ResonanceInput scenes how to use it.
 No special setup is needed - just provide source link/path on the component as usual, and modify exposed [3D] parameters.
@@ -18,10 +18,10 @@ You can set your own listener transform, or it defaults to main camera transform
 
 All Resonance playback is currently via FMOD exclusively bypassing Unity, so in the same category as AudioStreamMinimal i.e. no AudioSource support/Unity audio interop.
 
-
 Google is now providing its own proper 3D audio Unity integration in the form of Resonance Audio package that can be used instead (https://developers.google.com/resonance-audio/ , Unity 2017.1 and up)
 AudioStream can be used just like any other AudioSource, so it's sufficient to just add AudioStream component to Resonance enabled game object and everything will just work.
 Compared to the full Resonance package from Google AudioStream Resonance* components lack some features such as Room properties, room transitions and sound materials.
 
 Other 3D spatializers such as Oculus Integration for Unity ( https://developer.oculus.com/downloads/package/unity-integration/ ) and Steam Audio ( https://valvesoftware.github.io/steam-audio/ )
 work with AudioStream in similar fashion, though latency might not be as low as when using provided AudioStream Resonance* components directly.
+(disclaimer: not measured)

@@ -1,7 +1,12 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
 .: General usage notes and concepts overview :.
-===============================================================================
+================================================================================
+(turn on Word Wrap in your IDE/editor for possibly more readable formatting)
+
+
+This file is more of an overview, with generic components - for each specific topic please see 'DocumentationNNN_[topic].txt' file/s next to this one.
+
 
 Note: >> When working with audio it's often very useful to turn on 'Run In Background' in player settings to keep audio running when switching out of the Editor.
 
@@ -9,44 +14,54 @@ Note: >> When working with audio it's often very useful to turn on 'Run In Backg
 | Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.)
 
 
-This file is more of an overview, with generic components - for each specific topic please see 'DocumentationNNN_[topic].txt' file/s next to this one.
 
+================================================================================
+Scripting API:
+================================================================================
 
-'Documentation000_audio_streaming'
+For scripting please refer to demo scenes in Demo\[component group]\ folder/s:
 
-'Documentation010_recording_and_inputs'
-
-'Documentation020_system_outputs'
-
-'Documentation021_channels_separation'
-
-'Documentation030_3D_spatialisation'
-
-'Documentation040_Icecast'
-
-'Documentation050_LAN_source_client'
-
-'Documentation060_mobiles'
-
-'Documentation070_ASIO'
-
-
-===============================================================================
-GOAudioSaveToFile:
-===============================================================================
-
-- utility script that allows automatic or manual saving of audio being played on a Game Object to a file in WAV PCM16 format
-- file is saved into StreamingAssets, except on iOS, Android and WSA where Application.persistentDataPath is used (also see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)
-
-You can drive it also externally by passing write data yourself - just uncheck useThisGameObjectAudio in that case and call 'AddToSave' on it periodically [at OnAudioFilterRead rate] after it's started via 'StartSaving'.
-
-On iOS you can enable 'Application supports iTunes file sharing' entitlement to (more easily) retrieve/access the application data container and saved files.
+- each component has a specific demo scene set up for its intended usage
+- each demo scene contains a GameObject with script ending with 'Demo' with scene UX and asset's component(s) references
+- these single files in general illustrate how to use each component's API the intended way
+- most important/relevant sections are commented
+- it's worth paying attention esp. to initialization usually found in Start (coroutine), and events where thery are handled
 
 
 
-===============================================================================
+================================================================================
+Devices config:
+================================================================================
+
+Devices configuration across the whole package was brought into a single place in
+
+'AudioStream\Scripts\Resources\DevicesConfiguration'
+
+scriptable object. 
+(Resources folder is used for config to be available also at runtime)
+
+Each entry corresponds to given output id in that order as seen by FMOD during initialization
+- config for each (input/output) device consists of several fields, for more details on each refer to its Editor tooltip
+
+The asset has configured settings for output #0 as an example
+	- since it is populated just with default values, the output's properties will be unchaged (as set by OS by default)
+
+
+For custom/RAW speaker mode see also FMOD documentation:
+	https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_speakermode
+	and https://www.fmod.com/docs/2.02/api/core-api-channelcontrol.html#channelcontrol_setmixmatrix
+	- good place to call setMixMatrix on opened channel is in 'OnPlaybackStarted' event.
+	- max. number of speakers is MAX_CHANNEL_WIDTH = 32; - see also https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_max_channel_width
+	
+Note:
+	ASIO has separate buffer settings (which have to correspond to configured ASIO buffer), but the rest of the settings are used also for it.
+	Refer to 'Documentation070_ASIO.txt' for more.
+
+
+
+================================================================================
 IL2CPP builds and building with turned off IL2CPP runtime checks:
-===============================================================================
+================================================================================
  
 Code running most tight audio loops can be optionally built with null, array bounds and division by zero checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that build is running correctly with them being turned off first)
 
@@ -56,12 +71,64 @@ The file 'Il2CppSetOptionAttribute.cs' must be placed into project's 'AudioStrea
 - if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
 
 
-===============================================================================
+
+================================================================================
 Customizable cache location:
-===============================================================================
+================================================================================
 
 2.6 and up - added new 'RuntimeSettings' scriptable object to 'AudioStream\Scripts\AudioStreamSupport\Resources' with customizable path to cache folder
 - enter full path to a cache directory, or leave empty to use dafault (Application.temporaryCachePath) location
 AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache will use this location to save all its cached data.
 
 . saving original compressed stream instead of fully decompressed raw PCM data is planned
+
+
+
+================================================================================
+GOAudioSaveToFile component:
+================================================================================
+
+- utility script that allows automatic or manual saving of audio being played on a Game Object to a file in WAV PCM16 format
+- file is saved into StreamingAssets, except on iOS, Android and WSA where Application.persistentDataPath is used (also see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)
+
+You can drive it also externally by passing write data yourself - just uncheck useThisGameObjectAudio in that case and call 'AddToSave' on it periodically [at OnAudioFilterRead rate] after it's started via 'StartSaving'.
+
+On iOS you can enable 'Application supports iTunes file sharing' entitlement to (more easily) retrieve/access the application data container and saved files from desktop.
+
+
+
+================================================================================
+For more details about all components please refer to each respective file in _Docs folder:
+
+- 'Documentation000_audio_streaming':
+	- main playback/streaming components: AudioStream, AudioStreamMinimal, AudioStreamDownload, AudioStreamMemory
+
+- 'Documentation010_recording_and_inputs':
+	- streaming from any available system recording input: AudioSourceInput, AudioSourceInput2D, ResonanceInput
+
+- 'Documentation020_system_outputs':
+	- playing Unity audio on different available system outputs: AudioSourceOutputDevice, OutputID on AudioStreamMinimal, and AudioPluginAudioStreamOutputDevice Unity Audio Mixer effect
+
+- 'Documentation021_channels_separation':
+	- playing on different channels of an output: AudioSourceOutputDevice and MediaSourceOutputDevice
+	- separating playback and input channels: (originally demo scripts) AudioStreamInputChannelsSeparation, AudioSourceChannelsSeparation, AudioClipChannelsSeparation
+
+- 'Documentation030_3D_spatialisation':
+	- Unity spatialization (Spatial Blend) w/ AudioStream and AudioStreamInput
+	- Resonance based 3D spatialization components: ResonanceSource, ResonanceSoundfield, ResonanceInput
+
+- 'Documentation040_Icecast':
+	- IcecastSource for AudioSource -> Icecast mountpoint
+
+- 'Documentation050_LAN_source_client':
+	- AudioSources connector over LAN: AudioStreamNetMQSource and AudioStreamNetMQClient
+
+- 'Documentation060_mobiles':
+	- AudioStreamInput_iOS_ExternalDevicesDemo for capturing external devices on iOS, incl. e.g. Bluetooth headphones/microphones
+	- iOS and Android background running notes
+
+- 'Documentation070_ASIO':
+	- 
+
+
+

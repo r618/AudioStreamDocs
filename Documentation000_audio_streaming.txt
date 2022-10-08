@@ -1,11 +1,13 @@
-::v2.6.6::1o.2o22::2019.4.0::
+::v3.0::1o.2o22::2019.4.0::
 
-===============================================================================
+================================================================================
 AudioStream Usage instructions:
-===============================================================================
+================================================================================
 
-AudioStream provides two main ways to stream audio - the first completely bypasses Unity audio (playing at stream specified sample rate), but is capable of playing just the audio signal from the stream 1:1, while the second one
-behaves like a standard AudioSource enabling all usual functionality such as Unity 3D spatialisation, effecting and mixing with other Unity audio sources.
+(Note: for better iOS intergration - with just playback and limited formats - see also AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8])
+
+There are two main components which stream and play audio from generic location (network/filesystem):
+	- the first completely bypasses Unity audio (playing at stream specified sample rate), but is capable of playing just the audio signal from the stream 1:1, while the second one behaves like a standard AudioSource enabling all usual functionality such as Unity 3D spatialisation, effecting and mixing with other Unity audio sources.
 
 First component is
   AudioStreamMinimal,
@@ -17,7 +19,7 @@ The 'infinite' radio streams are limited to 4 GB download ( which amounts to abo
 
 You can pick either MEMORY, or DISK for incoming data caching:
 - MEMORY uses small in-memory buffer for playback, DISK caches all data and stream is seekable up to the download point in that case if the file being played has finite size
-- please also see 'Customizable cache location' below
+- please also see 'Customizable cache location' in Documentation.txt
 
 Each component further provides selective Console logging and UnityEvent messages.
 
@@ -33,7 +35,7 @@ Filesystem relative paths: you can reference file in e.g. StreamingAssets using 
 ::: the first entry from playlist is played. This is usually the correct stream, but if there are more than one streams specified
 you'd have to extract desired stream/link from the downloaded playlist manually.
 
-Note that M3U/8 support limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
+Note that M3U/8 support is limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
 
 :::
 UnityWebRequest by default accepts all certificates/their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
@@ -42,8 +44,7 @@ UnityWebRequest by default accepts all certificates/their public keys. In 2018.1
 
 ::: AudioStreamMinimal uses less resources since it deesn't go through Unity AudioSourcem, so if all Unity audio features are not needed I generally recommend using it for just for 1:1 playback.
 
-::: The amount of independent AudioStreamMinimal components created at the same time is limited though, since each creates its own FMOD system currently.
-There is no limit for the amount of AudioStream components (all share the same system).
+::: The amount of independently running AudioStreamMinimal/AudioStream components created at the same time is limited only by available system resources
 
 
 For networking enabled component see notes below.
@@ -53,7 +54,7 @@ Streaming was tested on iOS, Android, Windows and OS X, and user project on Holo
 :::::: Be sure to have have 'Run in Background' turned on in Player settings and you need to switch to another application while still needing audio being processed by the Editor/application.
 
 ====
-NOTE: All components - except AudioSourceOutputDevice and FMOD direct (Minimal/Media) components - can be used as input for Unity Mixer since they produce usual Unity AudioClip
+NOTE: All components - except AudioSourceOutputDevice and FMOD direct (Minimal/Media) components - can be used as input for Unity Mixer since they use usual Unity AudioClip
 AudioSourceOutputDevice bypasses it completely (since it redirects signal to a device Unity has no knowledge of currently) - but can be attached to main listener in which case the whole application audio (and final mix) ends up on chosen device.
 
 ====
@@ -63,20 +64,20 @@ if not needed, without impacting the rest.
 
 ====
 ! iOS NOTE: If you want to use Bluetooth connected devices for playback you have to enable iOS player for recording and set project #define symbol
-Please see iOS recording specific notes in 'Documentation_mobiles.txt' next to this file
+Please see iOS recording specific notes in 'Documentation060_mobiles.txt' next to this file
 
 
-===============================================================================
+================================================================================
 Network/web proxy:
-===============================================================================
+================================================================================
 
 All UnityWebRequests used by components should follow operating system setting for proxy.
 (see Unity manual e.g. https://docs.unity3d.com/2019.4/Documentation/ScriptReference/Networking.UnityWebRequest.html)
 
 
-===============================================================================
+================================================================================
 Supported formats:
-===============================================================================
+================================================================================
 
 AudioStream can stream all formats FMOD recognises with the exceptions below for audio streamed from network. For complete list see https://en.wikipedia.org/wiki/FMOD#File_formats
 RAW format is supported also by exposing format values in the AudioStream/AudioStreamMinimal Inspector since these must be set explicitly by user.
@@ -103,21 +104,15 @@ It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
 
 
 *MIDI format*:
-- please use AudioStream* legacy components to stream this format from network for now
+- audio MIDI files playback is supported
 
-===============================================================================
-(Advanced/Custom) Speaker mode :
-===============================================================================
 
-When RAW speaker mode is selected for custom setups you should also provide No. of speakers, and consider providing custom mix matrix, if needed.
-See https://www.fmod.com/docs/api/content/generated/FMOD_SPEAKERMODE.html and https://www.fmod.com/docs/2.02/api/core-api-channelcontrol.html#channelcontrol_setmixmatrix for details.
-Good place to call setMixMatrix on opened channel is in 'OnPlaybackStarted' event.
-
-===============================================================================
+================================================================================
 AudioStreamDownload:
-===============================================================================
+================================================================================
 
-Since 1.7.8 it is possible to used this newly added component to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normal while still going via FMOD decoder first.
+This allows to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normal while still going via FMOD decoder first.
+
 AudioStreamDownload is almost identical to AudioStream component, except that it allows setting the size of download buffer and network thread max timeout manually.
 This is important to set to match actual available network/originating stream bandwidth, otherwise it will lead to significant buffer underruns which can cause application stalls (mainly on Windows).
 
@@ -144,6 +139,8 @@ Downloaded data is progressively cached in application's set cache directory
 If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamDownload's url is found in the cache, instead AudioClip is constructed and played immediately.
 AudioClip can be set to automatically start playback after the download stopped - either because end fo file was reached, cached file was found, or user stopped the download manually.
 
+Audio data is cached as decoded RAW PCM bytes - these are rather large, saving of original compressed stream instead of fully decompressed raw PCM data is planned.
+
 AudioStreamDownload can run without an AudioSource. Only cached data is saved in that case as described above and no AudioClip is created.
 
 To better sync with realtime streams it's possible to enable 'realTimeDecoding' - in that case the decoder will run at stream rate and thus e.g. allow to save netradios
@@ -154,17 +151,17 @@ An audio clip will be automatically created and played on it.
 See AudioStreamDownloadDemo scene for example usage.
 
 
-===============================================================================
+================================================================================
 AudioStreamMemory:
-===============================================================================
+================================================================================
 
-Added in 1.8.2 this component allows to decode an audio file from a memory buffer: set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
+Allows to decode an audio file from a memory buffer: set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
 Once done it creates a new AudioClip on its AudioSource and optionally plays it (since it's common AudioClip it just calls Play() on AudioSource).
 
 All features of AudioStream such as choosing audio type, tags, logging and Unity events are supported.
 Similarly as above for AudioStreamDownload it has adjustable decoder thread buffer size which should not exceed cca half of the overall decoded bytes and which directly affects decoding speed.
 
 Decoded data are progressively cached in application's temp directory (data is not reused, each Play() call overwrites any existing/previous run).
-- please also see 'Customizable cache location' below
+- please also see 'Customizable cache location'
 
 See AudioStreamMemoryDemo scene for example usage.
