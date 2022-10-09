@@ -638,11 +638,11 @@ Updates/fixes:
 Demos:
 	- removed not used Rigidbody component from demo objects -> the package doesn't depend on built-in 'Physics' package after importing
 	- most scenes which use AudioSource(s) have added audio visualization textures of wave and spectrum data 
-	- AudioStreamInputDemo scene has AudioStreamInput's Game Object Spatial Blend set to 3D and can be moved in horizontal plane w/ [W/A/S/D] ([R] to reset its position)
+	- AudioStreamInputDemo scene has AudioStreamInput's Game Object Spatial Blend set to 3D and can be moved in horizontal plane w/ [W/A/S/D], [R] to reset its position
 
 New:
 	- ASIO support on Windows
 	- use 'AudioStream\Scripts\Resources\DevicesConfiguration' to enable it
-		- this resource is alebo the only place in the asset where all (output/input) devices are configured now
+		- this resource is also the only place in the asset where all (output/input) devices are configured now
 	- systems' backend has been rewritten with connection to the above - should be more performant and stable, esp. wrt error recovery (which should be rare)
 	- Demo app has a toggle to en/disable ASIO on Windows
