@@ -44,51 +44,39 @@ Since AudioStream 2.0 the asset provides iOS native plugin which should allow to
 
 
 ================================================================================
-Basic background audio mode on mobiles:
+Background audio mode on mobiles:
 ================================================================================
 
 iOS:
 ====
+	Enable background audio on iOS application level:
 
-	On all relatively recent versions of iOS this should be sufficient to properly enable basic background audio mode:
+		- In Unity, iOS Player Settings:
 
-	- In Unity, iOS Player Settings:
+			- set 'Behavior in Background': Custom
+			- enable 'Audio, AirPlay, PiP'
 
-		- set 'Behavior in Background': Custom
-		- enable 'Audio, AirPlay, PiP'
+			this generates appropriate entries in Xcode project:
+				- Application does not run in background    NO
+				- Required background modes
+						- Item 0                                App plays audio or streams audio/video using AirPlay
 
-		this generates appropriate entries in Xcode project:
-			- Application does not run in background    NO
-			- Required background modes
-					- Item 0                                App plays audio or streams audio/video using AirPlay
+			(you can inspect them manually if needed)
 
-		(you can inspect them manually if needed)
+	That's it, everything else should be done automatically.
 
-	- In Xcode modify UnityApplicationController.mm:
-
-                #import <AVFoundation/AVAudioSession.h>
-
-				In
-
-                - (void)applicationWillResignActive:(UIApplication*)application
-                OR
-                - (void)applicationDidEnterBackground:(UIApplication*)application
-                OR
-                - (void)startUnity:(UIApplication*)application
-
-				add:
-
-				[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-				[[AVAudioSession sharedInstance] setActive: YES error: nil];
-
-
-				- you can use other appropriate category if needed, such as  AVAudioSessionCategoryRecord, or AVAudioSessionCategoryPlayAndRecord
-
-	- the application's audio should now not be interrupted when entering background.
-
+	Details:
+		- for audio content played locally in the application nothing else would be needed,
+		- for content played from the network the Unity player needs to be update while in the backgound
+		- this is done via a custom App Controller in 'AudioStream\Plugins\iOS\AudioStreamAppController'
+		- it implements the player background refreshing, and also sets audio session needed for the asset
+		- if you don't need special audio features, e.g. use only network playback, you can examine and remove/comment out the session update there,
+		if Unity default (Ambient) audio session works ok. (note: this most likely shouldn't be necessary, but it might vary for specific iOS version/s)
+		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitely set descedants hierarchy manually) 
+	
 	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed.
-
-	The above are manual instructions for now which work; - AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8] has better implementation based on Unity App Controller customization, but this is not yet added.
+	These probably will come in later update.
+		This full implmentation is already present in e.g. AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8]
 
 Android:
 ========
