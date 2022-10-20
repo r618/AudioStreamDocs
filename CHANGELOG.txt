@@ -646,3 +646,18 @@ New:
 		- this resource is also the only place in the asset where all (output/input) devices are configured now
 	- systems' backend has been rewritten with connection to the above - should be more performant and stable, esp. wrt error recovery (which should be rare)
 	- Demo app has a toggle to en/disable ASIO on Windows
+
+
+===============================================================================
+3.0.1 Watermelon
+
+Updates/fixes:
+	- renamed events on AudioSourceOutputDevice for future usage: OnRedirectStarted -> OnRoutingStarted, OnRedirectStopped -> OnRoutingStopped
+	- few fixes w/ logging + strings/data marshaling for DSP plugins
+	- main download handler: ContentLength 0 spam
+	- improved AudioTextures source for analysis
+
+New:
+	- added iOS background mode custom AppController (see Documentation060_mobiles.txt for more)
+
+non critical update overall - you don't have to update if iOS background audio is not needed
