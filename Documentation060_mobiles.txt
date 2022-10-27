@@ -54,7 +54,7 @@ iOS:
 		- In Unity, iOS Player Settings:
 
 			- set 'Behavior in Background': Custom
-			- enable 'Audio, AirPlay, PiP'
+				- enable 'Audio, AirPlay, PiP'
 
 			this generates appropriate entries in Xcode project:
 				- Application does not run in background    NO
@@ -66,13 +66,11 @@ iOS:
 	That's it, everything else should be done automatically.
 
 	Details:
-		- for audio content played locally in the application nothing else would be needed,
-		- for content played from the network the Unity player needs to be update while in the backgound
-		- this is done via a custom App Controller in 'AudioStream\Plugins\iOS\AudioStreamAppController'
-		- it implements the player background refreshing, and also sets audio session needed for the asset
-		- if you don't need special audio features, e.g. use only network playback, you can examine and remove/comment out the session update there,
-		if Unity default (Ambient) audio session works ok. (note: this most likely shouldn't be necessary, but it might vary for specific iOS version/s)
-		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitely set descedants hierarchy manually) 
+		- setup is done via a custom App Controller in 'AudioStream\Plugins\iOS\AudioStreamAppController'
+		- this sets audio session for the app for iOS to play the audio while the app is in the background
+			(Unity default audio session implementation isn't often consistent across Unity/iOS versions for this)
+		- implements Unity player loop background refreshing (needed for all Updates in the app, so also for e.g. networking)
+		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitely set descedants hierarchy manually)
 	
 	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed.
 	These probably will come in later update.
