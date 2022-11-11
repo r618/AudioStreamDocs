@@ -661,3 +661,10 @@ New:
 	- added iOS background mode custom AppController (see Documentation060_mobiles.txt for more)
 
 non critical update overall - you don't have to update if iOS background audio is not needed
+
+===============================================================================
+3.0.2 Watermelon
+
+Updates/fixes:
+	- AudioStreamDevicesChangedNotify	: added (*missing*) processing of devices changed notification for *inputs*
+	- fixed UnityEvent invocation to be on main thread only
