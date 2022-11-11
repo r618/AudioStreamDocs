@@ -662,10 +662,11 @@ New:
 
 non critical update overall - you don't have to update if iOS background audio is not needed
 
+
 ===============================================================================
 3.0.2 Watermelon
 
 Updates/fixes:
 	- AudioStreamDevicesChangedNotify	: simplified and added (*missing*) processing of devices changed notification for *inputs*
-	- error repoting via UnityEvent		: fixed invocation to be on main thread only
+	- error reporting via UnityEvent	: fixed invocation to be on main thread only
 	- demo application					: added zoom/font size for onscreen text
