@@ -49,7 +49,7 @@ ASIO on Windows:
 	Save to Default FlexASIO.toml
 	- this config will be picked up by FlexASIO when running a scene which uses one of the AudioStream's components with ASIO enabled.
 
-	It *might* work with other ASIO driver(s), but this was not tested yet.
+	It *might* work with other ASIO driver(s), but it was tested primarily with the above.
 
 	ASIO created systems might not be fully stable when using 'Output devices' (AudioSourceOutputDevice, MediaSourceOutputDevice) components,
 	though it makes little sense to be using them, since there are only 1 input and 1 output devices configured as per above
@@ -62,4 +62,4 @@ ASIO on Windows:
 	--------------------------------------------------------------------------------------------------
 	Audio Mixer effect:
 	- it currently had little sense for the mixer plugin to be using ASIO driver since there are no devices/outputs to redirect the audio to
-	given just 1 input and output (see above), so it is unchaged and currentyl always using normal FMOD autodetected output type.
+	given just 1 input and output (see above), so it is unchaged and currently always using normal FMOD autodetected output type.

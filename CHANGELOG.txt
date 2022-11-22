@@ -670,3 +670,29 @@ Updates/fixes:
 	- AudioStreamDevicesChangedNotify	: simplified and added (*missing*) processing of devices changed notification for *inputs*
 	- error reporting via UnityEvent	: fixed invocation to be on main thread only
 	- demo application					: added zoom/font size for onscreen text
+
+
+===============================================================================
+3.1 112o22 85k
+
+Updates/fixes:
+	- AudioStream						: added option to download to/playback from local disk cache directly to this main component
+										: if Url begins with 'http', 'Download To Cache' and 'Play From Cache' options become available
+										: see 'Documentation000_audio_streaming' for more
+										: fixed/updated forward/rewind seeking in infinte streams when downloading (when 'Download To Cache' is On)
+
+	- AudioStreamDownload				: removed component and its demos
+										: previous functionality of realtime downloads moved to AudioStream and can be seen in AudioStreamDemo - see above
+										: for non realtime downloads there's new component AudioStreamRuntimeImport - see below
+
+	- cache location/s					: added 'Download Cache Path' - stores original downloaded media which can be played offline, defaults to Application.persistentDataPath
+										: added 'Temporary Directory Path' - stores temporary audio PCM data, defaults to Application.temporaryCachePath
+										: configurable at 'Support\Resources\AudioStreamRuntimeSettings'
+New:
+	- AudioStreamRuntimeImport			: imports (streamed) content into an AudioClip - previously done via AudioStreamDownload with 'Real Time Decoding' option Off
+										: importing should also be faster than previously
+										: also see 'Documentation000_audio_streaming' for more
+	- AudioStreamRuntimeImportDemo
+	- AudioStreamRuntimeImportStressTest: use the above, similar to now removed AudioStreamDownloadDemo and AudioStreamDownloadStressTest
+
+Updated out of date documentation where needed.

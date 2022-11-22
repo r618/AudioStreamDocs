@@ -17,9 +17,7 @@ Both consume (compressed) audio data retrieved either from network via UnityWebR
 
 The 'infinite' radio streams are limited to 4 GB download ( which amounts to about 20 hours of playback of 2 channel, 44100 Hz audio )
 
-You can pick either MEMORY, or DISK for incoming data caching:
-- MEMORY uses small in-memory buffer for playback, DISK caches all data and stream is seekable up to the download point in that case if the file being played has finite size
-- please also see 'Customizable cache location' in Documentation.txt
+Both can optionally save their streamed content into local cache for offline playback later - see 'Downloading the original stream', and 'AudioStreamRuntimeImport' below.
 
 Each component further provides selective Console logging and UnityEvent messages.
 
@@ -33,7 +31,7 @@ It is important to select correct audio type, though - if wrong format is select
 Filesystem relative paths: you can reference file in e.g. StreamingAssets using relative paths such as ./Assets/StreamingAssets/FILE.mp3 as url
 
 ::: the first entry from playlist is played. This is usually the correct stream, but if there are more than one streams specified
-you'd have to extract desired stream/link from the downloaded playlist manually.
+you'd have to extract desired stream/link from the downloaded playlist manually first.
 
 Note that M3U/8 support is limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
 
@@ -88,12 +86,10 @@ For Resonance specific formats see below.
 	make this as small as possible until the stream still starts, e.g. for common netradios 2-4k times 1 - 2 should work
 	Some (mp3) files with embedded artwork need this to be read completely so for them 64k times 10 or higher might be needed.
 
-!! Currently ( 2.0 ) there is a format limitation though:
+!! Currently ( 2.0 < ) there is a format limitation though:
 Ogg/Vorbis format can't be played until the whole file/media is accessible. This means that the whole file has to be downloaded first in order to successfully play it.
 Please set 'blockalign' to physical (compressed) file size and 'blockalignDownloadMultiplier' to 1 for Ogg/Vorbis files.
 I tried to resolve this with FMOD, but the situation is unresolved for the time being.
-
-Using legacy AudioStreamLegacy/Minimal component/s is also an option for 'some' Ogg/Vorbis streams (probably will work with netradios, but not for files)
 
 Note that the above applies only for audio streamed from network - local files are not affected.
 
@@ -108,60 +104,77 @@ It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
 
 
 ================================================================================
-AudioStreamDownload:
+Downloading the original stream:
 ================================================================================
 
-This allows to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normal while still going via FMOD decoder first.
+If AudioStream/AudioStreamMinimal url points to network (i.e. the url begins with 'http'), 
+'Play From Cache' and 'Download To Cache' options become available:
 
-AudioStreamDownload is almost identical to AudioStream component, except that it allows setting the size of download buffer and network thread max timeout manually.
-This is important to set to match actual available network/originating stream bandwidth, otherwise it will lead to significant buffer underruns which can cause application stalls (mainly on Windows).
+- 'Download To Cache' will be simultaneously saving incoming audio into local cache in its original format
+Note: currently any previous save for fiven Url will be automatically overwritten
 
-As an example: common internet radio stream should be set to cca 2048 b buffer size and 11 ms timeout, on LAN/filesystem it's possible to go (much) faster - it's possible to set very high buffer capacity ( e.g. several MB ) and 1ms timeout -
-- with 20000000 buffer size and 1ms timeout a 19MB mp3 file is processed in about 10 seconds when reading from local filesystem -
-(processed means the whole file is decoded by FMOD, an AudioClip is constructed and played; note that higher buffer size values probably won't affect it much since it still needs to go via decoder).
+- when started with 'Play From Cache' On, the component will try to locate existing cached media for given Url and will play that instead of live stream if it exists
 
+The identifier/filename in the cache is derived from entered Url; (the original Url will be stripped of non filesystem valid characters, and will be truncated to 1oo characters)
+
+Cache is located at Application.persistentDataPath by default and can be customized - please see 'Local disk cache' in Documentation.txt
+
+When the playabck is stopped/finished and 'Download To Cache' is On, the full resulting path of saved file is passed via 'OnPlaybackStopped' event - see AudioStreamDemo.cs
+
+
+Note: when using 'Download To Cache' for playlists Url, the cache/filename is derived from original playlist Url (although its content is played)
+- this is because to determine its content it has to be downloaded first - and thus to connect to the network - the first item in it is not known yet when started
+So e.g. a cache item might be saved with extension '.pls' although it's mpeg audio - you might want to change the extension afterwards for usage outside the app if you know the format;
+[the component itself ignores the extension if the streeam type is set expliciately]
+
+
+
+================================================================================
+AudioStreamRuntimeImport:
+================================================================================
+
+This allows to stream a file/audio faster than realtime and use its data to create Unity AudioClip which can then be used/played as normally while still going via FMOD decoder first at runtime.
 This way it's also possible to create an AudioClip from audio files which formats Unity normally doesn't but FMOD does support.
 
+'Why is import of audio files in the Editor fast and why this can't be that fast' ? was often a question -
+the answer is Unity uses speacialized tool for importing audio assets in the Editor which is not available at runtime.
+
+AudioStreamRuntimeImport is almost identical to AudioStream component, except that it doesn't run at realtime speed but faster and caches all decoded audio as raw samples.
+- running this with normal web audio streams / radios is not recommended (the bandwidth is not enough and decoding won't work)
+- it's suitable for higher bandwidth LANs, and for local filesystem media
 - Tags are supported the same way as in normal streaming components
 
 - Download progress is being reported via decoded_bytes and file_size public members, note that:
 1] file_size is the size of the encoded file (either on the filesystem or as reported from the network), streamed content reports -1
 2] decoded_bytes are actual bytes decoded by FMOD
-That means that decoded_bytes will be usually much higher than the size of the file (so you get no proper upper bound for the download progress currently unfortunately)
+That means that decoded_bytes will be usually much higher than the size of the file (so you get no proper upper bound for the download progress currently)
 
 Downloaded data is progressively cached in application's set cache directory
-- it's filename is derived from hash of AudioStreamDownload's url, with appended '.raw' extension as returned by AudioStreamSupport.CachedFilePath() [in other words a given url, or filepath is saved to the same, its own cache]
+- it's filename is derived from hash of AudioStreamRuntimeImport's url, with appended '.raw' extension
 - original samplerate and channels are saved at the beginning of the file, so raw format can be played back later
 - (samplerate and channels occupy 8 bytes together so this has no impact on playback)
 - these are followed by raw interleaved stream of PCMFLOAT serialized as bytes (sizeof(float) bytes per sample)
-- please also see 'Customizable cache location' below
+- sudio data is cached as decoded RAW PCM bytes - these can get quite large.
+- please also see 'Local disk cache' in Documentation.txt
 
-If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamDownload's url is found in the cache, instead AudioClip is constructed and played immediately.
-AudioClip can be set to automatically start playback after the download stopped - either because end fo file was reached, cached file was found, or user stopped the download manually.
+If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamRuntimeImport's url is found in the cache, instead AudioClip is constructed and played immediately.
 
-Audio data is cached as decoded RAW PCM bytes - these are rather large, saving of original compressed stream instead of fully decompressed raw PCM data is planned.
+When it's finished a new AudioClip containing the decoded audio is returned via 'OnAudioClipCreated' Unity event.
 
-AudioStreamDownload can run without an AudioSource. Only cached data is saved in that case as described above and no AudioClip is created.
+See AudioStreamRuntimeImportDemo scene for example usage.
 
-To better sync with realtime streams it's possible to enable 'realTimeDecoding' - in that case the decoder will run at stream rate and thus e.g. allow to save netradios
-If realtime streaming/downloading is enabled it's possible to play back the stream while it's being downloaded - enable 'playWhileDownloading' and specify your AudioSource which will be used for playback.
-An audio clip will be automatically created and played on it.
-
-
-See AudioStreamDownloadDemo scene for example usage.
 
 
 ================================================================================
 AudioStreamMemory:
 ================================================================================
 
-Allows to decode an audio file from a memory buffer: set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
-Once done it creates a new AudioClip on its AudioSource and optionally plays it (since it's common AudioClip it just calls Play() on AudioSource).
+Works similarly as 'AudioStreamRuntimeImport' above, but decodes audio from in-memory location
+- set buffer IntPtr and its length via memoryLocation and memoryLength fields, and call Play() on the component.
 
 All features of AudioStream such as choosing audio type, tags, logging and Unity events are supported.
-Similarly as above for AudioStreamDownload it has adjustable decoder thread buffer size which should not exceed cca half of the overall decoded bytes and which directly affects decoding speed.
 
-Decoded data are progressively cached in application's temp directory (data is not reused, each Play() call overwrites any existing/previous run).
-- please also see 'Customizable cache location'
+Cache is not reused - each Play() call overwrites any existing/previous run.
+- please also see AudioStreamRuntimeImport above
 
 See AudioStreamMemoryDemo scene for example usage.

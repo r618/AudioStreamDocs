@@ -7,19 +7,19 @@
 
 This file is more of an overview, with generic components - for each specific topic please see 'DocumentationNNN_[topic].txt' file/s next to this one.
 
-
 Note: >> When working with audio it's often very useful to turn on 'Run In Background' in player settings to keep audio running when switching out of the Editor.
 
 (For 2022 and up -> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
 | Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.)
 
-
-.: Source license :.
-
-you can use any parts of source in your project freely - just don't publish it for public access
-If you use significant portions of the source infrastructure please mention where they came from - i.e. from this asset, in the form:
+-------------------------
+.: Source code license :.
+-------------------------
+you can use any parts of this asset and its source code in any and all your project freely - just don't publish it for public access
+If you use significant portions of the source infrastructure, please mention where they came from - i.e. from this asset, in the form:
 
 "Portions of this (c) 2016-2022 Martin Cvengros, AudioStream Unity package, https://r618.github.io/"
+--------------------------------------------------------------------------------
 
 
 ================================================================================
@@ -28,12 +28,11 @@ Scripting API:
 
 For scripting please refer to demo scenes in Demo\[component group]\ folder/s:
 
-- each component has a specific demo scene set up for its intended usage
+- each component has a specific demo scene set up with its intended usage
 - each demo scene contains a GameObject with script ending with 'Demo' with scene UX and asset's component(s) references
 - these single files in general illustrate how to use each component's API the intended way
 - most important/relevant sections are commented
 - it's worth paying attention esp. to initialization usually found in Start (coroutine), and events where thery are handled
-
 
 
 ================================================================================
@@ -65,7 +64,6 @@ Note:
 	Refer to 'Documentation070_ASIO.txt' for more.
 
 
-
 ================================================================================
 IL2CPP builds and building with turned off IL2CPP runtime checks:
 ================================================================================
@@ -78,17 +76,17 @@ The file 'Il2CppSetOptionAttribute.cs' must be placed into project's 'AudioStrea
 - if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
 
 
-
 ================================================================================
-Customizable cache location:
+Local disk cache:
 ================================================================================
 
-2.6 and up - added new 'RuntimeSettings' scriptable object to 'AudioStream\Scripts\AudioStreamSupport\Resources' with customizable path to cache folder
-- enter full path to a cache directory, or leave empty to use dafault (Application.temporaryCachePath) location
-AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache will use this location to save all its cached data.
+Customizable via 'AudioStreamRuntimeSettings' scriptable object in 'AudioStream\Support\Resources'
+- 'Download Cache Path' location for storing original compressed stream, which can be saved / played later offline via 'AudioStream' based on its Url.
+Defaults to Application.persistentDataPath if not set/empty.
+- 'Temporary Directory Path' stores intermediary uncompressed audio mainly for AudioClip creation by AudioStreamRuntimeImport and AudioStreamMemory components.
+Defaults to Application.temporaryCachePath if not set/empty.
 
-. saving original compressed stream instead of fully decompressed raw PCM data is planned
-
+Both can be either full or relative directory paths.
 
 
 ================================================================================
@@ -108,7 +106,7 @@ On iOS you can enable 'Application supports iTunes file sharing' entitlement to 
 For more details about all components please refer to each respective file in _Docs folder:
 
 - 'Documentation000_audio_streaming':
-	- main playback/streaming components: AudioStream, AudioStreamMinimal, AudioStreamDownload, AudioStreamMemory
+	- main playback/streaming components: AudioStream, AudioStreamMinimal, AudioStreamRuntimeImport, AudioStreamMemory
 
 - 'Documentation010_recording_and_inputs':
 	- streaming from any available system recording input: AudioSourceInput, AudioSourceInput2D, ResonanceInput
@@ -135,7 +133,4 @@ For more details about all components please refer to each respective file in _D
 	- iOS and Android background running notes
 
 - 'Documentation070_ASIO':
-	- 
-
-
-
+	- config & running ASIO enabled system
