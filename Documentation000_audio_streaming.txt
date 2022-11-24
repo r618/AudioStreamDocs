@@ -177,4 +177,6 @@ All features of AudioStream such as choosing audio type, tags, logging and Unity
 Cache is not reused - each Play() call overwrites any existing/previous run.
 - please also see AudioStreamRuntimeImport above
 
+If you're using this to decode/stream in-memory raw PCM data, be sure to set correct sound type on the component (i.e. RAW format, and correct samplerate + channels) - otherwise it won't work properly.
+
 See AudioStreamMemoryDemo scene for example usage.
