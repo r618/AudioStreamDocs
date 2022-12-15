@@ -696,3 +696,9 @@ New:
 	- AudioStreamRuntimeImportStressTest: use the above, similar to now removed AudioStreamDownloadDemo and AudioStreamDownloadStressTest
 
 Updated out of date documentation where needed.
+
+===============================================================================
+3.x.y MMYYYY 90k
+
+Updates/fixes:
+	- demo scenes						: Demo\_Support\Editor\AudioStreamDemoMenuDef scriptable object, copyDemoScenesToBuildSettings
