@@ -18,7 +18,7 @@ Note: >> When working with audio it's often very useful to turn on 'Run In Backg
 you can use any parts of this asset and its source code in any and all your project freely - just don't publish it for public access
 If you use significant portions of the source infrastructure, please mention where they came from - i.e. from this asset, in the form:
 
-"Portions of this (c) 2016-2022 Martin Cvengros, AudioStream Unity package, https://r618.github.io/"
+"Portions of this (c) 2016-2023 Martin Cvengros, AudioStream Unity package, https://r618.github.io/"
 --------------------------------------------------------------------------------
 
 

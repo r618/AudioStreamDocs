@@ -698,7 +698,12 @@ New:
 Updated out of date documentation where needed.
 
 ===============================================================================
-3.x.y MMYYYY 90k
+3.1.1 012o23 >100k
 
 Updates/fixes:
-	- demo scenes						: Demo\_Support\Editor\AudioStreamDemoMenuDef scriptable object, copyDemoScenesToBuildSettings
+	- copyDemoScenesToBuildSettings
+		- demo scenes						: Demo\_Support\Editor\AudioStreamDemoMenuDef scriptable object, copyDemoScenesToBuildSettings
+	- FMOD 2.02.11
+	- (maintenance + improvements refactors for other assets, DEMO UX)
+	- AS_DL_Cache -> AudioStream_DownloadCache
+
