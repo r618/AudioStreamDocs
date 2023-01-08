@@ -698,7 +698,7 @@ New:
 Updated out of date documentation where needed.
 
 ===============================================================================
-3.1.1 012o23 >100k
+3.2 012o23 >100k
 
 Updates/fixes:
 	- copyDemoScenesToBuildSettings
@@ -707,3 +707,6 @@ Updates/fixes:
 	- (maintenance + improvements refactors for other assets, DEMO UX)
 	- AS_DL_Cache -> AudioStream_DownloadCache
 
+	- AudioStreamInputbase					: Startup of the sound/recording has been improved; takes into account actual playback buffer latency, should be glichtless and smoother overall now
+											: [auto startup vs. deferred..]
+	- ResonanceInput						: allows multiple input game obejcts in the scene (this was previously limited to single instance)
