@@ -20,7 +20,7 @@ See 'Devices config' in Documentation.txt
 For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
 
 It is possible to capture and listen to the system output - for Windows, see this forum post: https://forum.unity.com/threads/audiostream-an-audio-streaming-solution-for-all-and-everywhere.412029/page-3#post-3120495
-Please note: don't use *loopback* interfaces for signals which should be audible/heard - this will immediately cause feedback loop -
+Note: don't use *loopback* interfaces for signals which should be audible/heard - this will immediately cause feedback loop -
 
 Windows specific: any device/s which can be opened for recording, not designated as a micophone/audio input by system, is prefixed with "[loopback]" in their name by FMOD
 - for example on Windows a VirtualCable port/channel can be opened and streamed into Unity this way
