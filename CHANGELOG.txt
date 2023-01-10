@@ -701,12 +701,16 @@ Updated out of date documentation where needed.
 3.2 012o23 >100k
 
 Updates/fixes:
-	- copyDemoScenesToBuildSettings
-		- demo scenes						: Demo\_Support\Editor\AudioStreamDemoMenuDef scriptable object, copyDemoScenesToBuildSettings
-	- FMOD 2.02.11
-	- (maintenance + improvements refactors for other assets, DEMO UX)
-	- AS_DL_Cache -> AudioStream_DownloadCache
+	- copyDemoScenesToBuildSettings			: asset setting to en/disable populating build settings with its demo scenes when doing a build
+											: toggle is present on 'Demo\_Support\Editor\AudioStreamDemoMenuDef' scriptable object
 
-	- AudioStreamInputbase					: Startup of the sound/recording has been improved; takes into account actual playback buffer latency, should be glichtless and smoother overall now
-											: [auto startup vs. deferred..]
-	- ResonanceInput						: allows multiple input game obejcts in the scene (this was previously limited to single instance)
+	- directory for downloading original streamed audio in Application.persistentDataPath is renamed from 'AS_DL_Cache' to -> 'AudioStream_DownloadCache'
+
+	- AudioStreamInputBase					: significantly enhanced startup to prevent glitches especially with 'recordOnStart' ON
+											: further enhanced playback of recorded sound for ResonanceInput
+
+	- Resonance components					: each instance/GameObject component now uses its own Resonance DSPs which allows multiple playback/input Resonance enabled objects to coexist in a scene
+											: (this was previously limited to a single instance) - some caveats apply, please see docs in Documentation030_3D_spatialisation
+
+	- more maintenance + improvements refactors due to other assets, DEMO UX improvements
+	- used with FMOD 2.02.11
