@@ -706,16 +706,13 @@ Updates/fixes:
 
 	- directory for downloading original streamed audio in Application.persistentDataPath is renamed from 'AS_DL_Cache' to -> 'AudioStream_DownloadCache'
 
-	- AudioStreamInputBase					: significantly enhanced startup to prevent glitches especially with 'recordOnStart' ON
-											: there were outstanding quality and performance issues - these were fixed
-
-	- Resonance components					: each instance/GameObject component now uses its own Resonance DSPs which allows multiple playback/input Resonance enabled objects to coexist in a scene
-											: (this was previously limited to a single instance) - some caveats apply currently, please see docs in Documentation030_3D_spatialisation
-											: fixed recordGain vs. Resonance Gain where necessary
+	- Inputs components (AudioStreamInputBase, Resonance)
+											: significantly enhanced startup to prevent glitches especially with 'recordOnStart' ON
+											: there were outstanding quality issues - these were fixed
+											: fixed recordGain vs. Resonance Gain where necessary (all inputs have direct recordGain)
 
 	- more maintenance + improvements refactors for usage internally in other assets
 	- used with FMOD 2.02.11
 
 	- 3D Input related demo scenes			: set Linear Volume Roloff for 3D AudioSources for their better playback audition
 	- more user friendly DEMO UX + default values 
-					

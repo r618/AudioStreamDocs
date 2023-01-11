@@ -28,5 +28,6 @@ work with AudioStream in similar fashion, though latency might not be as low as 
 
 You can have multiple separate Resonance* components/GameObjects in the scene and combine them (e.g. multiple ResonanceInputs + ResonanceSources in one scene), though currently:
 
-- you should be able to have multiple ResonanceInputs in the scene without issues
-- but ResonanceSource/Soundfield currently need more optimization and more than 1 (of any) in the scene will probably result in noticeable/audible glitches
+- you should be able to have multiple ResonanceInputs in the scene
+- ResonanceSource/Soundfield currently need more optimization 
+- more than 1 (of any) in the scene will probably result in noticeable/audible glitches
