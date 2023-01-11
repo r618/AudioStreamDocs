@@ -5,8 +5,12 @@ Audio input:
 ================================================================================
 
 To stream audio from any available system recording input - just attach AudioSourceInput component to an empty game object and from custom script access audio buffer data of AudioSource which it automatically creates.
-See how to interact with it in the AudioStreamInputDemo scene.
-Latency is rather high for spatializable input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioSourceInput2D component - with downside that it is 2D only.
+See how to interact with it in the AudioStreamInputDemo/AudioStreamInput2DDemo scene.
+Latency is rather high for Unity spatialized input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioSourceInput2D component - with downside that it is 2D only.
+ResonanceInput is fully spatialized and has near realtime latency (it doesn't use Unity spatialization at all)
+
+All input components can stream/record from almost any connected input with a recording interface and they support more broader class of hardware compared to Unity Microphone class.
+
 
 Currently this is best option I could come up with, for even lower latency native plugin is needed ( such as https://github.com/keijiro/Lasp ), with but the same 2D limitation since it uses just OnAudioFilterRead
 [ OnAudioFilterRead has limitation of not being able to support 3D sound ]. For LASP interop with Unity AudioSource see this gist: https://gist.github.com/r618/d74f07b6049fce20f1dc0dfa546bda89 ( LASP have to be patched though currently since it can't be run not from main thread, and frequency is not exposed - those are just minor changes).

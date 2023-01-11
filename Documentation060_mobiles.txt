@@ -71,6 +71,16 @@ iOS:
 			(Unity default audio session implementation isn't often consistent across Unity/iOS versions for this)
 		- implements Unity player loop background refreshing (needed for all Updates in the app, so also for e.g. networking)
 		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitely set descedants hierarchy manually)
+
+		:: == the background timer is set to 1 second by default and might not be suitable for all devices. If you encounter network (and thus playback) related issues please change it manually for now at:
+			Plugins\iOS\AudioStreamAppController.mm
+			ín 'applicationWillResignActive'
+			at 'iceTimer' creation
+			change it to smaller value such as 0.3
+			for scheduledTimerWithTimeInterval
+
+Also, slight suggestion. In your AudioStreamAppController you set refresh rate for Unity in the background to 1sec. This results in constant readUnderflows even on 4g. I would suggest you add possibility to express this value in Inspector, or at least provide a bit clarification. For me values 0.3 do the trick.
+
 	
 	For full implementation including ability to start/stop playback by the user when in the background from Control centre/lock screen working remote events are needed.
 	These probably will come in later update.
