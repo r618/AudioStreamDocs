@@ -22,9 +22,9 @@ Notes on frame size and MTU:
 	
 	Since reliable sequenced packet distribution is needed, fragmented messages cannot be sent and this poses some restriction on the network, mainly on routers and their/usual MTU (or Maximum transmission unit), which is usually around 1500 bytes on common home networks.
 This implies size for Opus encoder ( 960 for 1 channel, both channel encoded are below the 1500 MTU limit ), buffer should to fit below the size limit.
-Otherwise there are no restirctions on the conenction or Unity project audio latency eihter for source or client.
+Otherwise there are no restrictions on the connection or Unity project audio latency either for source or client.
 
-Also, in order to successfully receive all packets the network endcoder has to perform reliably and quickly enough which was not the case on e.g. lower end phones / device such as iPhone 7 had no problems /
+Also, in order to successfully receive all packets the network encoder has to perform reliably and quickly enough which was not the case on e.g. lower-end phones/devices such as iPhone 7 had no problems /
 
 By default maximum of 10 clients are allowed to connect to one source - this is configurable and with higher number should run without problems on sufficient hardware.
 

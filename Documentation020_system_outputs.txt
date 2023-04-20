@@ -21,15 +21,15 @@ If you don't need output redirection it is better to not attach AudioSourceOutpu
 Note: AudioSourceOutputDevice allows chaining of audio filters, the last one in the chain should have 'Mute After Routing' enabled.
 As a side-effect it is therefore possible to output single AudioSource to default, and selected non default output simultaneously at the same time.
 
-Note: this component introduces some latency since it needs to effectively sample OnAudioFilterRead buffer before passing it on to FMOD. You can set desired/reasonable latency on the component, until it sill works on your system.
-(FMOD by default uses 400 ms, which is too high, but beware that although the sound migh be playing with very low latency set, it might be skipped entirely without warning if it's too low for your system, so reasonable values are aroudn 25-50 ms)
+Note: this component introduces some latency since it needs to effectively sample OnAudioFilterRead buffer before passing it on to FMOD. You can set desired/reasonable latency on the component, until it still works on your system.
+(FMOD by default uses 400 ms, which is too high, but beware that although the sound migh be playing with very low latency set it might be skipped entirely without warning if it's too low for your system, so reasonable values are around 25-50 ms)
 For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
 
-Note also that Default Unity output speaker mode bandwidth should not exceed system default output bandwidth (in other words no. of speakers/channels of Unity default speaker mode <= no. of system default output speakers), otherwise there's not enough audio data from Unity audio to be passed on continuosly.
+Note also that Default Unity output speaker mode bandwidth should not exceed system default output bandwidth (in other words no. of speakers/channels of Unity default speaker mode <= no. of system default output speakers), otherwise there's not enough audio data from Unity audio to be passed on continuously.
 This is reported as Warning at runtime when encountered, and lower/actual HW channel count is used.
 
 Important: it's recommended to restart the Editor when Default Speaker Mode is changed in AudioSettings.
-- in general it's safer to restart the Editor upon any change of system default device, or AudioSettings for it to match the environment correctly - although recent (>2020) Unity verions seem to handle these changes better.
+- in general it's safer to restart the Editor upon any change of system default device, or AudioSettings for it to match the environment correctly - although recent (>2020) Unity versions seem to handle these changes better.
 
 (Note: at least version 1.08.11 of FMOD Unity Integration was needed as it contains a bug fix for AudioSourceOutputDevice to work.)
 
@@ -63,7 +63,7 @@ MediaSourceOutputDevice works similarly as AudioSourceOutputDevice, but doesn't 
 Currently it supports opening and playing audio files in supported formats from disk, or net location (using FMOD network support only)
 E.g. demo scene - MediaSourceOutputDeviceDemo - plays them from application's StreamingAssets
 
-This was added to adress the problem of targeting multiple output channels on the same output device with multiple audio files simultaneously - read more in Channels separation
+This was added to address the problem of targeting multiple output channels on the same output device with multiple audio files simultaneously - read more in Channels separation
 
 See MediaSourceOutputDeviceDemo scene for example how to play a file on selected output using this component
 

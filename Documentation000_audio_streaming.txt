@@ -4,7 +4,7 @@
 AudioStream Usage instructions:
 ================================================================================
 
-(Note: for better iOS intergration - with just playback and limited formats - see also AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8])
+(Note: for better iOS integration - with just playback and limited formats - see also AudioStreamIce [https://assetstore.unity.com/packages/slug/223601?aid=1100l7sC8])
 
 There are two main components which stream and play audio from generic location (network/filesystem):
 	- the first completely bypasses Unity audio (playing at stream specified sample rate), but is capable of playing just the audio signal from the stream 1:1, while the second one behaves like a standard AudioSource enabling all usual functionality such as Unity 3D spatialisation, effecting and mixing with other Unity audio sources.
@@ -36,11 +36,11 @@ you'd have to extract desired stream/link from the downloaded playlist manually 
 Note that M3U/8 support is limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
 
 :::
-UnityWebRequest by default accepts all certificates/their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
+UnityWebRequest by default accepts all certificates and their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
 
 ::: Any necessary resampling is done by Unity automatically as needed.
 
-::: AudioStreamMinimal uses less resources since it deesn't go through Unity AudioSourcem, so if all Unity audio features are not needed I generally recommend using it for just for 1:1 playback.
+::: AudioStreamMinimal uses less resources since it doesn't go through Unity AudioSourcem, so if all Unity audio features are not needed, I generally recommend using it for just for 1:1 playback.
 
 ::: The amount of independently running AudioStreamMinimal/AudioStream components created at the same time is limited only by available system resources
 
@@ -77,13 +77,13 @@ All UnityWebRequests used by components should follow operating system setting f
 Supported formats:
 ================================================================================
 
-AudioStream can stream all formats FMOD recognises with the exceptions below for audio streamed from network. For complete list see https://en.wikipedia.org/wiki/FMOD#File_formats
+AudioStream can stream all formats FMOD recognises with the exceptions below for audio streamed over the network. For complete list see https://en.wikipedia.org/wiki/FMOD#File_formats
 RAW format is supported also by exposing format values in the AudioStream/AudioStreamMinimal Inspector since these must be set explicitly by user.
 For Resonance specific formats see below.
 
 'Blockalign' and 'Blockalign download multiplier':
-	- 'Blockalign' defines chunk size for the decoder to read (smaller values help initial latency), ['Blockalign' times 'Blockalign download multiplier'] defines how much data has to be downloaded prior playback attempt -
-	make this as small as possible until the stream still starts, e.g. for common netradios 2-4k times 1 - 2 should work
+	- 'Blockalign' defines chunk size for the decoder to read (smaller values help initial latency), ['Blockalign' times 'Blockalign download multiplier'] defines how much data has to be downloaded prior to playback attempt -
+	make this as small as possible until the stream still starts, e.g. for common net radios 2-4k times 1 - 2 should work
 	Some (mp3) files with embedded artwork need this to be read completely so for them 64k times 10 or higher might be needed.
 
 !! Currently ( 2.0 < ) there is a format limitation though:
@@ -111,7 +111,7 @@ If AudioStream/AudioStreamMinimal url points to network (i.e. the url begins wit
 'Play From Cache' and 'Download To Cache' options become available:
 
 - 'Download To Cache' will be simultaneously saving incoming audio into local cache in its original format
-Note: currently any previous save for fiven Url will be automatically overwritten
+Note: currently any previous save for given Url will be automatically overwritten
 
 - when started with 'Play From Cache' On, the component will try to locate existing cached media for given Url and will play that instead of live stream if it exists
 
@@ -125,7 +125,7 @@ When the playabck is stopped/finished and 'Download To Cache' is On, the full re
 Note: when using 'Download To Cache' for playlists Url, the cache/filename is derived from original playlist Url (although its content is played)
 - this is because to determine its content it has to be downloaded first - and thus to connect to the network - the first item in it is not known yet when started
 So e.g. a cache item might be saved with extension '.pls' although it's mpeg audio - you might want to change the extension afterwards for usage outside the app if you know the format;
-[the component itself ignores the extension if the streeam type is set expliciately]
+[the component itself ignores the extension if the stream type is set expliciately]
 
 
 

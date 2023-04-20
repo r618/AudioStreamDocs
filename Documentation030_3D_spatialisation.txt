@@ -20,7 +20,7 @@ All Resonance playback is currently via FMOD exclusively bypassing Unity, so in 
 
 Google is now providing its own proper 3D audio Unity integration in the form of Resonance Audio package that can be used instead (https://developers.google.com/resonance-audio/ , Unity 2017.1 and up)
 AudioStream can be used just like any other AudioSource, so it's sufficient to just add AudioStream component to Resonance enabled game object and everything will just work.
-Compared to the full Resonance package from Google AudioStream Resonance* components lack some features such as Room properties, room transitions and sound materials.
+Compared to the full Resonance package from Google, AudioStream Resonance* components lack some features such as Room properties, room transitions and sound materials.
 
 Other 3D spatializers such as Oculus Integration for Unity ( https://developer.oculus.com/downloads/package/unity-integration/ ) and Steam Audio ( https://valvesoftware.github.io/steam-audio/ )
 work with AudioStream in similar fashion, though latency might not be as low as when using provided AudioStream Resonance* components directly.

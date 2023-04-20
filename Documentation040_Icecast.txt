@@ -6,7 +6,7 @@ Icecast source:
 
 This provides support for any AudioSource to become an Icecast source via IcecastSource component.
 IcecastSource processes OnAudioFilterRead signal, optionally encodes it, and pushes result to opened source connection to Icecast, which can be then connected to by any streaming client.
-IcecastSource configuration should match Icecast source and mountpoint definition - all fields are hopefully comprehensibly annotated in the Editor with tooltips.
+IcecastSource configuration should match Icecast source and mountpoint definition - all fields are hopefully comprehensively annotated in the Editor with tooltips.
 Icecast 2.4.0 + is supported.
 
 Icecast settings are reasonably well documented directly in the xml configuration file; for common testing it is enough to set 
@@ -24,7 +24,7 @@ If you know of any other C# only Vorbis encoding library, please let me know!
 
 For PCM server/source:
 	- make sure the AudioStream client uses exactly the same audio properties, i.e. samplerate, channels, and byte format as originating machine with IcecastSource
-	( this means not the format of the audio it is playing, but properties of its audio output as reported e.g. by AudioSettings.outputSampleRate, byte format should be PCM16 under most cirumstances),
+	( this means not the format of the audio it is playing, but properties of its audio output as reported e.g. by AudioSettings.outputSampleRate, byte format should be PCM16 under most circumstances),
 	otherwise the signals won't match and connection will be dropped.
 
 	Note: Icecast admin might not show complete mountpoint information and sound preview/player in the browser might be missing, but if you connect to the mountpoint with properly configured client (i.e. with same byte format, channels and samplerate as mentioned above) the stream will still be played by the client (not all common audio players support this)
@@ -40,5 +40,5 @@ OGGOPUS source:
 	- supports only 1-, or 2- channel audio, quality of the encoder is set to be highest possible
 	- Sampling rate of input signal (of Unity audio) must be one of 8000, 12000, 16000, 24000, or 48000
 	- entered bitrate is considered when creating the encoder
-	- FMOD/AudioStream does not support OPUS familty of codecs, so you won't be able to connect to Icecast server with AudioStream when using this encoder, but common audio players/browsers can play it.
+	- FMOD/AudioStream does not support OPUS family of codecs, so you won't be able to connect to Icecast server with AudioStream when using this encoder, but common audio players/browsers can play it.
 	- OPUS has much favorable bitrate and performance

@@ -5,8 +5,8 @@ iOS Build notes:
 ================================================================================
 
 - Since FMOD Version 1.09 added support for Google VR, later replaced by Google Resonance, and the respective plugin is not Bitcode enabled it is necessary to not build Xcode project with Bitcode support - or, if you don't need Resonance plugin, simply delete libresonanceaudio plugin/library.
-- arbitrary loads for app transport security settings should be enabled ( newer versions of Unity handle this automatically via Allow HTTP downloads in Player settings ) in order to stream internet content via HTTP.
-- Resonance plugin have to be manually enabled in fmodpluing.cpp source - see there for further reference
+- arbitrary loads for App Transport Security Settings should be enabled ( newer versions of Unity handle this automatically via Allow HTTP downloads in Player settings ) in order to stream internet content via HTTP.
+- Resonance plugin have to be manually enabled in fmodplugin.cpp source - see there for further reference
 
 
 ================================================================================
@@ -31,7 +31,7 @@ Since AudioStream 2.0 the asset provides iOS native plugin which should allow to
 	------------------------ !
 	If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
 	[ the audio session category used for BT playback is tied to recording - that's why it needs to have also recording enabled ]
-	Default to speaker - which was needed in older versions of Unity - is still enabled by default ( should be possible to set it in iOS Player settings too )
+	Default to speaker - which was needed in older versions of Unity - is still enabled by default ( should also be possible to set it in iOS Player settings )
 
 	You don't need to do any of this if you just want to play audio on default/normal device output as per Unity set audio session.
 	------------------------ !
@@ -70,7 +70,7 @@ iOS:
 		- this sets audio session for the app for iOS to play the audio while the app is in the background
 			(Unity default audio session implementation isn't often consistent across Unity/iOS versions for this)
 		- implements Unity player loop background refreshing (needed for all Updates in the app, so also for e.g. networking)
-		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitely set descedants hierarchy manually)
+		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitly set descedants hierarchy manually)
 
 		:: == the background timer is set to 1 second by default and might not be suitable for all devices. If you encounter network (and thus playback) related issues please change it manually for now at:
 			Plugins\iOS\AudioStreamAppController.mm

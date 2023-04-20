@@ -35,8 +35,8 @@ There are three simple components originally developed as demo for basic channel
 		AudioSource can be 'anything' playable, each single channel is streamed
 
 	AudioClipChannelsSeparation:
-		this splits AudioClip's original channels based on its Import Serttings similarly as above. Note for this to work the AudioClip has to have its 'Load Type' set to 'Decompress On Load' in order to use GetData on it -
-		- the AudioClip needs some processing to be done for splitting before playback begins which is currently done automatically on Start
+		this splits AudioClip's original channels based on its Import Settings similarly as above. Note for this to work the AudioClip has to have its 'Load Type' set to 'Decompress On Load' in order to use GetData on it -
+		- the AudioClip needs some processing to be done for splitting before playback begins. This is currently done automatically on Start
 		only AudioClips imported via Unity are supported.
 
 	Public user friendly API, e.g. for starting/stopping is missing yet; currently playback is started via normal Unity Start events.
