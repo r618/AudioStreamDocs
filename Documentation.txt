@@ -12,8 +12,8 @@ Note: >> When working with audio it's often very useful to turn on 'Run In Backg
 (For 2022 and up -> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
 | Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set 'Allow downloads over HTTP' to 'Always allowed'. Alternatively, use your own secure (HTTPS) links only.)
 
-- as mentioned in !!README1ST!!, the asset by default populates Editor BuildSettings scene list with all demo scenes and copies all demo assets into 'StreamingAssets\AudioStream'.
-You can turn this off by unchecking 'copyDemoScenesToBuildSettings' on 'AudioStream\Demo\_Support\Editor\AudioStreamDemoMenuDef' configuration object.
+- as mentioned in !!README1ST!!, the asset by default populates Editor BuildSettings scene list with all demo scenes and copies all demo assets into 'StreamingAssets\AudioStream';
+you can turn this off by unchecking 'copyDemoScenesToBuildSettings' on 'AudioStream\Demo\_Support\Editor\AudioStreamDemoMenuDef' configuration object.
 
 
 -------------------------
@@ -22,7 +22,7 @@ You can turn this off by unchecking 'copyDemoScenesToBuildSettings' on 'AudioStr
 you can use any parts of this asset and its source code in any and all your project freely - just don't publish it for public access
 If you use significant portions of the source infrastructure, please mention where they came from - i.e. from this asset, in the form:
 
-"Portions of this (c) 2016-2023 Martin Cvengros, AudioStream Unity package, https://r618.github.io/"
+"Uses AudioStream Unity package (c) 2016-2023 Martin Cvengros, https://r618.github.io/"
 --------------------------------------------------------------------------------
 
 

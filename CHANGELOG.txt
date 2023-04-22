@@ -716,3 +716,21 @@ Updates/fixes:
 
 	- 3D Input related demo scenes			: set Linear Volume Roloff for 3D AudioSources for their better playback audition
 	- more user friendly DEMO UX + default values 
+
+===============================================================================
+3.2.1 042023 180k
+
+Updates/fixes:
+	- AudioStreamBase						: 'continuosStreaming' is automatically ignored also for AudioStreamRuntimeImport
+	- AudioStreamRuntimeImport				: for some (MPEG) files for which FMOD incorrectly reports their length and their redudant parts are decoded as stream of 0s
+											these frames are checked before writing to an AudioClip and aren't included in imported clip
+Demo scenes/assets:
+	- copyDemoScenesToBuildSettings			: added more explanation to first README/Docs so it's more noticeable
+											: the checkkbox now also controls copying all demo assets into 'StreamingAssets\AudioStream'
+											toggle is present on 'Demo\_Support\Editor\AudioStreamDemoMenuDef' scriptable object
+	- demo scenes with OnPlaybackStopped	: was not correctly set in handful of scenes due to its recent change - this was updated
+
+- code was updated in few places for better usability/readability
+
+!! IMPORTANT !!
+	- since some functionality changed places (assembly), please DELETE previous version of the asset (whole 'AudioStream' folder) before importing new update
