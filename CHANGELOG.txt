@@ -722,15 +722,25 @@ Updates/fixes:
 
 Updates/fixes:
 	- AudioStreamBase						: 'continuosStreaming' is automatically ignored also for AudioStreamRuntimeImport
+
 	- AudioStreamRuntimeImport				: for some (MPEG) files for which FMOD incorrectly reports their length and their redudant parts are decoded as stream of 0s
 											these frames are checked before writing to an AudioClip and aren't included in imported clip
-Demo scenes/assets:
-	- copyDemoScenesToBuildSettings			: added more explanation to first README/Docs so it's more noticeable
-											: the checkkbox now also controls copying all demo assets into 'StreamingAssets\AudioStream'
-											toggle is present on 'Demo\_Support\Editor\AudioStreamDemoMenuDef' scriptable object
-	- demo scenes with OnPlaybackStopped	: was not correctly set in handful of scenes due to its recent change - this was updated
+											: added new 'OnSamplesCreated' Unity event which is invoked immediately before clip creation with samples to be set for AudioClip
+											this also helps in project with Unity audio disabled where AudioClip is not created, but samples can be still retrieved
 
-- code was updated in few places for better usability/readability
+	- projects with Unity audio disabled	: fixed several instances relying on Unity audio properties which can be derived from FMOD directly, so projects with Unity audio disabled can run properly now
+											see this also mentioned in Documentation
+
+Demo scenes/assets:
+	- copyDemoScenesToBuildSettings				: added more explanation to first README/Docs so it's more noticeable
+												: the checkkbox now also controls copying all demo assets into 'StreamingAssets\AudioStream'
+												toggle is present on 'Demo\_Support\Editor\AudioStreamDemoMenuDef' scriptable object
+
+	- demo scenes with OnPlaybackStopped		: was not correctly set in handful of scenes due to its recent change - this was updated
+	- RuntimeImportDemo / AudioStreamMemoryDemo	: new 'OnSamplesCreated' example usage
+	- AudioClipChannelsSeparationDemo			: added displaying of progress of processing the AudioClip
 
 !! IMPORTANT !!
-	- since some functionality changed places (assembly), please DELETE previous version of the asset (whole 'AudioStream' folder) before importing new update
+- since some functionality changed places (assembly), please DELETE previous version of the asset (whole 'AudioStream' folder) before importing new update
+- since asset contains native mixer plugin this might not be possible with projects opened in the Editor -
+with project closed, delete 'AudioStream' folder normally via OS filesystem, reopen it in Editor and import it afterwards

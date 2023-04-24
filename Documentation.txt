@@ -107,6 +107,18 @@ On iOS you can enable 'Application supports iTunes file sharing' entitlement to 
 
 
 ================================================================================
+Projects with disabled Unity audio:
+================================================================================
+
+Asset will properly run with Unity audio disabled in Project Settings, except all AudioSource related functionality won't work;
+All FMOD stuff will function properly though, so components which don't rely on Unity AudioSource will function as usual -
+such as all AudioStreamMinimal, MediaSource, and Resonance components
+
+- Unity will print an error message when accessing its certain Audio features (such as AudioSettings.outputSampleRate)
+and these are left as message to user that they probably shouldn't be used
+
+
+================================================================================
 For more details about all components please refer to each respective file in _Docs folder:
 
 - 'Documentation000_audio_streaming':

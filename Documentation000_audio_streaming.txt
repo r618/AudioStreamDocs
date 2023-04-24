@@ -137,7 +137,7 @@ This allows to stream a file/audio faster than realtime and use its data to crea
 This way it's also possible to create an AudioClip from audio files which formats Unity normally doesn't but FMOD does support.
 
 'Why is import of audio files in the Editor fast and why this can't be that fast' ? was often a question -
-the answer is Unity uses speacialized tool for importing audio assets in the Editor which is not available at runtime.
+the answer is Unity uses specialized tool for importing audio assets in the Editor which is not available at runtime.
 
 AudioStreamRuntimeImport is almost identical to AudioStream component, except that it doesn't run at realtime speed but faster and caches all decoded audio as raw samples.
 - running this with normal web audio streams / radios is not recommended (the bandwidth is not enough and decoding won't work)
@@ -160,6 +160,10 @@ Downloaded data is progressively cached in application's set cache directory
 If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamRuntimeImport's url is found in the cache, instead AudioClip is constructed and played immediately.
 
 When it's finished a new AudioClip containing the decoded audio is returned via 'OnAudioClipCreated' Unity event.
+
+Actual samples used for the AudioClip can be also retrieved in 'OnSamplesCreated' event which is invoked immediately before 'OnAudioClipCreated'
+- this event is also useful for projects which run with Unity audio disabled - final samples are returned and AudioClip creation will be ignored
+- samples are in PCM FLOAT format, with samplerate and channels passed as parameters in the event
 
 See AudioStreamRuntimeImportDemo scene for example usage.
 
