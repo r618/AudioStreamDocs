@@ -744,3 +744,10 @@ Demo scenes/assets:
 - since some functionality changed places (assembly), please DELETE previous version of the asset (whole 'AudioStream' folder) before importing new update
 - since asset contains native mixer plugin this might not be possible with projects opened in the Editor -
 with project closed, delete 'AudioStream' folder normally via OS filesystem, reopen it in Editor and import it afterwards
+
+
+===============================================================================
+3.2.2 190k
+AudioStream
+more resilient on low network bandwidth and partial network outages
+- waits in Read until the Read request is satisfied (blocking Read)
