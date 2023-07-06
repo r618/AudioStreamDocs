@@ -747,7 +747,11 @@ with project closed, delete 'AudioStream' folder normally via OS filesystem, reo
 
 
 ===============================================================================
-3.2.2 190k
-AudioStream
-more resilient on low network bandwidth and partial network outages
-- waits in Read until the Read request is satisfied (blocking Read)
+3.2.2 072023 200k+
+
+Updates/fixes:
+	- AudioStreamBase		: more resilient on low network bandwidth and partial network outages
+							- will now wait in Read until the read request is satisfied in blocking fashion
+	- AudioStream			: Unity AudioClip channels should be now fixed/follow the network stream 
+
+	- run with FMOD 2.02.15
