@@ -6,32 +6,20 @@ Audio input:
 
 To stream audio from any available system recording input - just attach an AudioStreamInput component to an empty game object and from custom script access audio buffer data of AudioSource which it automatically creates.
 See how to interact with it in the AudioStreamInputDemo/AudioStreamInput2DDemo scene.
-Latency is rather high for Unity spatialized input streams since it has to go via full Unity audio buffer processing. For (significantly) lower latency you can use AudioStreamInput2D component - with downside that it is 2D only.
+Latency is rather high for Unity input streams since it has to go via full Unity audio buffer processing (including optional spatialization). For significantly lower latency you can use AudioStreamInput2D component - with downside that it is 2D only.
 ResonanceInput is fully spatialized and has near realtime latency (it doesn't use Unity spatialization at all)
 
 All input components can stream/record from almost any connected input with a recording interface and they support broader class of hardware compared to Unity Microphone class.
+See also 'Audio input interfaces' below.
 
-
-Currently this is best option I could come up with, for even lower latency native plugin is needed ( such as https://github.com/keijiro/Lasp ), with but the same 2D limitation since it uses just OnAudioFilterRead
+As for latency currently this is best option I could come up with, for even lower latency native plugin is needed ( such as https://github.com/keijiro/Lasp ), with but the same 2D limitation since it uses just OnAudioFilterRead
 [ OnAudioFilterRead has limitation of not being able to support 3D sound ]. For LASP interop with Unity AudioSource see this gist: https://gist.github.com/r618/d74f07b6049fce20f1dc0dfa546bda89 ( LASP have to be patched though currently since it can't be run not from main thread, and frequency is not exposed - those are just minor changes).
 AudioStreamInput2D latency is very usable though and e.g. on iOS and recent phones it has almost immediate response to audio input in the scene.
 
 AudioStreamInput* components will use DSP buffer setting for output #0, if specified, since FMOD's system for output #0 is also used as recording system.
 See 'Devices config' in Documentation.txt
 
-
-
 For latency you can also refer to answers to this post: http://www.fmod.org/questions/question/delaylatency-when-playing-sounds/ 
-
-It is possible to capture and listen to the system output - for Windows, see this forum post: https://forum.unity.com/threads/audiostream-an-audio-streaming-solution-for-all-and-everywhere.412029/page-3#post-3120495
-Note: don't use *loopback* interfaces for signals which should be audible/heard - this will immediately cause feedback loop -
-
-Windows specific: any device/s which can be opened for recording, not designated as a micophone/audio input by system, is prefixed with "[loopback]" in their name by FMOD
-- for example on Windows a VirtualCable port/channel can be opened and streamed into Unity this way
- -on macOS it's possible to configure new recording device using e.g. Soundflower [https://github.com/mattingalls/Soundflower], newer stuff from RogueAmoeba, or BlackHole virtual audio driver/s [https://github.com/ExistentialAudio/BlackHole]
-Note that device customisation like this is only possible on desktops.
-
-Multichannel input/microphones are supported as opposed to Unity's Microphone class.
 
 Since the way the resampling of input signal by just setting the pitch on the AudioSource was handled led to big drifting over longer time if input and output sample rates were significantly different,
 in 1.7.7 I added option to not use Unity's built AudioSource resampling and channel conversion this way.
@@ -41,11 +29,31 @@ See demo scene for reference, and call SetCustomMixMatrix on component before st
 Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
 will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
 
-FMOD has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is 32 for no. of channels of its system's software format/device channels.
-
 ! For iOS/mobiles please see specific mobile recording notes.
+Documentation060_mobiles
 
 With ResonanceInput it's possible to capture any input device and play it back in 3D - see in 3D spatialisation.
+
+
+
+Audio input interfaces:
+--------------------------------------------------------------------------------
+
+On desktops/standalones it is possible to capture and listen to the system output
+- for Windows, see this forum post: https://forum.unity.com/threads/audiostream-an-audio-streaming-solution-for-all-and-everywhere.412029/page-3#post-3120495
+- on macOS it's possible to configure new recording device using e.g. Soundflower [https://github.com/mattingalls/Soundflower], newer stuff from RogueAmoeba, or BlackHole virtual audio driver/s [https://github.com/ExistentialAudio/BlackHole]
+
+*Windows specific*:
+	-any device/s which can be opened for recording, not designated as a micophone/audio input by system, is postfixed with "[loopback]" in their name by FMOD
+	- for example on Windows a VirtualCable port/channel can be opened and streamed into Unity this way -
+
+Note: that device access like this is only possible on desktops, mobile OSs typically don't expose this functionality of main audio output.
+Note: don't use *loopback* interfaces for signals which should be audible/heard - this will immediately cause feedback loop -
+
+HW compatibility:
+	- FMOD currently has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is =32= for number of channels of a given interface - so it unfortunatelly doesn't support more than 32 inputs/outputs of a soundcard/interface
+	- multichannel input/microphones are supported as opposed to Unity's Microphone class.*
+	Unity support for multichannel inputs might got better with latest (2022) updates though
 
 
 Android recording permissions:

@@ -753,5 +753,7 @@ Updates/fixes:
 	- AudioStreamBase		: more resilient on low network bandwidth and partial network outages
 							- will now wait in Read until the read request is satisfied in blocking fashion
 	- AudioStream			: Unity AudioClip channels should be now fixed/follow the network stream 
+	- AudioStreamInput*		: clarified usage of 'loopback' interfaces applicable only on Windows
+							: fixed ASIO related bug in the Editor
 
-	- run with FMOD 2.02.15
+	- tested with FMOD 2.02.15
