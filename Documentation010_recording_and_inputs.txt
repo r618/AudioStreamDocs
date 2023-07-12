@@ -44,16 +44,16 @@ On desktops/standalones it is possible to capture and listen to the system outpu
 - on macOS it's possible to configure new recording device using e.g. Soundflower [https://github.com/mattingalls/Soundflower], newer stuff from RogueAmoeba, or BlackHole virtual audio driver/s [https://github.com/ExistentialAudio/BlackHole]
 
 *Windows specific*:
-	-any device/s which can be opened for recording, not designated as a micophone/audio input by system, is postfixed with "[loopback]" in their name by FMOD
+	- any device/s which can be opened for recording, not designated as a micophone/audio input by system, is postfixed with "[loopback]" in their name by FMOD
 	- for example on Windows a VirtualCable port/channel can be opened and streamed into Unity this way -
 
 Note: that device access like this is only possible on desktops, mobile OSs typically don't expose this functionality of main audio output.
 Note: don't use *loopback* interfaces for signals which should be audible/heard - this will immediately cause feedback loop -
 
 HW compatibility:
-	- FMOD currently has limit of 'MAX_CHANNEL_WIDTH' which at the times of writing is =32= for number of channels of a given interface - so it unfortunatelly doesn't support more than 32 inputs/outputs of a soundcard/interface
-	- multichannel input/microphones are supported as opposed to Unity's Microphone class.*
-	Unity support for multichannel inputs might got better with latest (2022) updates though
+	- FMOD currently has limit 'MAX_CHANNEL_WIDTH' which at the times of writing is =32= for number of channels of a given interface - so it doesn't support more than 32 inputs/outputs on a soundcard/interface
+	- multichannel input/microphones are supported as opposed to Unity's Microphone class
+	Unity support for multichannel inputs might got better with latest (2023) updates though
 
 
 Android recording permissions:
