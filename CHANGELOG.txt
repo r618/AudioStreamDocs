@@ -751,8 +751,9 @@ with project closed, delete 'AudioStream' folder normally via OS filesystem, reo
 
 Updates/fixes:
 	- AudioStreamBase		: more resilient on low network bandwidth and partial network outages
-							- will now wait in Read until the read request is satisfied in blocking fashion
-	- AudioStream			: Unity AudioClip channels should be now fixed/follow the network stream 
+							- will now wait in Read until the read request from network is satisfied in blocking fashion
+							: all locally played media files are accessed/read via UnityWebRequest now, instead of direct .NET file I/O
+	- AudioStream			: Unity AudioClip channels should be now fixed/following the network stream format
 	- AudioStreamInput*		: clarified usage of 'loopback' interfaces applicable only on Windows
 							: fixed ASIO related bug in the Editor
 
