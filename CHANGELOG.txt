@@ -763,3 +763,11 @@ Updates/fixes:
 							: fixed ASIO related bug in the Editor
 
 	- tested with FMOD 2.02.15
+
+===============================================================================
+3.2.3 082023 Bridge#2
+
+Updates/fixes:
+	- AudioStreamNetMQSource	: fixed outstanding scaling issues
+								- multiple sources in a scene should behave properly
+								- NetMQ 4.0.0.0;
