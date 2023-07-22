@@ -34,6 +34,9 @@ Documentation060_mobiles
 
 With ResonanceInput it's possible to capture any input device and play it back in 3D - see in 3D spatialisation.
 
+====
+	! Please be aware that each component which manipulates and manages its own AudioSource makes the Unity AudioSource component on GameObject unusable by user/Unity/other components at runtime
+So in general it's advisable to place each AudioStream* component which uses AudioSource on its own exclusive GameObject
 
 
 Audio input interfaces:

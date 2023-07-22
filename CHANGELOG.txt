@@ -768,6 +768,9 @@ Updates/fixes:
 3.2.3 082023 Bridge#2
 
 Updates/fixes:
-	- AudioStreamNetMQSource	: fixed outstanding scaling issues
-								- multiple sources in a scene should behave properly
-								- NetMQ 4.0.0.0;
+	- AudioStreamNetMQSource		: fixed outstanding scaling issues
+									- multiple sources in a scene should behave properly
+
+	- AudioStreamNetMQSourceDemo	: added default microphone to network source
+									- scene's AudioListener is captured
+

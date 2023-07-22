@@ -56,6 +56,11 @@ NOTE: All components - except AudioSourceOutputDevice and FMOD direct (Minimal/M
 AudioSourceOutputDevice bypasses it completely (since it redirects signal to a device Unity has no knowledge of currently) - but can be attached to main listener in which case the whole application audio (and final mix) ends up on chosen device.
 
 ====
+	! Please be aware that each component which manipulates and manages its own AudioSource makes the Unity AudioSource component on GameObject unusable by user/Unity/other components at runtime
+So in general it's advisable to place each AudioStream* component which uses AudioSource on its own exclusive GameObject
+
+
+====
 	The whole system is designed to be modular with each module being independent - you should be able to e.g. delete any folder in AudioStream/Scripts (except AudioStreamSupport) - with associated demo scene/s -
 if not needed, without impacting the rest.
 
