@@ -23,11 +23,9 @@ For latency you can also refer to answers to this post: http://www.fmod.org/ques
 
 Since the way the resampling of input signal by just setting the pitch on the AudioSource was handled led to big drifting over longer time if input and output sample rates were significantly different,
 in 1.7.7 I added option to not use Unity's built AudioSource resampling and channel conversion this way.
-Instead Speex resampler is used directly, with possibility to specify custom mix matrix to provide mapping between input and output channels. Default mix matrix is computed by FMOD if not customised by user.
+Instead a custom resampler is used, with possibility to specify custom mix matrix to provide mapping between input and output channels. Default mix matrix is computed by FMOD if not customised by user,
+on iOS default mix matrix is computed manually (might not be best fit for all scenarios).
 See demo scene for reference, and call SetCustomMixMatrix on component before starting the recording, if needed.
-
-Note that Speex resampler support for other than 1 or 2 output channels is limited and currently it works best when the rates don't differ too much - so going from lower rates usually provided by common microphones 
-will probably result in not high quality audio - it might still be useful for cases where only e.g. energy of the signal is important and not the audio itself -
 
 ! For iOS/mobiles please see specific mobile recording notes.
 Documentation060_mobiles

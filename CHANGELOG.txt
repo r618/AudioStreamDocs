@@ -771,6 +771,10 @@ Updates/fixes:
 	- AudioStreamNetMQSource		: fixed outstanding scaling issues
 									- multiple sources in a scene should behave properly
 
+	- AudioStreamInput2D and AudioStreamInput_iOS_ExternalDevices:
+									: Speex resampler was removed and replaced
+									- custom resampler is suitable for all audio and is recommended to use although Unity resampling is still default
+
 	- AudioStreamNetMQSourceDemo	: added default microphone to network source
 									- scene's AudioListener is captured
 
