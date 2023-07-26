@@ -784,3 +784,5 @@ Updates/fixes:
 									- scene's AudioListener is captured
 
 	- NetMQ.Unity surfaced an old/er Unity bug in Il2CPP builds - minimum suported Unity version is 2019.4.5 which fixed it
+
+	- removed Box/Sphere colliders (which got there, again) from demo scenes 
