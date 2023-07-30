@@ -27,6 +27,9 @@ Instead a custom resampler is used, with possibility to specify custom mix matri
 on iOS default mix matrix is computed manually (might not be best fit for all scenarios).
 See demo scene for reference, and call SetCustomMixMatrix on component before starting the recording, if needed.
 
+The custom resampler is based on simple interpolation of original audio/samplerate for target/output,
+and is probably lower quality than Unity's builtin one - but is stable when running long/er.
+
 ! For iOS/mobiles please see specific mobile recording notes.
 Documentation060_mobiles
 
