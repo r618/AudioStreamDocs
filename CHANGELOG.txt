@@ -769,20 +769,19 @@ Updates/fixes:
 
 Updates/fixes:
 	
-	- AudioStreamNetMQSource		: fixed outstanding scaling issues
-									- multiple sources in a scene should behave properly
-
 	- AudioStreamNetworkSource && AudioStreamNetworkClient :
+									- cleaned up and updated
 									- removed Unity Events for now; they weren't used and properly implementing them left 4 later
-									- 
+									- added PCM 'codec' option which trasnports audio buffer without any compression (see docs for more)
 
-	- AudioStreamInput2D and AudioStreamInput_iOS_ExternalDevices:
-									: Speex resampler was removed and replaced
-									- custom resampler is suitable for all audio and is recommended to use although Unity resampling is still default
+	- AudioStreamNetMQSource		: fixed outstanding scaling issues - multiple sources in a scene should behave properly
+	- NetMQ.Unity surfaced an old/er Unity bug in Il2CPP builds - minimum suported Unity version is 2019.4.5 which fixed it
 
 	- AudioStreamNetMQSourceDemo	: added default microphone to network source
 									- scene's AudioListener is captured
 
-	- NetMQ.Unity surfaced an old/er Unity bug in Il2CPP builds - minimum suported Unity version is 2019.4.5 which fixed it
+	- AudioStreamInput2D and AudioStreamInput_iOS_ExternalDevices:
+									: Speex resampler was removed and replaced by simple linear interpolation
+									- custom resampler is suitable for all audio and is recommended to use although Unity resampling is still default
 
 	- removed Box/Sphere colliders (which got there, again) from demo scenes 
