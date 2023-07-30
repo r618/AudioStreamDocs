@@ -19,8 +19,8 @@ Server's IP address and port are needed on the client in order to connect, - see
 		Audio is sent directly as unprocessed Unity audio buffer - this removes channels limitation
 		Be aware that
 		- much higher network bandwidth is required
-		- the only supported latency / DSP Buffer Size in project Audio settings are 'Good letency' and 'Best performance'; when using 'Best latency' the audio buffer rate exceeds the library 
-		messages handling capacity and it's not usable
+		- the only supported latency / DSP Buffer Size in project Audio settings are 'Good latency' and 'Best performance'; when using 'Best latency' the audio buffer rate exceeds the library 
+		messages handling capabilities and it's not usable
 
 	OPUS channels limitation should be possibly updated in later version, and OSC will be probably used as transport library in the future too
 
