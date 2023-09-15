@@ -794,3 +794,4 @@ Updates/fixes:
 	- tested with latest FMOD 2.02.17
 	- fixed end of file bug when streaming/playing remote files
 	- added ASIO support to mixer effect output plugin - needs manual setup & care please refer to documentation for more
+
