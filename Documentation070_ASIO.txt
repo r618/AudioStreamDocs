@@ -3,9 +3,10 @@
 ================================================================================
 ASIO on Windows:
 ================================================================================
-
+	
 	When enabled via 'Asio' checkbox on 'AudioStream\Scripts\Resources\DevicesConfiguration' Scriptable Object
-	all sounds/resources created by the asset on Windows use a special ASIO enabled system - (this includes "all" input and output functionality)
+	all sounds/resources created by all C# components and their inputs/outputs used in scenes on Windows use a special ASIO enabled system
+	(this includes "all" input and output functionality with the exception of 'AudioStream' which uses Unity Audio regardless of this setting; AudioStreamMinimal uses ASIO output)
 
 	Settings for output #0 configured here also apply for ASIO, except its buffers which are configured separately:
 	'ASIO buffer Size'	must match ASIO config (see below)
@@ -13,6 +14,32 @@ ASIO on Windows:
 
 	// max. number of speakers is 32
 	// see also 'Devices config' in Documentation.txt
+
+	
+	Unity Audio Mixer plugins are separate and they are *not* ASIO enabled by default,
+	when using their ASIO enabled variant - see below - be aware that it's not possible to use 'normal' C# components (either ASIO, or non ASIO) and ASIO-enabled mixer plugins in the same project
+	- ASIO requires exclusive internal initialization and using more than 1 FMOD system won't work.
+
+	--------------------------------------------------------------------------------------------------
+	Audio Mixer effects:
+
+	The output device plugin is available as `AudioStream ASIO OutputDevice` effect when adding to a mixer group
+	[binaries are in `AudioStream\Plugins\x86 | x86_64`]	
+	As mentioned above they are included w/o ASIO support by default
+	To enable/use ASIO output on mixer, please:
+	- close the Editor
+	- rename `not_used_AudioStreamASIOOutputDevice.dll` -> `AudioPluginAudioStreamASIOOutputDevice.dll`
+	- rename/move away `AudioPluginAudioStreamOutputDevice.dll` as well (e.g. to `not_used_AudioStreamOutputDevice.dll`)
+	- reopen project
+
+	- note that all outputs are conflated to default (0) output, regardless of `OutputDevice ID` entered on mixer group
+	- ASIO buffer lenghts and buffer count is hardcoded to 512, 4 currently
+
+	This way it's possible for Unity on Windows to output to an ASIO output from mixer.
+	(but as mentioned above C# components are not available in that case)
+
+	--------------------------------------------------------------------------------------------------
+	Example ASIO configuration:
 
 	ASIO was tested w/
 		FlexASIO [https://github.com/dechamps/FlexASIO/releases] driver, and configured via 
@@ -58,8 +85,3 @@ ASIO on Windows:
 	An example with
 		ASIO buffer 256 b large, 2 buffers is computed total latency on AudioStreamInput2D component in demo scene is 10.66 ms
 		with 128, 2 buffers is total latency 5.33 ms
-
-	--------------------------------------------------------------------------------------------------
-	Audio Mixer effect:
-	- it currently had little sense for the mixer plugin to be using ASIO driver since there are no devices/outputs to redirect the audio to
-	given just 1 input and output (see above), so it is unchanged and currently always using normal FMOD autodetected output type.
