@@ -23,7 +23,7 @@ ASIO on Windows:
 	--------------------------------------------------------------------------------------------------
 	Audio Mixer effects:
 
-	The output device plugin is available as `AudioStream ASIO OutputDevice` effect when adding to a mixer group
+	The output device plugin is available as `AudioStream OutputDevice` effect when adding to a mixer group
 	[binaries are in `AudioStream\Plugins\x86 | x86_64`]	
 	As mentioned above they are included w/o ASIO support by default
 	To enable/use ASIO output on mixer, please:
