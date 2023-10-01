@@ -14,6 +14,8 @@ First component is
   component for 'normal' Unity AudioSource is called AudioStream.
 
 Both consume (compressed) audio data retrieved either from network via UnityWebRequest, or directly from file system 
+- UnityWebRequest is used for all communication, except when attempting to resolve an Url redirect for initial connection -
+for that platform System.Net.HttpWebRequest is used - this is the deafult behaviour which can be turned off via 'attemptToResolveUrlRedirection'
 
 The 'infinite' radio streams are limited to 4 GB download ( which amounts to about 20 hours of playback of 2 channel, 44100 Hz audio )
 
@@ -74,9 +76,8 @@ Please see iOS recording specific notes in 'Documentation060_mobiles.txt' next t
 Network/web proxy:
 ================================================================================
 
-All UnityWebRequests used by components should follow operating system setting for proxy.
+All UnityWebRequests and HttpWebRequest used by components should follow operating system setting for proxy.
 (see Unity manual e.g. https://docs.unity3d.com/2019.4/Documentation/ScriptReference/Networking.UnityWebRequest.html)
-
 
 ================================================================================
 Supported formats:

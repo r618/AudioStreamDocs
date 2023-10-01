@@ -795,3 +795,8 @@ Updates/fixes:
 	- fixed end of file bug when streaming/playing remote files
 	- added ASIO support to mixer effect output plugin - needs manual setup & care please refer to documentation for more
 
+===============================================================================
+3.2.5 102023
+
+Updates/fixes:
+	- added 'attemptToResolveUrlRedirection' option to AudioStreamBase for automatic Url redirects resolving if needed based on System.Net.HttpWebRequest
