@@ -84,3 +84,20 @@ Default is ON and the input signal is resampled to current output sample rate so
 	Devices are checked for changes in Update
 	If a change is detected, an user Unity event is invoked where the new list can be queried/updated via 'AvailableInputs' again.
 	'AudioStreamDevicesChangedNotify' is included in few demo scenes together with event handler.
+
+
+
+================================================================================
+AudioPluginAudioStreamInputDevice mixer effect:
+================================================================================
+
+InputDeviceID -1 
+AudioSource running
+demo Demo\UnityMixer\InputDeviceUnityMixerDemo
+
+
+        * ! Auto Mixer Suspend
+        * exit playmode && Volume > Threshold Volume => input will be processing
+        * stop when Volume off / below Threshold Volume (-80 dB)
+        * 
+        * 
