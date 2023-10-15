@@ -79,20 +79,21 @@ See MediaSourceOutputDeviceDemo scene for example how to play a file on selected
 
 
 ================================================================================
-AudioPluginAudioStreamOutputDevice mixer effect:
+'AudioStream OutputDevice' mixer effect:
 ================================================================================
 
 It's also possible to redirect audio signal directly from Unity AudioMixer:
 
-Once you add 'AudioStream OutputDevice' effect to a mixer/group it runs autonomously outputting any input signal to its configured output ID.
+Once 'AudioStream OutputDevice' effect is added to a mixer/group and its Output ID is set it will run autonomously outputting any input signal to its configured output.
+Setting output to '-1' deactivates it.
 (If you misconfigure output ID by specifying ID non existent in the system, the plugin should fall back to output 0 (default)).
 The effect by default silences output on its mixer group/bus/master/output - you can change this by setting Passthru to true (all the way to the right) - although note that latency between plugin and Unity mixer will differ.
 
 For macOS:
-	- macOS version has currently unresolved limitation in that it doesn't support devices hotplugging correctly (due to a bug while releasing FMOD system)
+	- macOS version has currently unresolved limitation in that it doesn't support devices hotplugging correctly due to a bug while releasing FMOD system
 	it should work normally with all available outputs while they're not changed at runtime.
 	- required FMOD dynamic library libfmod.dylib was not automatically included in the build (and recognized in the Editor as a native plugin) up to ~ 2019.3b8
-	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamOutputDevice.bundle) manually, but this should be automatic post 2019.3 betas
+	Before this Unity version it is/was necessary to copy libfmod.dylib to the build's Contents/Plugins directory (next to AudioPluginAudioStreamDevice.bundle) manually, but this should be automatic post 2019.3 betas
 
 The signal is outputted 'as is' - so any channel mapping customization (i.e. custom mix matrix) and/or speaker mode is not supported (yet) and relies on default FMOD up/down mixing of channels
 Plugin uses samplerate of Unity project samplerate for its sound and default speakers/speaker mode for given output - currently this means that ideally your ouptut device has the same speaker/count/mode as Unity project.

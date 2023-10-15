@@ -16,24 +16,22 @@ ASIO on Windows:
 	// see also 'Devices config' in Documentation.txt
 
 	
-	Unity Audio Mixer plugins are separate and they are *not* ASIO enabled by default,
-	when using their ASIO enabled variant - see below - be aware that it's not possible to use 'normal' C# components (either ASIO, or non ASIO) and ASIO-enabled mixer plugins in the same project
-	- ASIO requires exclusive internal initialization and using more than 1 FMOD system won't work.
+	Unity Audio Mixer output/input effects can be added as ASIO enabled
+	'AudioStream ASIO OutputDevice' and 'AudioStream ASIO InputDevice'
+	when using their ASIO enabled variant be aware that it's not possible to use 'normal' C# components (either ASIO, or non ASIO) with ASIO-enabled mixer plugins in the same project
+	- ASIO requires exclusive internal initialization and using more than 1 FMOD system doesn't work.
 
 	--------------------------------------------------------------------------------------------------
 	Audio Mixer effects:
 
-	The output device plugin is available as `AudioStream OutputDevice` effect when adding to a mixer group
-	[binaries are in `AudioStream\Plugins\x86 | x86_64`]	
-	As mentioned above they are included w/o ASIO support by default
-	To enable/use ASIO output on mixer, please:
-	- close the Editor
-	- rename `not_used_AudioStreamASIOOutputDevice.dll` -> `AudioPluginAudioStreamASIOOutputDevice.dll`
-	- rename/move away `AudioPluginAudioStreamOutputDevice.dll` as well (e.g. to `not_used_AudioStreamOutputDevice.dll`)
-	- reopen project
+	'AudioStream ASIO OutputDevice' and 'AudioStream ASIO InputDevice' work identically as normal variants, see
+	Documentation010_recording_and_inputs.txt
+	and Documentation020_system_outputs.txt
 
-	- note that all outputs are conflated to default (0) output, regardless of `OutputDevice ID` entered on mixer group
-	- ASIO buffer lenghts and buffer count is hardcoded to 512, 4 currently
+	- all outputs are conflated to default (0) output, regardless of `OutputDevice ID` entered on mixer group
+	- similarly, the input plugin will record only from default (0) input (and will pass the input along the - non ASIO enabled - Unity mixer)
+	- ASIO buffer lenghts and buffer count *are hardcoded* to 512 and 4 currently
+	| sources for the audio plugin are included in AudioPlugin.zip
 
 	This way it's possible for Unity on Windows to output to an ASIO output from mixer.
 	(but as mentioned above C# components are not available in that case)

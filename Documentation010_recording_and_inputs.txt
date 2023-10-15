@@ -88,16 +88,20 @@ Default is ON and the input signal is resampled to current output sample rate so
 
 
 ================================================================================
-AudioPluginAudioStreamInputDevice mixer effect:
+'AudioStream InputDevice' mixer effect:
 ================================================================================
 
-InputDeviceID -1 
-AudioSource running
-demo Demo\UnityMixer\InputDeviceUnityMixerDemo
+To record directly into an AudioMixer group add 'AudioStream InputDevice' effect and set InputDeviceID to 0 (default system input) or above. The effect will start recording immediately and pass the recording along in the mixer
+Set InputDeviceID to '-1' to stop recording
 
+The recording will be running depending on the setting of the mixer:
+- if 'Auto Mixer Suspend' is ON (default) the recording will be running (recording from the input) as long as the signal is above the Threshold Volume (default -80 dB) of the mixer
+note: this is regardless of playmode, so if the recording was started during play time after exiting play mode in Editor, it will stil be running if the volume is above the threshold
+- if 'Auto Mixer Suspend' is OFF the recording will start and be running regardless of e.g. play mode
 
-        * ! Auto Mixer Suspend
-        * exit playmode && Volume > Threshold Volume => input will be processing
-        * stop when Volume off / below Threshold Volume (-80 dB)
-        * 
-        * 
+Moreover, the demo scene for the effect - InputDeviceUnityMixerDemo - has additional AudioSouce in the scene, which outputs to (a single) mixer group, is played automatically
+and has its volume set to 0. This is in order to activate the mixer processing by Unity, since 'Auto Mixer Suspend' is by default ON and the gorup wouldn't be even processed otherwise
+
+Note: * macOS *
+Please note the recording effect currently doesn't work on macOS -- this should be hopefully fixed later
+- in any case all sources for the plugin are included in AudioPlugin.zip archive

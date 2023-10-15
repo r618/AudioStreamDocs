@@ -125,10 +125,10 @@ For more details about all components please refer to each respective file in _D
 	- main playback/streaming components: AudioStream, AudioStreamMinimal, AudioStreamRuntimeImport, AudioStreamMemory
 
 - 'Documentation010_recording_and_inputs':
-	- streaming from any available system recording input: AudioStreamInput, AudioStreamInput2D, ResonanceInput
+	- streaming from any available system recording input: AudioStreamInput, AudioStreamInput2D, ResonanceInput, and 'AudioStream InputDevice' Audio Mixer effect
 
 - 'Documentation020_system_outputs':
-	- playing Unity audio on different available system outputs: AudioSourceOutputDevice, OutputID on AudioStreamMinimal, and AudioPluginAudioStreamOutputDevice Unity Audio Mixer effect
+	- playing Unity audio on different available system outputs: AudioSourceOutputDevice, OutputID on AudioStreamMinimal, and 'AudioStream OutputDevice' Audio Mixer effect
 
 - 'Documentation021_channels_separation':
 	- playing on different channels of an output: AudioSourceOutputDevice and MediaSourceOutputDevice
