@@ -797,11 +797,18 @@ Updates/fixes:
 
 
 ===============================================================================
-3.2.5 102023 -X-
+3.2.5 102023 -300kX-
 
 Updates/fixes:
 
 	- tested with latest FMOD 2.02.18
 	AudioStreamBase		: added 'attemptToResolveUrlRedirection' option to resolve Url redirects if needed based on System.Net.HttpWebRequest
 						: more rare network playback shutdown fix
-	
+
+	Audio Mixer			: new 'AudioStream InputDevice' (and 'AudioStream ASIO InputDevice') effect/s which allows recording directly into an AudioMixer group
+						: note: currently Windows only
+						: for details plese see Documentation010_recording_and_inputs.txt
+Demo scenes:
+	- moved all Unity AudioMixer related demos to Demo\UnityMixer\
+	- new InputDeviceUnityMixerDemo
+	- and InOutDeviceUnityMixerDemo
