@@ -808,7 +808,10 @@ Updates/fixes:
 	Audio Mixer			: new 'AudioStream InputDevice' (and 'AudioStream ASIO InputDevice') effect/s which allows recording directly into an AudioMixer group
 						: note: currently Windows only
 						: for details plese see Documentation010_recording_and_inputs.txt
+
+	Resonance Source & Soundfield : fixed marshaling/performance for some run cases
+
 Demo scenes:
 	- moved all Unity AudioMixer related demos to Demo\UnityMixer\
-	- new InputDeviceUnityMixerDemo
-	- and InOutDeviceUnityMixerDemo
+	- new InputDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group
+	- and InOutDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group -> AudioStreamOutputDevice effect
