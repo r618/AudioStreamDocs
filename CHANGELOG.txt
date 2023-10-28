@@ -815,3 +815,11 @@ Demo scenes:
 	- moved all Unity AudioMixer related demos to Demo\UnityMixer\
 	- new InputDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group
 	- and InOutDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group -> AudioStreamOutputDevice effect
+
+
+===============================================================================
+
+	OSC components
+		
+	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+

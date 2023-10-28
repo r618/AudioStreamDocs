@@ -4,6 +4,11 @@
 Audio over LAN:
 ================================================================================
 
+	TODO:
+	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+	OSC
+
+
 	There are two components based on NetMQ messaging library that enable streaming and receiving audio via local network (LAN):
 AudioStreamNetMQSource and AudioStreamNetMQClient,
 		which function as connectors of two AudioSources over a local network.
