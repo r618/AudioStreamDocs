@@ -142,7 +142,7 @@ For more details about all components please refer to each respective file in _D
 	- IcecastSource for AudioSource -> Icecast mountpoint
 
 - 'Documentation050_LAN_source_client':
-	- AudioSources connector over LAN: AudioStreamNetMQSource and AudioStreamNetMQClient
+	- AudioSources connector over LAN: AudioStreamNetMQSource, AudioStreamNetMQClient and AudioStreamOscSource/AudioStreamOscClient
 
 - 'Documentation060_mobiles':
 	- AudioStreamInput_iOS_ExternalDevicesDemo for capturing external devices on iOS, incl. e.g. Bluetooth headphones/microphones

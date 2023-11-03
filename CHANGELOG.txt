@@ -818,8 +818,7 @@ Demo scenes:
 
 
 ===============================================================================
+3.3 112023
 
 	OSC components
-		
 	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
-

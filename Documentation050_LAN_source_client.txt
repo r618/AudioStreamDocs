@@ -1,12 +1,21 @@
-::v3.0::1o.2o22::2019.4.0::
+::v3.0::11.2o23::2019.4.5::
 
 ================================================================================
 Audio over LAN:
 ================================================================================
 
-	TODO:
-	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
 	OSC
+	OscCore
+	As of (10)2023 not yet merged upstream
+	https://github.com/r618/OscCore/
+
+	OscCore
+	https://github.com/stella3d/OscCore
+
+	NetMQ
+
+	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+
 
 
 	There are two components based on NetMQ messaging library that enable streaming and receiving audio via local network (LAN):
