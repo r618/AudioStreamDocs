@@ -822,3 +822,5 @@ Demo scenes:
 
 	OSC components
 	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+
+	.NET Standard 2.1 => min 2021.3.0
