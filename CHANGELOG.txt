@@ -818,9 +818,17 @@ Demo scenes:
 
 
 ===============================================================================
-3.3 112023
+3.3 112023 birds can imitate arrivals
+	
+Updates/fixes:
+	- in order to use .NET Standard 2.1 runtime, the asset now requires at least 2021 LTS (2021.3.0) Unity version 
+	AudioStream:	- improved AudioStream streaming under degraded network conditions - it should now handle better situations when network is lost for a short while, but system recovers the connection
+					- added logging to memory file system/download handler
+	- updated/simplified Xcode project/build
 
-	OSC components
-	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+New components:
+	- new AudioStreamNetworkSource/Client components based on OSC messaging: AudioStreamOscSource and AudioStreamOscClient
+	- new demo scenes for the above
+	- see also Documentation050_LAN_source_client.txt
 
-	.NET Standard 2.1 => min 2021.3.0
+NOTE: removing existing/previous version of the asset is recommended before updating

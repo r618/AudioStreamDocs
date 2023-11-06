@@ -1,4 +1,4 @@
-::v3.0::1o.2o22::2019.4.0::
+::v3.3::11.2o23::2021.3.0::
 
 .: General usage notes and concepts overview :.
 ================================================================================
@@ -142,7 +142,7 @@ For more details about all components please refer to each respective file in _D
 	- IcecastSource for AudioSource -> Icecast mountpoint
 
 - 'Documentation050_LAN_source_client':
-	- AudioSources connector over LAN: AudioStreamNetMQSource, AudioStreamNetMQClient and AudioStreamOscSource/AudioStreamOscClient
+	- AudioSources connector over LAN: AudioStreamNetMQSource/AudioStreamNetMQClient and AudioStreamOscSource/AudioStreamOscClient
 
 - 'Documentation060_mobiles':
 	- AudioStreamInput_iOS_ExternalDevicesDemo for capturing external devices on iOS, incl. e.g. Bluetooth headphones/microphones

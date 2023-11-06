@@ -1,65 +1,92 @@
-::v3.0::11.2o23::2019.4.5::
+::v3.3::11.2o23::2021.3.0::
 
 ================================================================================
 Audio over LAN:
 ================================================================================
 
-	OSC
-	OscCore
-	As of (10)2023 not yet merged upstream
-	https://github.com/r618/OscCore/
+	Two AudioSources - or AudioListener and AudioSource - in two separate Unity players/apps can be connected over a local network (LAN) setup via machine/s IPs/ports,
+	there are two sets of components to do this:
+		- OSC (Open Soucd Control) based 'AudioStreamOscSource' and 'AudioStreamOscClient' and
+		- NetMQ (.NET port of ZeroMQ) based 'AudioStreamNetMQSource' and 'AudioStreamNetMQClient'
 
-	OscCore
-	https://github.com/stella3d/OscCore
+	If client's (receiving) AudioSource is not spatialized the network audio latency is minimal (at most few ms on localhost), spatialized AudioSource can't be used with realtime like latency
+	This is determined after a client connects based on Spatial Blend of the AudioSource it is attached to (for 2D it must be 0)
 
-	NetMQ
+	See demo scenes (clients use 2D AudioSource) in:
+		Network\AudioStreamOscDemo\
+		Network\AudioStreamNetMQDemo\
 
-	NetSrcNetCl - auto 2D / 3D source - low latency vs. spatialized receiver
+	Sources demo scenes audio is captured at AudioListener level and have also option to start default microphone (scene audio + microphone input is then transmitted together)
 
+	Be sure to have have 'Run in Background' turned on in Player settings when running e.g. build + editor scene at the same time.
 
+Codecs:
+--------------------------------------------------------------------------------
 
-	There are two components based on NetMQ messaging library that enable streaming and receiving audio via local network (LAN):
-AudioStreamNetMQSource and AudioStreamNetMQClient,
-		which function as connectors of two AudioSources over a local network.
-
-	Audio can be either encoded/decoded using OPUS codec - C# port by Logan Stromberg [https://github.com/lostromb/concentus], or sent directly without any encoding
-Server's IP address and port are needed on the client in order to connect, - see AudioStreamNetMQSourceDemo and AudioStreamNetMQClientDemo demo scenes in Network/AudioStreamNetMQDemo/ - also for options available for encoder and decoder.
+	Audio can be either encoded/decoded using OPUS codec - using C# port by Logan Stromberg [https://github.com/lostromb/concentus] -
+or sent directly from AudioSource/Listener as raw PCM data without any encoding;
 
 	OPUS codec:
-		Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer, latency on receiving end(client) depends on Unity AudioClip, usable for realtime changes on the server (e.g. using a microphone over LAN).
+		Codec is very efficient and both encoding and decoding run in each own thread in order to not stall Unity's audio buffer
 	Opus/Concentus support currently _only_ 1 or 2 channels audio. For all options see also component inspector/demo scene.
 
 	PCM 'codec':
 		Audio is sent directly as unprocessed Unity audio buffer - this removes channels limitation
 		Be aware that
-		- much higher network bandwidth is required
-		- the only supported latency / DSP Buffer Size in project Audio settings are 'Good latency' and 'Best performance'; when using 'Best latency' the audio buffer rate exceeds the library 
-		messages handling capabilities and it's not usable
+		- (possibly much) higher network bandwidth is required
+		- project's audio DSP Buffer Size / latency (in project Audio settings) should be 'Good latency' or 'Best performance';
+		when using 'Best latency' the audio rate will probably exceed network messages handling capabilities and won't be usable
 
-	OPUS channels limitation should be possibly updated in later version, and OSC will be probably used as transport library in the future too
+	Notes on frame size and MTU:
+	----------------------------------------------------------------------------
 
-	Note: for more comfortable audio transfer over LAN based on Unity Netcode for GameObjects see also AudioStreamNetCode [https://assetstore.unity.com/packages/slug/233329?aid=1100l7sC8]
+		Since reliable sequenced packet distribution is needed, fragmented network packets cannot be sent and this poses some restriction on the network, mainly on routers and their/usual MTU (or Maximum transmission unit), which is usually around 1500 bytes on common home networks.
+	This implies size for Opus encoder ( 960 for 1 channel, both channel encoded are below the 1500 MTU limit ), buffer should to fit below the size limit.
+	Otherwise there are no restrictions on the connection or Unity project audio latency either for source or client when using OPUS encoding
 
-Notes on frame size and MTU:
+	Also, in order to successfully receive all packets the network encoder has to perform reliably and quickly enough which was not the case on e.g. lower-end phones/devices such as iPhone 7 had no problems /
+
+
+AudioStreamOscSource/Client:
 --------------------------------------------------------------------------------
-	
-	Since reliable sequenced packet distribution is needed, fragmented messages cannot be sent and this poses some restriction on the network, mainly on routers and their/usual MTU (or Maximum transmission unit), which is usually around 1500 bytes on common home networks.
-This implies size for Opus encoder ( 960 for 1 channel, both channel encoded are below the 1500 MTU limit ), buffer should to fit below the size limit.
-Otherwise there are no restrictions on the connection or Unity project audio latency either for source or client when using OPUS encoding
 
-Also, in order to successfully receive all packets the network encoder has to perform reliably and quickly enough which was not the case on e.g. lower-end phones/devices such as iPhone 7 had no problems /
+OSC components are based on 'OscCore' library, orig. [https://github.com/stella3d/OscCore],
+though for version currently used in the asset see [https://github.com/r618/OscCore/]
+( PR contains changes needed to use it, as of (11)2023 not yet merged upstream )
 
-By default maximum of 10 clients are allowed to connect to one source - this is configurable and with higher number should run without problems on sufficient hardware.
+AudioStreamOscSource
+	- distributes audio of AudioSource/Listener of GameObject it is attached to IP/subnet based on IP/mask set in 'Remote IP'
+	- local broadcast can be used as 255.255.255.255, though be aware that it bigger latency than when specifying remote IP directly
+	- local interface can be used as '127.0.0.1'
+	- creates multiple OscClients based on specified 'Remote Ports'
+	- OSC address can be customized (but shouldn't be needed)
 
-Be sure to have have 'Run in Background' turned on in Player settings when running source and client at the same time.
+AudioStreamOscClient
+	- single OscServer 'Connect Port' parameter - which should match the above
+	- will accept on local interface if Source's Remote IP is '127.0.0.1'
+	- local network IP is determined @ runtime as info
+	- OSC address can be customized (but shouldn't be needed & must match the above)
 
 
-NetMQ messaging library:
+AudioStreamNetMQSource/Client:
 --------------------------------------------------------------------------------
+
+	These are now kept mainly for legacy reasons since OSC is more performant and uses modern runtime features
+
+	Server's IP address and port are needed on the client in order to connect
+	- server's IP is determined @ runtime (and is also displayed in the demo scene), local IP '127.0.0.1' can be used
+	- by default maximum of 10 clients are allowed to connect to one source - this is configurable and with higher number should run without problems on sufficient hardware.
+
+
+	NetMQ messaging library:
+	----------------------------------------------------------------------------
 
 	NetMQ.dll is included as prebuilt assembly, together with its dependency AsyncIO.dll - these are replaceable with any other more recent/other versions if needed.
-
-	It is targeted for .NET 3.5 since 2017 LTS has 3.5 runtime as default, but can be used with 4.6 runtime.
-
-Due to that there was a drawback though in that the server IP on client must be reachable, otherwise it can deadlock while connecting.
+	It is targeted for .NET 3.5 since 2017 LTS has 3.5 runtime as default, but can be used with later (4.6.x, NetStandard) runtimes
+	Server IP on client must be reachable, otherwise it can deadlock while connecting.
 	(iOS required this to be compiled with 4.x runtime, but this should now be always the case)
+
+
+--------------------------------------------------------------------------------
+For more comfortable GameObjects based audio transfer over LAN based on Unity Netcode for GameObjects you can see also another, separate asset
+AudioStreamNetCode [https://assetstore.unity.com/packages/slug/233329?aid=1100l7sC8]
