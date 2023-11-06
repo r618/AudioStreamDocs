@@ -825,6 +825,8 @@ Updates/fixes:
 	AudioStream:	- improved AudioStream streaming under degraded network conditions - it should now handle better situations when network is lost for a short while, but system recovers the connection
 					- added logging to memory file system/download handler
 	- updated/simplified Xcode project/build
+	- fixed/improved PCM aliasing in certain cases
+	- small refactoring changes / description / text updates (will/can break existing user code)
 
 New components:
 	- new AudioStreamNetworkSource/Client components based on OSC messaging: AudioStreamOscSource and AudioStreamOscClient
