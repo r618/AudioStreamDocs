@@ -824,7 +824,7 @@ Updates/fixes:
 	- in order to use .NET Standard 2.1 runtime, the asset now requires at least 2021 LTS (2021.3.0) Unity version 
 	AudioStream:	- improved AudioStream streaming under degraded network conditions - it should now handle better situations when network is lost for a short while, but system recovers the connection
 					- added logging to memory file system/download handler
-	- updated/simplified Xcode project/build
+	- updated/simplified mixer plugin Xcode project/build
 	- fixed/improved PCM aliasing in certain cases
 	- small refactoring changes / description / text updates (will/can break existing user code)
 
@@ -834,3 +834,11 @@ New components:
 	- see also Documentation050_LAN_source_client.txt
 
 NOTE: removing existing/previous version of the asset is recommended before updating
+
+
+===============================================================================
+3.3.1 122023 donate socks & gloves
+
+Updates/fixes:
+	- AudioStreamBase: hotfix for unability to play finite sized media files from network
+	- verified w/ FMOD 2.02.13
