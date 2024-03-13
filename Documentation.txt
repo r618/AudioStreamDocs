@@ -22,7 +22,7 @@ you can turn this off by unchecking 'copyDemoScenesToBuildSettings' on 'AudioStr
 you can use any parts of this asset and its source code in any and all your project freely - just don't publish it for public access
 If you use significant portions of the source infrastructure, please mention where they came from - i.e. from this asset, in the form:
 
-"Uses AudioStream Unity package (c) 2016-2023 Martin Cvengros, https://r618.github.io/"
+"Uses AudioStream Unity package (c) 2016-2024 Martin Cvengros, https://r618.github.io/"
 --------------------------------------------------------------------------------
 
 
