@@ -1,22 +1,55 @@
-::v3.0::1o.2o22::2019.4.0::
+::v3.4.0::03.2o24::2021.3.0::
 
 ================================================================================
 3D spatialisation
 ================================================================================
 
-All streams using Unity AudioSource can be fully spatialised by Unity by adjusting Spatial Blend on AudioSource.
-Possibly the most simple usage is demonstrated in the UnitySpatializerDemo scene together with AudioStream, and AudioStreamInput.
-- AudioStreamInput has 3D support, but higher latency than just 2D component AudioStreamInput2D
+Unity built-in spatializer:
+---------------------------
+	Since the asset is compatible with Unity AudioSources as much as possible/where it makes sense,
+all streams/components can be spatialised by Unity's built-in spatialization by adjusting Spatial Blend on AudioSource.
+Possibly the most simple usage is demonstrated in the UnitySpatializerDemo scene together with AudioStream, and AudioStreamInput,
+AudioStreamInputDemo also uses AudioStreamInput which has 3D support (but higher latency than 2D-only AudioStreamInput2D)
 
-1.6 introduced support for FMOD's provided GoogleVR spatializer plugin, later (from 2.0) replaced by Google Resonance - see ResonanceSourceDemo, ResonanceSoundfieldDemo and ResonanceInput scenes about how to use it.
-No special setup is needed - just provide source link/path on the component as usual, and modify exposed [3D] parameters.
-You can set your own listener transform, otherwise it defaults to main camera transform if not specified. The sound is being played on the GameObject's position the component is attached to.
 
-*ResonanceSource* accepts all formats as normal AudioStream/FMOD component.
-*ResonanceSoundfield* can play only a-, and b-format ambisonic files.
-*ResonanceInput* added in 2.0 can stream from any input similarly to AudioStreamInput* and plays the input at GameObject's location after being processed by Resonance.
+FMOD Resonance spatializer:
+---------------------------
+1.6 introduced support for FMOD's provided GoogleVR spatializer plugin, later (from 2.0) replaced by Google Resonance.
+Resonance has more realistic 3D audio than Unity built-in spatializer and allows for more customization,
+but note that all Resonance playback is currently via FMOD exclusively bypassing Unity (similar to AudioStreamMinimal) - so no AudioSource/AudioClip support for Unity audio interop.
 
-All Resonance playback is currently via FMOD exclusively bypassing Unity, so in the same category as AudioStreamMinimal i.e. no AudioSource support/Unity audio interop.
+The components -
+
+	ResonanceSource: 
+		- accepts all audio formats as normal AudioStream/FMOD playback component/s and plays the content at GameObject's 3D position relative to the listener.
+		- use 'Output Driver ID' to play on different system audio output than default
+
+	ResonanceSoundfield:
+		- plays only a-, and b-format ambisonic files
+		- use 'Output Driver ID' to play on different system audio output than default
+
+	ResonanceInput:
+		- can stream from any input similarly to AudioStreamInput* and plays the input audio at GameObject's position after being processed by Resonance.
+		- use 'Record Device Id' to specify input to record from
+		- currently the input is being played back on default (0) audio output only
+
+	In all cases no special setup is needed - just attach the component on a GameObject in scene and modify exposed [3D] parameters, the audio will be played at its position
+	See also ResonanceSourceDemo, ResonanceSoundfieldDemo and ResonanceInputDemo scenes about how to use them via scripting
+
+	You can also set your own listener transform - otherwise it defaults to main camera transform - the sound is then played in 3D at the GameObject's position relative to this listener.
+
+	There can be multiple separate Resonance* components/GameObjects in the scene with any combination of inputs/outputs and listeners in one scene
+	* except the above mentioned ResonanceInput playback output
+
+	(it was not previously possible to use more than one component of the same type with the same Output ID in a single scene - this restriction is now removed/fixed)
+	- this means that it's possible for local disk media/network streams to have multiple/many audio listeners in scene, each playing on different system audio output
+
+	For more about more than one audio listener in scene *with Unity AudioSources*, please see
+	-- 'Documentation031_audiolisteners'--
+
+
+Other spatializers:
+---------------------------
 
 Google is now providing their own proper 3D audio Unity integration in the form of Resonance Audio package that can be used instead (https://developers.google.com/resonance-audio/ , Unity 2017.1 and up)
 AudioStream can be used just like any other AudioSource, so it's sufficient to just add AudioStream component to Resonance enabled game object and everything will just work.
@@ -24,10 +57,3 @@ Compared to the full Resonance package from Google, AudioStream Resonance* compo
 
 Other 3D spatializers such as Oculus Integration for Unity ( https://developer.oculus.com/downloads/package/unity-integration/ ) and Steam Audio ( https://valvesoftware.github.io/steam-audio/ )
 work with AudioStream in similar fashion, though latency might not be as low as when using provided AudioStream Resonance* components directly.
-
-
-You can have multiple separate Resonance* components/GameObjects in the scene and combine them (e.g. multiple ResonanceInputs + ResonanceSources in one scene), though currently:
-
-- you should be able to have multiple ResonanceInputs in the scene
-- ResonanceSource/Soundfield currently need more optimization 
-- more than 1 (of any) in the scene will probably result in noticeable/audible glitches

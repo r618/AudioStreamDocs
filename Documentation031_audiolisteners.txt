@@ -1,0 +1,18 @@
+::v3.4.0::03.2o24::2021.3.0::
+
+================================================================================
+Audio Listeners for Unity AudioSources
+================================================================================
+	
+	To play any Unity AudioSource in scene under full 3D spatialization relative to an audio listener using Resonance:
+	- attach 'AudioStreamListenerAudioSource' to GameObject with source audio
+	- attach 'AudioStreamListener' to (any) other GameObject
+	- point/add all required sources to AudioStreamListener's 'Audio Stream Listener AudioSources' list
+
+	The source(s) will then play in 3D relative to the listener, which can optionally have Output Driver also set.
+	There can be multiple AudioStreamListeners in scene, and one source can be included as source in multiple listeners
+
+	This means that it's possible to play one set of AudioSources on arbitrary system audio output relative to some GameObject/listener and
+	another one similarly relative to some other listener, outputting to differnet output
+	
+	See also 'AudioStreamListenerDemo' for example of two listeners outputting AudioSource(s) to user selected output/s 

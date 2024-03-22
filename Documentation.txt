@@ -138,6 +138,10 @@ For more details about all components please refer to each respective file in _D
 	- Unity spatialization (Spatial Blend) w/ AudioStream and AudioStreamInput
 	- Resonance based 3D spatialization components: ResonanceSource, ResonanceSoundfield, ResonanceInput
 
+- 'Documentation031_audiolisteners':
+	- Resonance based Audio Listener for Unity AudioSources
+	- AudioStreamListener and AudioStreamListenerAudioSource components
+
 - 'Documentation040_Icecast':
 	- IcecastSource for AudioSource -> Icecast mountpoint
 
