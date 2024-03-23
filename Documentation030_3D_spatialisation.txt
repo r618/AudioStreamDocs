@@ -41,8 +41,11 @@ The components -
 	There can be multiple separate Resonance* components/GameObjects in the scene with any combination of inputs/outputs and listeners in one scene
 	* except the above mentioned ResonanceInput playback output
 
-	(it was not previously possible to use more than one component of the same type with the same Output ID in a single scene - this restriction is now removed/fixed)
+	it was not previously possible to use more than one component of the same type with the same Output ID in a single scene - this restriction is now removed/fixed
 	- this means that it's possible for local disk media/network streams to have multiple/many audio listeners in scene, each playing on different system audio output
+	
+	Performace notice: due to way Resonance Listener/DSPs are currently used, a spearate FMOD system object is created for each 'ResonanceSource/Soundfield' in the scene
+	- the overhead should be negligible however and allows for use of multiple resonance GameObjects with the same audio system output.
 
 	For more about more than one audio listener in scene *with Unity AudioSources*, please see
 	-- 'Documentation031_audiolisteners'--
