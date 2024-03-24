@@ -13,9 +13,13 @@ Audio Listeners for Unity AudioSources
 	There can be multiple AudioStreamListeners in scene, and one source can be included as source in multiple listeners
 
 	This means that it's possible to play one set of AudioSources on arbitrary system audio output relative to some GameObject/listener and
-	another one similarly relative to some other listener, outputting to differnet output
+	another one similarly relative to some other listener, outputting to different output
 	
-	See also 'AudioStreamListenerDemo' for an example of two listeners outputting AudioSource(s) to user selected output/s 
+	See also 'AudioStreamListenerDemo' scene for an example of two listeners outputting AudioSource(s) to user selected output/s 
 
-Performace notice: due to way Resonance Listener/DSPs are currently used, a spearate FMOD system object is created for each 'AudioStreamListener' in the scene
-- the overhead should be negligible however and allows for use of multiple listeners with the same audio system output.
+	Performace notice:
+		due to way Resonance Listener/DSPs are currently used, a spearate FMOD system object is created for each 'AudioStreamListener' in the scene
+	- the overhead should be negligible however and allows for use of multiple Listener GameObjects with the same audio system output.
+	- there is a limit on the no. of system objects (thus these components) allowed to be created at one time which is capped at 7
+	(depending on what other AudioStream objects there are in scene - one is for internal usage, the overall FMOD limit is 8 -
+	see also https://fmod.com/docs/2.02/api/core-api-common.html#fmod_max_systems)

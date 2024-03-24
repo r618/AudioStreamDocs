@@ -44,8 +44,12 @@ The components -
 	it was not previously possible to use more than one component of the same type with the same Output ID in a single scene - this restriction is now removed/fixed
 	- this means that it's possible for local disk media/network streams to have multiple/many audio listeners in scene, each playing on different system audio output
 	
-	Performace notice: due to way Resonance Listener/DSPs are currently used, a spearate FMOD system object is created for each 'ResonanceSource/Soundfield' in the scene
-	- the overhead should be negligible however and allows for use of multiple resonance GameObjects with the same audio system output.
+	Performace notice:
+		due to way Resonance Listener/DSPs are currently used, a spearate FMOD system object is created for each 'ResonanceSource/Soundfield' in the scene
+	- the overhead should be negligible however and allows for use of multiple Resonance GameObjects with the same audio system output.
+	- there is a limit on the no. of system objects (thus these components) allowed to be created at one time which is capped at 7
+	(depending on what other AudioStream objects there are in scene - one is for internal usage, the overall FMOD limit is 8 -
+	see also https://fmod.com/docs/2.02/api/core-api-common.html#fmod_max_systems)
 
 	For more about more than one audio listener in scene *with Unity AudioSources*, please see
 	-- 'Documentation031_audiolisteners'--

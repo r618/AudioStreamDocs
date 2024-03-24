@@ -842,3 +842,45 @@ NOTE: removing existing/previous version of the asset is recommended before upda
 Updates/fixes:
 	- AudioStreamBase: hotfix for unability to play finite sized media files from network
 	- verified w/ FMOD 2.02.13
+
+===============================================================================
+3.4 032024 buy a coffee to increase chances of increasing 400k
+
+Main added feature : *multiple audio listeners* 
+	- these use Resonance for immersive 3D spatialization 
+	- each listener has its own list of Unity AudioSources which are used as source of the audio
+	- each listener can output its spatialized audio to its own system audio output
+
+Updates/fixes:
+	- AudioStream:
+		- better/corrected handling of Tags strings with various encodings
+		- updated/capped download handler buffer to more sensible (smaller) size
+	- Resonance components:
+		- much improved/fixed 3D position updates
+		- much improved multiple Resonances of the same type in scene (previously this didn't scale well - this is now fixed, see Docs for more)
+		- added output device selection to Resonance demo scenes
+
+	- many fundational updates across component's common functionality required for new components
+	- all demos + their supporting files are put into separate namespace now
+
+	NOTE: it's therefore also recommended to remove existing/previous version of the asset before updating
+
+New components:
+	Audio listener for Unity AudioSources:
+		- AudioStreamListener:
+			- takes a list of AudioSources with 'AudioStreamListenerSource' attached and produces Resonance spatialized 3D audio of their sound relative to its position
+			- can output to any system audio output
+			- there can be theoreticelly any number of listeners in scene, each with their own different or same AudioSources and outputs
+			though there's currently practical limit of ~7 separate Listeners (depending on scene)
+
+		- AudioStreamListenerSource:
+			- requires AudioSource, tags GameObjects as source for listener
+			- allows for setting of all/needed Resonance 3D parameters for this source
+
+		See more in Documentation031_audiolisteners.txt
+
+New demo scene
+		- AudioStreamListenerDemo:
+			- there are two separate listeners each spatializing two AudioSources
+
+- tested w/ FMOD 02.02.21
