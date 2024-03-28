@@ -884,3 +884,8 @@ New demo scene
 			- there are two separate listeners each spatializing two AudioSources
 
 - tested w/ FMOD 02.02.21
+
+===============================================================================
+3.4.1 032024 dogs form packs and run feral
+Q fix:
+	AudioSourceOutputDevice: fixed sound buffer when driver and sw rate of output differ
