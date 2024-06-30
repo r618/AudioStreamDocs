@@ -906,4 +906,4 @@ Updates/fixes:
 		- fixed messaging/events to properly display decoding + AudioClip creation
 		- for downloads increased Blockalign Download Multiplier for better comapitiliby with some files
 
-- tested w/ 2.02.22
+- tested w/ FMOD 2.02.22
