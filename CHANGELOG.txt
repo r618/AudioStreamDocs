@@ -889,3 +889,21 @@ New demo scene
 3.4.1 032024 dogs form packs and run feral
 Q fix:
 	AudioSourceOutputDevice: fixed sound buffer when driver and sw rate of output differ
+
+
+===============================================================================
+3.4.2 F16
+
+Updates/fixes:
+	- AudioStreamRuntimeImport, AudioStreamMemory:
+		- removed heuristic which was detecting 0 filled frames
+		/ this was a woarkaround for FMOD bug for some mp3 (probably) files which decode to double length with 2nd half silent
+		/ these files cause FMOD behave this way even with its "play_sound" native example
+		/ please file a bug report to FMOD if you encounter this / reencode file if possible
+
+
+	- AudioStreamRuntimeImportDemo, AudioStreamMemoryDemo:
+		- fixed messaging/events to properly display decoding + AudioClip creation
+		- for downloads increased Blockalign Download Multiplier for better comapitiliby with some files
+
+- tested w/ 2.02.22
