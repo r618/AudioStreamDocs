@@ -907,3 +907,11 @@ Updates/fixes:
 		- for downloads increased Blockalign Download Multiplier for better comapitiliby with some files
 
 - tested w/ FMOD 2.02.22
+
+===============================================================================
+3.4.3 560 km
+
+Updates/fixes:
+	- more stable when using (rec)input + output device components together on macOS
+
+- tested w/ FMOD 2.02.23
