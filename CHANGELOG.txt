@@ -925,3 +925,4 @@ Updates/fixes:
 	- don't throw hard errors while waiting for recording device
 
 - tested w/ FMOD 2.02.25
+- Unity 6 tested
