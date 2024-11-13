@@ -915,3 +915,13 @@ Updates/fixes:
 	- more stable when using (rec)input + output device components together on macOS
 
 - tested w/ FMOD 2.02.23
+
+
+===============================================================================
+3.4.4 NWO2.0
+
+Updates/fixes:
+	- fixed string format logging while releasing input system
+	- don't throw hard errors while waiting for recording device
+
+- tested w/ FMOD 2.02.25
