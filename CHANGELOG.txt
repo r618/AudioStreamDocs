@@ -932,13 +932,16 @@ Updates/fixes:
 3.4.5 /\ for drones
 
 Updates/fixes:
-	- AudioStreamInput* : fixed small bug in *Input* components where they wouldn't properly create new system to record from after receiving devices change notification
+	- AudioStreamInput*: fixed small bug in *Input* components where they wouldn't properly create new system to record from after receiving devices change notification
 	(they couldn't record immediately after the change only after scene was restarted)
 
 	- removed Editor functionality which automatically copied all demo scenes and their assets for runtime usage
-	- please add all demo scenes into Build Settings manually
-	- all required runtime demo assets in StreamingAssets should be now properly handled by Asset Store donwload
-	- please see '!!README1ST!! INITIAL IMPORT ERRORS' for details
+	.please add all demo scenes into Build Settings manually
+	.all required runtime demo assets in StreamingAssets should be now properly handled by Asset Store donwload
+	.please see '!!README1ST!! INITIAL IMPORT ERRORS' for further details
+
+	- AudioStreamListenerDemo: has new audio track
+
 	- (sources (c) maintenance)
 
 - tested w/ FMOD 2.02.27
