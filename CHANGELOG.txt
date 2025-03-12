@@ -926,3 +926,11 @@ Updates/fixes:
 
 - tested w/ FMOD 2.02.25
 - Unity 6 tested
+
+===============================================================================
+3.4.5 
+
+Updates/fixes:
+	- (sources (c) maintenance)
+
+- tested w/ FMOD 2.02.27
