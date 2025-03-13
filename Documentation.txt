@@ -74,10 +74,18 @@ IL2CPP builds and building with turned off IL2CPP runtime checks:
  
 Code running most tight audio loops can be optionally built with null, array bounds and division by zero checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that build is running correctly with them being turned off first)
 
-The needed attributes for this are included in the package, but you are advised to verify this, i.e. check for your Unity version, see e.g. https://docs.unity3d.com/2018.4/Documentation/Manual/IL2CPP-CompilerOptions.html (and your respective Editor version) how to do that.
-The file 'Il2CppSetOptionAttribute.cs' must be placed into project's 'AudioStream/Support' folder (or any of its subfolders) - must be part of the 'AudioStreamSupport' assembly definition
+The needed attributes/out of the box support are no longer shipped with the asset due to Asset Store validation refusing `Unity` in a namespace, so to use this
+(see also e.g. https://docs.unity3d.com/6000.0/Documentation/Manual/scripting-backends-il2cpp.html):
 
-- if project doesn't have ENABLE_IL2CPP compiler define added already, add ENABLE_IL2CPP to Scripting Define Symbols in Player Settings
+- please create a new assembly definition (and separate folder) in your project named 'Il2CppSetOptionAttribute'
+(can be placed outside of the asset anywhere in the project)
+- In the directory where your Unity version is installed, navigate to the Data\il2cpp directory on Windows, or the Contents/Frameworks/il2cpp directory on OS X.
+- Find the Il2CppSetOptionAttribute.cs source file.
+- copy the file into the folder created in first step 
+- set Player scripting backend to Il2CPP if not done already
+- check if the attributes are used - look for `#if ENABLE_IL2CPP` in scripts:
+- Unity sometimes doesn't activate the define for me: please add `ENABLE_IL2CPP` #define to player settings Scripting Define Symbols manually if that's the case
+- all methods decorated with Il2CppSetOption attribute should now properly use/skip C++ runtime checks
 
 
 ================================================================================

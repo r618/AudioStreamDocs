@@ -927,17 +927,16 @@ Updates/fixes:
 - tested w/ FMOD 2.02.25
 - Unity 6 tested
 
-
 ===============================================================================
 3.4.5 /\ for drones
 
 Updates/fixes:
 	- AudioStreamInput*: fixed small bug in *Input* components where they wouldn't properly create new system to record from after receiving devices change notification
-	(they couldn't record immediately after the change only after scene was restarted)
+	(they couldn't record immediately after the change only after the scene was restarted)
 
 	- removed Editor functionality which automatically copied all demo scenes and their assets for runtime usage
 	.please add all demo scenes into Build Settings manually
-	.all required runtime demo assets in StreamingAssets should be now properly handled by Asset Store donwload
+	.all required runtime demo assets in StreamingAssets should be now properly handled by Asset Store download
 	.please see '!!README1ST!! INITIAL IMPORT ERRORS' for further details
 
 	- AudioStreamListenerDemo: has new audio track
@@ -945,3 +944,10 @@ Updates/fixes:
 	- (sources (c) maintenance)
 
 - tested w/ FMOD 2.02.27
+
+
+===============================================================================
+3.4.6 /\ for drones
+
+Fix for Il2CppSetOption attributes to be properly used in Il2CPP builds
+Updated/changed the process how to use Il2CppSetOptionAttribute - please refer to Il2CPP builds in Documentation.txt
