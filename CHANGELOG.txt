@@ -951,3 +951,9 @@ Updates/fixes:
 
 Fix for Il2CppSetOption attributes to be properly used in Il2CPP builds
 Updated/changed the process how to use Il2CppSetOptionAttribute - please refer to Il2CPP builds in Documentation.txt
+
+
+===============================================================================
+3.4.7 /\ for drones
+
+- added muting of channel with small timeout when stopping/releasing playing sounds - helps with audible pops when stopping the playback
