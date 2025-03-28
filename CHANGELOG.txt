@@ -954,6 +954,12 @@ Updated/changed the process how to use Il2CppSetOptionAttribute - please refer t
 
 
 ===============================================================================
-3.4.7 /\ for drones
+3.5.0 /\ for drones
 
-- added muting of channel with small timeout when stopping/releasing playing sounds - helps with audible pops when stopping the playback
+Changed to FMOD 2.03 release track - there is one (small) breaking change in FMOD 2.03.:
+- after reverting back to previous state - see AudioStreamBase+CaptureDSP.cs; Ln 48 - the asset can still be made compatible with FMOD 2.02
+
+Updates/fixes:
+	- added muting of channel with small timeout when stopping/releasing playing sounds - helps with loud audible pops while stopping the playback/processing
+
+- tested with FMOD 2.03.06
