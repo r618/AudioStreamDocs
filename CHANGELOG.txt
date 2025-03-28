@@ -962,4 +962,4 @@ Changed to FMOD 2.03 release track - there is one (small) breaking change in FMO
 Updates/fixes:
 	- added muting of channel with small timeout when stopping/releasing playing sounds - helps with loud audible pops while stopping the playback/processing
 
-- tested with FMOD 2.03.06
+- updated for & tested with FMOD 2.03.06
