@@ -963,3 +963,10 @@ Updates/fixes:
 	- added muting of channel with small timeout when stopping/releasing playing sounds - helps with loud audible pops while stopping the playback/processing
 
 - updated for & tested with FMOD 2.03.06
+
+===============================================================================
+3.5.1 /\ for drones
+
+
+Demo scenes:
+	- enabled listen monitor in IcecastSourceDemo by default
