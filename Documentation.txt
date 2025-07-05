@@ -79,7 +79,7 @@ The needed attributes/out of the box support are no longer shipped with the asse
 
 - please create a new assembly definition (and separate folder) in your project named 'Il2CppSetOptionAttribute'
 (can be placed outside of the asset anywhere in the project)
-- In the directory where your Unity version is installed, navigate to the Data\il2cpp directory on Windows, or the Contents/Frameworks/il2cpp directory on OS X.
+- In the directory where your Unity version is installed, find `il2cpp` directory (Data\il2cpp directory on Windows, or Contents/il2cpp on macOS)
 - Find the Il2CppSetOptionAttribute.cs source file.
 - copy the file into the folder created in first step 
 - set Player scripting backend to Il2CPP if not done already
