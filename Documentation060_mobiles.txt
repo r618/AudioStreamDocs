@@ -26,7 +26,7 @@ Newer ( 2017.1 and up ) versions of Unity provide setting for this in iOS Player
 
 - FMOD currently does not provide any way of recording from other than default recording device (iPhone Microphone) - that means that it can't record from e.g. AirPods / connected Bluetooth headsets etc.
 
-Since AudioStream 2.0 the asset provides iOS native plugin which should allow to record from any connected audio device - its demo is in 'AudioStreamInput_iOS_ExternalDevicesDemo' which shows all currently connected devices and allows any of them to be selected and to be record from:
+Since AudioStream 2.0 the asset provides iOS native plugin which should allow recording from any connected audio device - its demo is in 'AudioStreamInput_iOS_ExternalDevicesDemo' which shows all currently connected devices and allows any of them to be selected and to be recorded from:
 
 	------------------------ !
 	If you want to record from, or play on external/Bluetooth devices on iOS you have to - apart from the above - add project wide 'Scripting Define Symbol' called "AUDIOSTREAM_IOS_DEVICES" to iOS Player settings
@@ -70,7 +70,7 @@ iOS:
 		- this sets audio session for the app for iOS to play the audio while the app is in the background
 			(Unity default audio session implementation isn't often consistent across Unity/iOS versions for this)
 		- implements Unity player loop background refreshing (needed for all Updates in the app, so also for e.g. networking)
-		- If you use more than 1 asset which implements custom UnityAppCotroller, you'd have to chain them (explicitly set descedants hierarchy manually)
+		- If you use more than 1 asset which implements custom UnityAppController, you'd have to chain them (explicitly set descendants hierarchy manually)
 
 		:: == the background timer is set to 1 second by default and might not be suitable for all devices. If you encounter network (and thus playback) related issues please change it manually for now at:
 			Plugins\iOS\AudioStreamAppController.mm
@@ -88,7 +88,7 @@ Also, slight suggestion. In your AudioStreamAppController you set refresh rate f
 
 Android:
 ========
-	Background running and Media Controls on Android are normally implemented via a service, which interacts with OS audio spearately from main app/activity (Unity player), - so the asset doesn't implement this.
+	Background running and Media Controls on Android are normally implemented via a service, which interacts with OS audio separately from main app/activity (Unity player), - so the asset doesn't implement this.
 
 	For at least some functionality of the main app's background audio you can comment out onPause method of Unity player activity in Gradle build:
 	(

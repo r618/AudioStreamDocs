@@ -15,7 +15,7 @@ First component is
 
 Both consume (compressed) audio data retrieved either from network via UnityWebRequest, or directly from file system 
 - UnityWebRequest is used for all communication, except when attempting to resolve an Url redirect for initial connection -
-for that platform System.Net.HttpWebRequest is used - this is the deafult behaviour which can be turned off via 'attemptToResolveUrlRedirection'
+for that platform System.Net.HttpWebRequest is used - this is the default behaviour which can be turned off via 'attemptToResolveUrlRedirection'
 
 The 'infinite' radio streams are limited to 4 GB download ( which amounts to about 20 hours of playback of 2 channel, 44100 Hz audio )
 
@@ -38,11 +38,11 @@ you'd have to extract desired stream/link from the downloaded playlist manually 
 Note that M3U/8 support is limited - only direct, non chunked and non recursive playlist (in other words non HLS streams) can be played with first detected source as mentioned above.
 
 :::
-UnityWebRequest by default accepts all certificates and their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overriden if needed.
+UnityWebRequest by default accepts all certificates and their public keys. In 2018.1 and up this is handled by custom certificate handler so it can be overridden if needed.
 
 ::: Any necessary resampling is done by Unity automatically as needed.
 
-::: AudioStreamMinimal uses less resources since it doesn't go through Unity AudioSourcem, so if all Unity audio features are not needed, I generally recommend using it for just for 1:1 playback.
+::: AudioStreamMinimal uses less resources since it doesn't go through Unity AudioSource, so if all Unity audio features are not needed, I generally recommend using it for just for 1:1 playback.
 
 ::: The amount of independently running AudioStreamMinimal/AudioStream components created at the same time is limited only by available system resources
 
@@ -100,7 +100,7 @@ I tried to resolve this with FMOD, but the situation is unresolved for the time 
 Note that the above applies only for audio streamed from network - local files are not affected.
 
 *AAC format*:
-there's no special setup or any special considerations regarding this format. The *ONLY* actual difference compared to other formats is that the media *must* be played on an actual physical device (e.g. iOS/Andoid phone) which has hardware decoding capability for this format. That means that you will not be able to test it in e.g. Editor or standalone builds.
+there's no special setup or any special considerations regarding this format. The *ONLY* actual difference compared to other formats is that the media *must* be played on an actual physical device (e.g. iOS/Android phone) which has hardware decoding capability for this format. That means that you will not be able to test it in e.g. Editor or standalone builds.
 One thing might be necessary (although sometimes FMOD can cope without it) - you might want to set 'Stream Type' to 'AUTODETECT'.
 It's not possible to netstream AAC [though .caf or .m4a were not tested on iOS]
 
@@ -125,13 +125,13 @@ The identifier/filename in the cache is derived from entered Url; (the original 
 
 Cache is located at Application.persistentDataPath by default and can be customized - please see 'Local disk cache' in Documentation.txt
 
-When the playabck is stopped/finished and 'Download To Cache' is On, the full resulting path of saved file is passed via 'OnPlaybackStopped' event - see AudioStreamDemo.cs
+When the playback is stopped/finished and 'Download To Cache' is On, the full resulting path of saved file is passed via 'OnPlaybackStopped' event - see AudioStreamDemo.cs
 
 
 Note: when using 'Download To Cache' for playlists Url, the cache/filename is derived from original playlist Url (although its content is played)
 - this is because to determine its content it has to be downloaded first - and thus to connect to the network - the first item in it is not known yet when started
 So e.g. a cache item might be saved with extension '.pls' although it's mpeg audio - you might want to change the extension afterwards for usage outside the app if you know the format;
-[the component itself ignores the extension if the stream type is set expliciately]
+[the component itself ignores the extension if the stream type is set explicitly]
 
 
 
@@ -160,7 +160,7 @@ Downloaded data is progressively cached in application's set cache directory
 - original samplerate and channels are saved at the beginning of the file, so raw format can be played back later
 - (samplerate and channels occupy 8 bytes together so this has no impact on playback)
 - these are followed by raw interleaved stream of PCMFLOAT serialized as bytes (sizeof(float) bytes per sample)
-- sudio data is cached as decoded RAW PCM bytes - these can get quite large.
+- audio data is cached as decoded RAW PCM bytes - these can get quite large.
 - please also see 'Local disk cache' in Documentation.txt
 
 If 'overwriteCachedDownload' is not set, network is not even started if a file associated with AudioStreamRuntimeImport's url is found in the cache, instead AudioClip is constructed and played immediately.

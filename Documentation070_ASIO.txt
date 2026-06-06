@@ -30,7 +30,7 @@ ASIO on Windows:
 
 	- all outputs are conflated to default (0) output, regardless of `OutputDevice ID` entered on mixer group
 	- similarly, the input plugin will record only from default (0) input (and will pass the input along the - non ASIO enabled - Unity mixer)
-	- ASIO buffer lenghts and buffer count *are hardcoded* to 512 and 4 currently
+	- ASIO buffer lengths and buffer count *are hardcoded* to 512 and 4 currently
 	| sources for the audio plugin are included in AudioPlugin.zip
 
 	This way it's possible for Unity on Windows to output to an ASIO output from mixer.

@@ -54,7 +54,7 @@ Each entry corresponds to given output id in that order as seen by FMOD during i
 - config for each (input/output) device consists of several fields, for more details on each refer to its Editor tooltip
 
 The asset has configured settings for output #0 as an example
-	- since it is populated just with default values, the output's properties will be unchaged (as set by OS by default)
+	- since it is populated just with default values, the output's properties will be unchanged (as set by OS by default)
 
 
 For custom/RAW speaker mode see also FMOD documentation:
