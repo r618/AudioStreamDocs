@@ -967,6 +967,11 @@ Updates/fixes:
 ===============================================================================
 3.5.1 /\ for drones
 
-
 Demo scenes:
 	- enabled listen monitor in IcecastSourceDemo by default
+
+===============================================================================
+3.5.2 even more //\\ drones
+
+- fixed default UnityWebRequest User-Agent not being accepted by some internet host(s).
+- tested with recently released FMOD 2.0.14
