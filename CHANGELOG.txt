@@ -974,4 +974,5 @@ Demo scenes:
 3.5.2 even more //\\ drones
 
 - fixed default UnityWebRequest User-Agent not being accepted by some internet host(s).
+- fixed few unneeded allocations in several places
 - tested with recently released FMOD 2.0.14
