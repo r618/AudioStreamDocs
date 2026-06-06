@@ -976,3 +976,4 @@ Demo scenes:
 - fixed default UnityWebRequest User-Agent not being accepted by some internet host(s).
 - fixed few unneeded allocations in several places
 - tested with recently released FMOD 2.0.14
+- submitted with Unity 2022.3.62
