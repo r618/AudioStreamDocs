@@ -979,8 +979,8 @@ Demo scenes:
 - submitted with Unity 2022.3.62
 
 ===============================================================================
-3.5.3
+3.5.3 ///o\\\
 
 Performance/optimization fixes/updates:
-- should yield to better audio results when e.g. switching outputs
-- fixed/removed more related/indirect allocations + locks in audio threads/callbacks
+- fixed/removed related/indirect allocations + locks in audio threads/callbacks
+- should yield better audio results when e.g. switching outputs, using channels separation, opening inputs etc..
