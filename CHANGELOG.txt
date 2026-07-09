@@ -975,5 +975,12 @@ Demo scenes:
 
 - fixed default UnityWebRequest User-Agent not being accepted by some internet host(s).
 - fixed few unneeded allocations in several places
-- tested with recently released FMOD 2.0.14
+- tested with recently released FMOD 2.03.14
 - submitted with Unity 2022.3.62
+
+===============================================================================
+3.5.3
+
+Performance/optimization fixes/updates:
+- should yield to better audio results when e.g. switching outputs
+- fixed/removed more related/indirect allocations + locks in audio threads/callbacks
