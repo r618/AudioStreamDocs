@@ -979,9 +979,13 @@ Demo scenes:
 - submitted with Unity 2022.3.62
 
 ===============================================================================
-3.5.3 ///o\\\
+3.5.3 ///o\\\(*)
 
 Performance/optimization & source fixes/updates:
-- fixed/removed related/indirect allocations + locks in audio threads/callbacks
-- should yield better audio results when e.g. switching outputs, using channels separation, opening inputs etc..
-- resolved `FindObjectsOfType` obsolescence warnings for newer Unity versions
+	- fixed/removed related/indirect allocations + locks in audio threads/callbacks
+	- should yield better audio results when e.g. switching outputs, using channels separation, opening inputs etc..
+	- resolved `FindObjectsOfType` obsolescence warnings for newer Unity versions
+
+Demo scenes:
+	- New Input System support (demo scripts work with both old and new input system)
+
