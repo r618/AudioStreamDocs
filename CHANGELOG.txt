@@ -989,3 +989,7 @@ Performance/optimization & source fixes/updates:
 Demo scenes:
 	- New Input System support (demo scripts work with both old and new input system)
 	- fixed/updated proper .ready flag handling (logging was harmless previously but this now waits properly for all components)
+
+===============================================================================
+3.5.3.w (*)///o\\\(*)
+	- source updates for `FindObjectsOfType` & Inspector serialization obsolescence warnings for Unity 6.5
