@@ -993,3 +993,25 @@ Demo scenes:
 ===============================================================================
 3.5.3.w (*)///o\\\(*)
 	- source updates for `FindObjectsOfType` & Inspector serialization obsolescence warnings for Unity 6.5
+
+===============================================================================
+3.5.5 **====>
+	More large and small optimalizations/improvements, the asset should be now more responsive and with better error states reporting
+	- web request / http redirects now don't block the main thread
+	- components like IcecastSource, networkign components moved encoding/decoding to separate task/thread
+	- removed / cleaned up few outdated sources
+	- internal linear resampler: updated, fixed channel bleeding
+	- more callback are allocation free with zero-copy reads
+	- code was refactored at several places and common functionality brought into single place
+
+	AudioStream*:
+	- accessible local files are played directly not going through UnityWebRequest and playback allocates only required amount of memory (not previously deafult 1GB 'fallback')
+	- fixed metadata/albumart/icons for audio tracks and Shoutcast/Icecast streams 
+	- also fixed metadata text encodings
+	- updated&hardened ID3V2 tags parser
+	+ allowInvalidCertificates: default on, allows to restrict connections only to secure valid cerficates
+
+	AudioStreamOutputDevice:
+	- fixed several bugs related to keeping track of output while it changes its positoin in devices list
+
+	Tested with FMOD 2.03.15
