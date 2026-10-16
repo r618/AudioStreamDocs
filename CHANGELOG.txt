@@ -1019,4 +1019,7 @@ Demo scenes:
 	- fixed two-mic start/stop deadlock on macOS
 	- mixer plugin/effect: should allow for proper release and shouldn't block releasing/app quitting on macOS
 
+	AudioMixer effect:
+	- built w/ FMOD 2.03.15, fixed leaks and hangs on quit on macOS
+
 	Tested with FMOD 2.03.15
