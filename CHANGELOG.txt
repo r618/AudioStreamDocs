@@ -1013,6 +1013,10 @@ Demo scenes:
 
 	AudioStreamOutputDevice:
 	- fixed several bugs related to keeping track of output while it changes its positoin in devices list
-	- mixer plugin/effect: should allow for proper release and shouldn't block releasing/app quitting
+	- mixer plugin/effect: should allow for proper release and shouldn't block releasing/app quitting on macOS
+
+	AudioStreamInput*
+	- fixed two-mic start/stop deadlock on macOS
+	- mixer plugin/effect: should allow for proper release and shouldn't block releasing/app quitting on macOS
 
 	Tested with FMOD 2.03.15
