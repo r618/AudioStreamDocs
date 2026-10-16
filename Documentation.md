@@ -1,0 +1,144 @@
+::v3.3::11.2o23::2021.3.0::
+
+# General usage notes and concepts overview
+
+(turn on Word Wrap in your IDE/editor for possibly more readable formatting)
+
+This file is more of an overview, with generic components - for each specific topic please see the `DocumentationNNN_[topic].md` file/s next to this one.
+
+Note: >> When working with audio it's often very useful to turn on `Run In Background` in player settings to keep audio running when switching out of the Editor.
+
+(For 2022 and up -> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
+| Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set `Allow downloads over HTTP` to `Always allowed`. Alternatively, use your own secure (HTTPS) links only.)
+
+- as mentioned in !!README1ST!!, the asset by default populates Editor BuildSettings scene list with all demo scenes and copies all demo assets into `StreamingAssets\AudioStream`;
+you can turn this off by unchecking `copyDemoScenesToBuildSettings` on `AudioStream\Demo\_Support\Editor\AudioStreamDemoMenuDef` configuration object.
+
+## Source code license
+
+you can use any part of this asset and its source code in any and all of your projects - just don't publish it for public access
+If you customize significant portions of the source infrastructure, please attribute where the inspiration came from - i.e. from this asset, in the form:
+
+"Uses AudioStream Unity package (c) 2016-2024 Martin Cvengros, https://r618.github.io/"
+
+## Scripting API
+
+For scripting please refer to demo scenes in the Demo\[component group]\ folder/s:
+
+- each component has a specific demo scene set up with its intended usage
+- each demo scene contains a GameObject with a script ending with `Demo` with scene UX and references to the asset's component(s)
+- these single files in general illustrate how to use each component's API the intended way
+- the most important/relevant sections are commented
+- it's worth paying attention esp. to initialization usually found in Start (coroutine), and events where they are handled
+
+## Devices config
+
+Devices configuration across the whole package was brought into a single place in
+
+`AudioStream\Scripts\Resources\DevicesConfiguration`
+
+scriptable object.
+(Resources folder is used for config to be available also at runtime)
+
+Each entry corresponds to the given output id in that order as seen by FMOD during initialization
+
+- config for each (input/output) device consists of several fields, for more details on each, refer to its Editor tooltip
+
+The asset has configured settings for output #0 as an example
+
+- since it is populated just with default values, the output's properties will be unchanged (as set by OS by default)
+
+For custom/RAW speaker mode see also FMOD documentation:
+https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_speakermode
+and https://www.fmod.com/docs/2.02/api/core-api-channelcontrol.html#channelcontrol_setmixmatrix
+
+- a good place to call setMixMatrix on an opened channel is in `OnPlaybackStarted` event.
+- max. number of speakers is MAX_CHANNEL_WIDTH = 32; - see also https://www.fmod.com/docs/2.02/api/core-api-common.html#fmod_max_channel_width
+
+Note:
+ASIO has separate buffer settings (which have to correspond to configured ASIO buffer), but the rest of the settings are used also for it.
+Refer to [Documentation070_ASIO.md](Documentation070_ASIO.md) for more.
+
+## IL2CPP builds and building with turned off IL2CPP runtime checks
+
+Code running the tightest audio loops can be optionally built with null, array bounds and division by zero checks turned off for IL2CPP builds (which is generally recommended but it's advisable to verify that the build is running correctly with them being turned off first)
+
+The needed attributes/out of the box support are no longer shipped with the asset due to Asset Store validation refusing `Unity` in a namespace, so to use this
+(see also e.g. https://docs.unity3d.com/6000.0/Documentation/Manual/scripting-backends-il2cpp.html):
+
+- please create a new assembly definition (and separate folder) in your project named `Il2CppSetOptionAttribute`
+(can be placed outside of the asset anywhere in the project)
+
+- In the directory where your Unity version is installed, find the `il2cpp` directory (Data\il2cpp directory on Windows, or Contents/il2cpp on macOS)
+- Find the Il2CppSetOptionAttribute.cs source file.
+- copy the file into the folder created in the first step
+- set the Player scripting backend to Il2CPP if not done already
+- check if the attributes are used - look for `#if ENABLE_IL2CPP` in scripts:
+- Unity sometimes doesn't activate the define for me: please add `ENABLE_IL2CPP` #define to player settings Scripting Define Symbols manually if that's the case
+- all methods decorated with Il2CppSetOption attribute should now properly use/skip C++ runtime checks
+
+## Local disk cache
+
+Customizable via `AudioStreamRuntimeSettings` scriptable object in `AudioStream\Support\Resources`
+
+- `Download Cache Path` location for storing original compressed stream, which can be saved / played later offline via `AudioStream` based on its Url.
+Defaults to Application.persistentDataPath if not set/empty.
+
+- `Temporary Directory Path` stores intermediary uncompressed audio mainly for AudioClip creation by AudioStreamRuntimeImport and AudioStreamMemory components.
+Defaults to Application.temporaryCachePath if not set/empty.
+
+Both can be either full or relative directory paths.
+
+## GOAudioSaveToFile component
+
+- utility script that allows automatic or manual saving of audio being played on a Game Object to a file in WAV PCM16 format
+- file is saved into StreamingAssets, except on iOS, Android and WSA where Application.persistentDataPath is used (also see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)
+
+You can drive it also externally by passing write data yourself - just uncheck useThisGameObjectAudio in that case and call `AddToSave` on it periodically [at OnAudioFilterRead rate] after it's started via `StartSaving`.
+
+On iOS you can enable `Application supports iTunes file sharing` entitlement to (more easily) retrieve/access the application data container and saved files from the desktop.
+
+## Projects with disabled Unity audio
+
+The asset will properly run with Unity audio disabled in Project Settings, except all AudioSource related functionality won't work;
+All FMOD stuff will function properly though, so components which don't rely on Unity AudioSource will function as usual -
+such as all AudioStreamMinimal, MediaSource, and Resonance components
+
+- Unity will print an error message when accessing certain Audio features (such as AudioSettings.outputSampleRate)
+and these are left as messages to the user to indicate that these features probably shouldn't be used
+
+## For more details about all components please refer to each respective file in the _Docs folder
+
+- [Documentation000_audio_streaming](Documentation000_audio_streaming.md):
+    - main playback/streaming components: AudioStream, AudioStreamMinimal, AudioStreamRuntimeImport, AudioStreamMemory
+
+- [Documentation010_recording_and_inputs](Documentation010_recording_and_inputs.md):
+    - streaming from any available system recording input: AudioStreamInput, AudioStreamInput2D, ResonanceInput, and `AudioStream InputDevice` Audio Mixer effect
+
+- [Documentation020_system_outputs](Documentation020_system_outputs.md):
+    - playing Unity audio on different available system outputs: AudioSourceOutputDevice, OutputID on AudioStreamMinimal, and `AudioStream OutputDevice` Audio Mixer effect
+
+- [Documentation021_channels_separation](Documentation021_channels_separation.md):
+    - playing on different channels of an output: AudioSourceOutputDevice and MediaSourceOutputDevice
+    - separating playback and input channels: (originally demo scripts) AudioStreamInputChannelsSeparation, AudioSourceChannelsSeparation, AudioClipChannelsSeparation
+
+- [Documentation030_3D_spatialisation](Documentation030_3D_spatialisation.md):
+    - Unity spatialization (Spatial Blend) w/ AudioStream and AudioStreamInput
+    - Resonance based 3D spatialization components: ResonanceSource, ResonanceSoundfield, ResonanceInput
+
+- [Documentation031_audiolisteners](Documentation031_audiolisteners.md):
+    - Resonance based Audio Listener for Unity AudioSources
+    - AudioStreamListener and AudioStreamListenerAudioSource components
+
+- [Documentation040_Icecast](Documentation040_Icecast.md):
+    - IcecastSource for AudioSource -> Icecast mountpoint
+
+- [Documentation050_LAN_source_client](Documentation050_LAN_source_client.md):
+    - AudioSources connector over LAN: AudioStreamNetMQSource/AudioStreamNetMQClient and AudioStreamOscSource/AudioStreamOscClient
+
+- [Documentation060_mobiles](Documentation060_mobiles.md):
+    - AudioStreamInput_iOS_ExternalDevicesDemo for capturing external devices on iOS, incl. e.g. Bluetooth headphones/microphones
+    - iOS and Android background running notes
+
+- [Documentation070_ASIO](Documentation070_ASIO.md):
+    - config & running ASIO enabled system

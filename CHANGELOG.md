@@ -1,0 +1,1109 @@
+# Changelog
+
+## V 1.0 062016
+
+- initial version.
+
+## V 1.1 082016
+
+- update for FMOD Version 1.08.09 <- Strongly recommended to update, if previous version was used.
+- update for Unity 5.4
+- improved startup for variable buffer length streams
+- improved stream loss detection and recovery
+- improved stream finishing for finite streams ( hosted files ) and locally streamed files for AudioStream component
+- improved state reporting
+- few performance improvements - AudioStream is now even more low profile
+
+## V 1.2 082016
+
+- added option to select any available audio output in the system including non system default one for AudioStreamMinimal
+
+## V 1.3 092016
+
+- new AudioSourceOutputDevice component - enables redirection of AudioSource's output buffer to any audio output present in the system
+- update for FMOD Version 1.08.11 <- at least this version is needed for AudioSourceOutputDevice to work as it contains a bug fix formerly preventing so.
+- fixed tags reporting on track change
+- ( refactored common functionality into a new source file )
+
+## V 1.4 042017
+
+- new AudioSourceInput component - allows recording audio from any available recording device.
+- update for FMOD Version 1.09.03 ( it was not completely necessary, you can stay on any previous version )
+- added new demo scenes for each respective functionality type
+- few `quality of life` improvements and usability fixes based on users' requests
+
+## V 1.4.1 052017
+
+- RAW format support also in the Editor
+- iOS recording guide and fixes
+- readme updated with general remarks on usability of FMOD and Unity versions
+- startup sync to better synchronise user scripts with FMOD initialisation
+- Unity audio sample rate compensation for stream sample rate bugfix for AudioStream component
+- added AvailableOutputs() also to AudioSourceOutputDevice allowing its better independent usage
+
+## V 1.5 052017
+
+- finally support for Unity spatialisation
+- simple minimal 3D demo scene
+- few inconsistencies and limitations were resolved in connection to the above
+
+## V 1.5.1 062017
+
+- AudioSourceOutputDevice hotfixes release:
+    - fixed sample rate mismatch and consequent memory leak leading to sound degradation over time (regression from 1.4)
+    - fix for Best latency DSP buffer size in Audio Settings
+    - much smoother runtime device change without noticeable audio popping
+    - error message instead of plain exception when AudioSourceOutputDevice is not initialised / startup has to be synchronised since 1.5 /
+
+## V 1.5.2 072017
+
+- [Advanced] setting on AudioStream allows user to set "Stream Block Alignment" as workaround for audio files with unusually large tag blocks - typically e.g. mp3's with embedded artwork
+- new low latency 2D input component AudioStreamInput2D + demo scene
+- AudioSourceOutputDevice allows chaining of audio filters
+- AudioSourceOutputDevice further fixes for empty clip on startup
+- new event on stream tags/track change and better stream tags handling in general
+- new GOAudioSaveToFile component allows automatic saving of audio being played on GO
+- reorganized project files with more logical grouping (before upgrading it's probably good idea to delete existing version first)
+- updated README && in Editor help texts
+
+## V 1.6 092017
+
+- AudioSourceOutputDevice - added initialisation based on currently selected output device sample rate
+- added support for PCM8, PCM24, PCM32 and PCMFLOAT stream formats for AudioStream ( Unity AudioSource ) - note: this enables also playback of MIDI and modules audio files.
+- added support for GoogleVR 3D spatializer on GameObjects via GVRSource and GVRSoundfield components.
+- currently playback via FMOD audio only ( no AudioSource )
+- room definition support, audio input GVR component, and integration with AudioSource planned.
+
+## V 1.7 112017
+
+- changes for FMOD Studio Unity Integrations 1.10.00 (warning: Versions prior to 1.10.00 are no longer supported.)
+- for tags support and 1.10.00 please see `General Unity / mobile / FMOD plugin notes`
+- AudioStreamInput2D has now hard dependency on AudioSource removed - you can mix input signal with e.g. AudioListener buffer
+- Autodetect stream format option - it is default, but you *have* to select proper format on iOS
+- fixes, optimisations and better exception handling
+- due to minimal supported version of Unity on macOS's APFS being 5.5.4p5, AudioStream is submitted with this version
+
+## v 1.7.1 112017
+
+- bugfix for AudioSource stopping immediately when set to (default) automatic start
+- more startup stability fixes esp. for iOS
+- new IcecastSource component and demo scene providing PCM and OGGVORBIS encoded stream from any AudioSource to an Icecast 2.4.0+ mountpoint (see README for details)
+
+## v 1.7.2 122017
+
+- checked FMOD Studio 1.10.02 compatibility
+- FMOD version used is available now and displayed in demo scenes
+- updated automatic upgradable sources for Unity 2017.2
+- added separate input gain for audio input sources
+- Fix for available recording devices on Android
+- removed editor resources to have directivity texture computed instead of being textures composed for GoogleVR 3D sound
+- new connectivity and starvation influencing advanced parameters for AudioStream* ( `Initial Connection Retry Count` and `Starving Retry Count` )
+- AudioStream - will now try to mute on starvation
+- updated README, iOS/Android background audio guides
+
+## v 1.7.3 012018
+
+- AudioStream: fix for redundant buffer allocation (should fix playback with Best Latency setting)
+- AudioStream/Minimal: improved playback finishing for finite files
+- fixed spatializers demo scenes to be audible
+- AudioSourceOutputDevice: availability bugfix
+- AudioSourceOutputDevice: reduced latency and increased buffer availability to play more nicely with other packages such as AVPro
+- AudioStreamInput/2D: exposed dsp buffer size and count for better latency adjusting
+- AudioSourceOutputDevice: exposed dsp buffer size and count for better latency adjusting
+- more and hopefully more explanatory comments throughout the code and README
+- new components for distributed LAN audio playback using Opus codec and using UNET at the moment: AudioStreamUNETSource and AudioStreamUNETClient
+
+## v 1.7.4 032018
+
+- reworked demo scenes + added main launch screen for demo builds
+- improved IL2CPP compatibility for a remaining scene, which was not compatible
+- several fixes when disabling/stopping playback and input on game objects
+- improved LAN exchange by moving network loop to FixedUpdate
+- added public demo builds for Windows (x86 and x64), macOS and Android
+
+## v 1.7.5 042018
+
+- AudioStreamInput*: added multichannel input information to demo scenes
+- AudioStreamInput*: exposed advanced parameters for DSP buffers in the demo scenes
+- AudioStreamInput*: fix when stopping/changing the scene
+- AudioStream: updated network read by moving it to its own thread; note: this improves error condition handling, recovery and end of playback detection for files significantly; also buffer fill percentage is now updated properly
+- AudioStream: fix for few samples might be omitted at start when opening a file
+- AudioSourceOutputDevice: removed direct AudioSource dependency (this enables its usage on Timeline (just in runtime for now))
+- AudioSourceOutputDevice: updated demo scene, includes an example usage for AudioStreamMinimal now
+- project is compatible with .NET 4.x runtime, demo applications are built with it too
+- compatible with .NET 4.x and .NET standard APIs
+- updated README with respective changes and updated all FMOD links to be current
+
+## v 1.7.5.1 042018
+
+- hotfix for missing file on submission (no idea why it was missing..)
+- fixed crash in input base on scene change
+
+## v 1.7.6 042018
+
+- AudioStream component compatible with UWP/Hololens (conditional UNITY_WSA defines for thread/task)
+- AudioStream network thread timeout is now adjusted continuously instead of being hardcoded
+- cleaned up demo scenes UI and explanation texts
+- new MultichannelOutputDemo scene showing how to use multichannel separation of an output with MONO audio clip and AudioSourceOutputDevice component
+- increased looping AudioClips buffers to handle them better on some devices (Android/Daydream)
+
+## v 1.7.6.1, 1.7.6.2 052018
+
+- tested w FMOD 1.10.05
+- fix for repeated re/starting of the recording buffer
+
+## v 1.7.7 052018
+
+- minor networking info fix compatibility for Unity 2018.2 beta
+- AudioStreamInput2D: added manual resampling and custom mix matrix for consistent performance and advanced setups
+
+## v 1.7.8 052018
+
+- new component AudioStreamDownload: allows downloading of file/stream faster than realtime and to play automatically created AudioClip afterwards
+- AudioStreamDownloadDemo scene
+- playback of very short clips was fixed in connection to this
+- less confusing logging for (end of) playback
+
+## v 1.7.9 062018
+
+- optimised audio buffer conversions throughout AudioSourceOutputDevice and AudioStreamInput* components (they are much faster and e.g. means the former can be run even on mobiles now)
+- tested Best latency setting with the above (you need ASIO drivers on Windows still)
+- Added automatic DSP buffers option to components which allow DSP buffer customisation
+- prevent crashing in demo scenes which allow custom DSP buffer sizes on non Windows platforms
+- updated demo scenes with some more pleasant audio
+- fix for float->PCM16 conversion in GOAudioSaveToFile and IcecastSource components
+- tested w FMOD 1.10.06
+
+## v 1.7.9.1 062018
+
+- AudioStream - performance bugfix
+
+## v 1.7.9.2 072018
+
+- AudioStream - solved stream playback with Best latency AudioManager setting on all platforms tested with needed submillisecond resolution
+(as a consequence network buffer is drained more consistently at startup and during playback and is more resilient to stream/timing fluctuations as well)
+
+- added playback time to playback components
+
+## v 1.7.9.3 072018
+
+- AudioStreamMinimal - bugfix for finished playback
+
+## v 1.8 082018
+
+- project structure should be properly decoupled - you can press delete on any unneeded component/folder in Demos and Scripts - only Scripts/AudioStreamSupport is common and required for all AudioStream scenes/components. Native mixer plugins don't need even those.
+- upon opening main demo scene for the first time, all AudioStream demo scenes are added to the Editor Build Settings, if needed (it might be necessary to restart main scene for changes to be picked up)
+- improved current channels count detection for all components by taking into account AudioSettings.driverCapabilities - thanks to forum user ddf for reporting
+- more accurate (but less frequent) time elapsed for AudioStream by measuring dspTime only when audio is actually requested/played
+- GVR DSP plugins release bugfix
+- significant change how creation of FMOD systems is handled overall: there's only one FMOD system created per output device (for AudioSourceOutputDevice components), one FMOD system for all Unity AudioSources (AudioStream) and each non-Unity sound (AudioStreamMinimal) has its own (since setDriver can be called on them independently)
+- due to above output devices properties are now configured via scriptable object in Scripts/AudioSourceOutputDevice/Resources/OutputDevicesConfiguration instead of being directly on each component
+- ^ note: DSP buffer settings were removed for output devices for now
+- new OutputDevicePrefabDemo scene demonstrating instantiation of AudioSourceOutputDevice prefabs
+- new native mixer plugins (Windows x64 and macOS only for the time being) for redirecting directly from audio mixer to other than default system outputs
+- user has option to delete either `normal` AudioStream functionality, the native plugin, or keep both in the project - each system needs different FMOD package/libraries to be imported so the installation guide was updated as well
+- moved automatic deinitialization from OnDisable to OnDestroy - since the components are supposed to be long running, i.e. for the lifetime of the scene, it makes more sense, and they can be properly dis/enabled individually now as well
+- improved releasing of FMOD system for AudioStream/Minimal under unstable conditions in that the system is actually released now; - using a delay observed from FMOD diagnostics debug logging for file thread -
+- ^ added FMOD.Debug trace wrapper for diagnostics should be needed
+- native plugins compiled against FMOD 1.10.08
+
+## v 1.8.0.1 102018
+
+- updated for FMOD 1.10.09
+- AudioStreamDownload: added decoded_bytes and file_size for download `progress` (removed playback_time)
+- AudioStreamDownload: added tags support
+- updated ambisonic demo scene/s:
+- GVRSoundfieldDemo allows custom amb file path to be entered and played
+- GVRSoundfield, GVRSource components: fixed few bugs and automatic playback finishing when end of file is reached
+- updated readme [AAC on iOS, some contact information and corrections]
+
+## v 1.8.0.2 112018
+
+- added network proxy support for components which can stream from network (for UnityWebRequest for playlist retrieval, UNET, and for FMOD systems)
+(default configuration in AudioStream_ProxyConfiguration scriptable object in AudioStream\Scripts\AudioStream\Resources)
+
+- added AudioStreamProxySettingsDemo scene for changing proxy settings in the demo application, with saving/loading them to PlayerPrefs
+- AudioStream: improved connection stability with saturated network bandwidth - it should be much more stable (with e.g. concurrent downloads running on the same machine), with audio drops when data is unavailable, but instead of dropping the connection immediately it will keep it alive and eventually recover
+
+## v 1.8.0.3 112018
+
+- added and enhanced UnityEvent support for all components where appropriate/they were missing yet, including all demo scenes
+- better error reporting in few places in connection to the above
+- added new AudioStreamStressTest demo scene for basic simultaneous testing of multiple AudioStream game objects
+- exposed `streamBufferSize` on AudioStream* components
+- AudioStream/Download: fixed playback for PCM24/32 formats (non mobiles only for now)
+
+## v 1.8.0.4 122018
+
+- Checked compatibility with FMOD 1.10.10
+- AudioStreamDownload: cache filename is derived from the hash of the url as opposed to just string escaping (resolves filesystem exceptions for long URLs)
+- AudioStream: removed per platform timeout constants, updated code to be finding optimum continuously based on current network buffer utilization across all platforms
+(Note: this was done mainly for Best latency setting; however, on Windows it still leads to playback fluctuations regardless - this is OS audio system dependent - added a warning when starting playback on Windows with this configuration)
+
+- AudioStreamDemo scene: Good latency is automatically set when this scene is opened on Windows with Best latency setting, reverting to previous latency when leaving the scene.
+- FMODSystem - fixed bug when over releasing
+- cleaned up code for UI styles in demo scenes (also means that DPI is more correctly detected on macOS)
+
+## v 1.8.1 012019
+
+- AudioStreamOutputDevice: added `input` latency slider (for the FMOD sound created based on Unity audio buffer) - fixes sound disappearing when many AudioSources are being played in the scene
+- AudioStreamOutputDevice, AudioStreamInput: improved warning description when user selected Default Speaker Mode bandwidth would exceed HW capabilities (this would lead to insufficient audio data fed to FMOD).
+- AudioStreamDownload: optional slow AudioClip creation after download, which uses less memory (might help with memory related crashes on mobile, but the downside is that it's 5-10x slower)
+- AudioStream: added preliminary support for ID3v2 tags in mp3 files and extraction of album/cover art, if it's present. Texture2D is created out of extracted image data automatically.
+If the mp3 file has embedded album/cover art, the texture is displayed in the `AudioStreamDemo` demo scene.
+
+## v 1.8.2 022019
+
+- IcecastSource: added support for OPUS encoded in Ogg container audio - this should result in lower bitrate + better quality than previous methods. Note that FMOD/AudioStream can't be used as Icecast client in this case since FMOD does not support OPUS family of codecs.
+- IcecastSource: fixed non Vorbis encoded audio not being able to transmit; bitrate, channels and samplerate are now pushed as part of initial config - should help with signal acquisition by Icecast
+- IcecastSourceDemo: added input device to be available to push as combined signal with AudioSource, added codec selection
+- AudioStream: extended allowed stream types for explicitly selecting audio type
+- AudioStreamDemo: audio format can be now explicitly selected from combobox when needed
+- new component AudioStreamMemory: allows decoding audio data from a memory buffer, creates an AudioClip once done
+- fixed loading of demo audio tracks on Android
+- updated ASIO testing on Windows (not gonna happen very likely)
+- updated fmod 1.10.11 and OPUS encoding plugin
+- updated demo scenes high DPI looks
+- several bug and code consistency fixes
+
+## v 1.8.2.1 022019
+
+- don't use SpeeX resampling by default (updated for AudioStreamInput2D (its, and IcecastSourceDemo scene)
+- IcecastSourceDemo: updated to split audio sources to separate game objects, moved IcecastSource to main listener
+- Hololens support: compile with UNITY_WSA also newly added component
+- AudioStreamDownload: exception fix while retrieving the size of the target
+
+## v 1.9 072019
+
+- checked compatibility with FMOD 1.10.14
+please note that you can use/upgrade to FMOD 2.00 which is in Early Access, but you would have to fix few compile errors due to renamed callback in C# Wrapper. Otherwise it seems to be working fine though (tm).
+
+- submitted with Unity 2017.4.1 as lowest officially supported version
+
+### Updates/fixes
+
+- AudioStreamInput2D : fixed multichannel input with Mono system output
+- AudioStreamInput* : added option to skip [loopback] devices - this means that device enumeration can return the same input devices set as Unity audio/Microphone class.
+- AudioStreamInput* demo scenes : fixed RMS meter for zero/not present signal, added reaction cube for each channel separately
+- AudioStream/Minimal : added new `continuosStreaming` user flag to attempt to automatically reconnect/play again when the connection is dropped/finished
+(so components can keep trying connecting and playing ad infinitum without user intervention/code automatically)
+
+- AudioStreamMemory : decoupled from AudioSource, fixed performance bugs, reading of tags is optional (default off), decoding buffer sizes are now automatic, decoded data can be optionally cached to disk (default off)
+- AudioStreamDownload : decoupled from AudioSource, saved into application cache with `.raw` extension with stream properties at the beginning of the file
+Both of these optionally call back new `OnAudioClipCreated` user UnityEvent with newly constructed clip so it can be used independently
+
+### New Components
+
+- AudioStreamInput2D_iOS : allows recording from any connected input on iOS device, such as AirPods; signal is routed into an AudioSource so can be used as usual in Unity
+- ResonanceInput : records from any availble input - similarly as AudioStreamInput* component - and plays back the input processed by FMOD's provided Google Resonance DSP plugin in 3D. The playback is separate from Unity for now.
+- ResonanceSoundfield : a- b- format ambisonic source - replaced GVRSoundfield
+- ResonanceSource : 3D spatialized AudioSource - replaced GVRSource
+- AudioStreamNetMQSource : audio streaming server based on NetMQ.Unity libraries
+- AudioStreamNetMQClient : audio streaming client based on NetMQ.Unity libraries
+NetMQ.Unity is based on NetMQ with fixes for .NET 3.5 runtime, works on 4.6 (Unity 2017 LTS still defaults to 3.5 runtime)
+
+#### New testing scenes
+
+- AudioStreamInput2D_iOSDemo (runs properly on iOS only)
+- ResonanceInputDemo
+- AudioStreamMinimalStressTest
+- AudioStreamMemoryStressTest
+- AudioStreamDownloadStressTest
+- testing scenes in demo application are divided into groups for Features and Stress tests
+
+#### Removed
+
+- all UNET transport references in components and demos, replaced with NetMQ, see above
+- all GoogleVR components and scenes were replaced by FMOD's provided Google Resonance plugin
+
+### General
+
+- fixed all UNITY_WSA threading defines
+- native plugins sources are newly included in `AudioStream/Plugins/AudioPlugin.zip` with build instructions for 64-bit Windows and macOS
+- demo assets are now distributed with asset store package and are copied automatically into project's StreamingAssets when the package is imported/if they're not present, so they can be used at runtime
+
+## v 2.0 102019
+
+- updated for FMOD 2.00.xx
+(asset is not compatible with 1.10.xx OOTB any more)
+
+### Updates/fixes
+
+- AudioStreamBase : replaced network retrieval backend for FMOD with UnityWebRequest - this means all common http/s connections features work, including redirects and POST headers (to a degree UnityWebRequest provides them)
+- AudioStream demo scene/s : you can choose between MEMORY and DISK caching before starting playback: DISK allows seeking within the whole content downloaded up to that point (compressed audio is stored in application cache)
+! Important ! - format compatibility went down though - in general MPEG format works, other formats might need setting new `Decoder Block Size` to the physical file size before playback - this should be updated/fixed later -
+
+- AudioStreamInput* : added builtin automatic notification change on system record devices change - an user UnityEvent is invoked where the new updated list can be queried
+- AudioStreamInput* demo scenes : hotplugging of input devices is supported - you can dis/connect your devices at runtime and their list will update
+
+### New Components
+
+- AudioStreamLegacy and AudioStreamMinimalLegacy : previous versions of AudioStream and AudioStreamMinimal are left intact including their demo scene and renamed to AudioStreamLegacy and AudioStreamMinimalLegacy
+
+### General
+
+- removed redundant testing in native plugin (Unity project opening/startup should be faster now)
+- added new section to demo app for Legacy components
+- updated scenes and code for 2019.x/LTS compatibility
+
+## v 2.1 112019
+
+### Updates/fixes
+
+- AudioStreamInput* : added resampleInput setting which can turn off resampling to output samplerate for better compatibility with other assets which do their own encoding such as AVPro Movie Capture
+- AudioStreamInput* : fixed Un/Pause seamless continuation
+- AudioStreamInput* : fixed bug with multiple inputs being notified
+- AudioStreamInput* : AvailableInputs now returns struct describing an input rather than just string device name
+- AudioStreamInput* demo scenes : added UI option to filter out non/loopback interfaces
+
+- AudioSourceOutputDevice : AvailableOutputs now returns structs describing the output/s rather than just string device name
+- AudioSourceOutputDevice : added hotplugging notification for output devices during runtime
+- AudioSourceOutputDevice demo : available device list should react to device changes at runtime
+
+### General
+
+- fixed few format compatibility issues and updated AudioStream* to correctly point to local storage when needed, updated README and demo scene
+- split !!README1ST!! and general documentation
+
+## v 2.2 022020 Corona
+
+### Updates/fixes
+
+- Demo scenes : put lists containing potentially many items [inputs/outputs] under scroll views for friendlier UX
+- AudioStream : simplified memory buffer
+- AudioStreamInput* : added warning message explaining its dependency when no AudioSource is set
+- AudioStreamInput* : fixed recording devices enumeration and startup when RecordOnStart is true
+- AudioStreamInput2D : updated automatic mix matrix when Speex resampler is used
+- AudioStreamInput2D demo : automatic latency settings update when Speex resampler is used
+
+### General
+
+- checked w/ latest FMOD (2.00.07)
+- Windows native x86 plugin is now being included
+- the check for demo assets being present in StreamingAssets for demo scenes to work is now simplified and less resources hungry in the Editor
+- tested disabled Domain and Scene Reloading in Unity 2019.3
+
+## v 2.3 032020 Corona+
+
+### Updates/fixes
+
+- AudioStreamOutputDevice : moved automatic output device changes notifications to separate component (see below)
+- AudioStreamInput* : moved automatic input device changes notifications to separate component (see below)
+- AudioStreamInput2D : fixed incorrect handling of Mono output, corrected input signal retrieval so this further improves latency, Speex resampler output is improved as consequence, too
+- AudioStreamInput2D_iOS : updated same as above
+- AudioStreamBase, AudioStreamLegacyBase: automatically update audio session at start to include Bluetooth devices as possible system output on iOS
+
+### New Components
+
+- AudioStreamOutputDevicesChangedNotify : optional component can be placed in the scene to receive system's output device changes updates
+- AudioStreamInputDevicesChangedNotify : optional component can be placed in the scene to receive system's input device changes updates
+
+## v 2.3.1 042020 Corona++
+
+### Updates/fixes
+
+- AudioStreamOutputDevice : fixed wrongly determined Unity output channels count when Unity set speaker mode != driver capabilities (hopefully for some time at least)
+this caused erroneous playback on some machines and when using other than default (Mono/Stereo) speaker mode
+
+- mix matrix : (for recording and output device) - cleaned up displaying and simplified automatic mix matrix creation
+
+### Demo applications
+
+- built with 5.1 default speaker mode, actual mode is determined at runtime based on HW, requested and actual speaker modes are both displayed
+
+### General
+
+- tested with `FMOD for Unity` package which is now available on the Asset Store
+(and is identical to FMOD Integration available on FMOD website)
+
+## v 2.3.2 042020 +++
+
+- fixed issue with loading Resonance plugin in Windows player on 2019.x
+- demo application should display build time, not current time
+
+## v 2.4 062020 4thMonth
+
+### Updates/fixes
+
+- AudioStreamDownload : added `realTimeDecoding` which will force the decoder to run at realtime - this allows e.g. netradios to be saved
+    added `playWhileDownloading` option which will allow the audio playback while the download is in progress on user provided audio source `audioSourceToPlayWhileDownloading`. Only available if the above is enabled.
+
+- AudioStreamDownload
+- AudioStreamMemory : not consistent finishing (resulting clip length) should be fixed
+
+- resolved issue with playback on iOS when the application is not setup for recording: use `AUDIOSTREAM_IOS_DEVICES` compile time define in iOS Player Settings to enable recording from Bluetooth devices and `force to speaker` workaround functionality - OR - when the playback on Bluetooth devices is needed
+(the player has to have `Prepare for recording` enabled in Player Settings in both cases)
+
+- tidied up demo assets to be stored and retrieved from separate directory in StreamingAssets in `StreamingAssets/AudioStream`
+
+### New Components
+
+- MediaSourceOutputDevice : user API only (not extensive Editor support) component for playing back individual audio files on arbitrary output channels/speakers on a given output device simultaneously and independently
+uses FMOD only directly, not for use with Unity AudioSources/AudioClips for now
+
+- new demo scene MediaSourceOutputDeviceDemo
+- MultichannelOutputDemo : renamed/moved to new AudioSourceOutputChannelsDemo
+
+- AudioStreamDevicesChangedNotify : rolled previous two AudioStreamInputDevicesChangedNotify and AudioStreamOutputDevicesChangedNotify components into one new one which should catch both input and output device changes in the system
+(previously there were problems when both were used in the same scene)
+
+## v 2.4.1 072020 5thMonth
+
+### Updates/fixes
+
+- iOS AVAudioSessionWrapper : moved alongside other input components for better/proper asmdef compatibility
+- MediaSourceOutputDevice : added few user methods provided by Jon Olive (@Jon_Olive)
+- AudioStreamLegacy : improved insufficient network data state
+    demo scene AudioStreamLegacyDemo disables UI controls so user can't stop the stream until the stream either continues or stops completely
+    - stopping / pausing the stream when in this state led to freezes previously; this situation is resolved in newer component already
+
+### New Components
+
+- AudioSourceCaptureBuffer : to ease the retrieval of filter audio data between game objects (must be in sync with OnAudioFilterRead)
+    not used in demo scenes - needs to be attached on a game object with AudioSource
+
+### New demo scene
+
+- MediaSourcePlaybackDemo : plays an audio file (from StreamingAssets) directly by FMOD via MediaSourceOutputDevice component
+    24 channel wav audio file used for demo
+    file provided by Jon Olive of MagicBeans Physical Audio Ltd. [https://www.magicbeans.xyz/], used with permission (thanx Jon!)
+
+## v 2.4.2 092020 M#6
+
+### Updates/fixes
+
+- MediaSourceOutputDevice : further user facing functionality
+    - defer playback to user after sound creation, allows to completely release the sound only when needed (not when e.g. just stopped)
+    improved behaviour and fixed channel release/stealing/looping functionality
+    - channel returned to the user might change as result of the call
+- MediaSource demos : updated as per above
+
+- AudioStreamInput* : all input sounds are created on a single FMOD system, so their # (# of `input` game objects) is no longer limited to allowed max. system count
+    - this also means that it's no longer possible to change/update DSP buffer properties at runtime - this should be hopefully acceptable trade off though -
+    but might be a breaking change if you were updating DSP buffers at runtime
+
+- AudioStreamInput demo scenes : removed custom DSP buffer changes at runtime due to the above
+
+- latest FMOD 2.01.04 update : tested against latest FMOD update - FMOD 2.01.04
+    Please be advised that this brought breaking changes, in a way which is not backward compatible with previous versions (again).
+    in other words you need FMOD 2.01.04 (and up) for asset to work
+    - updated initial setup in README
+
+## v 2.4.3 112020 11
+
+### Updates/fixes
+
+- AudioStreamDevicesChangedNotify : since notification callback is by default installed on system output 0, there were previously issues when system default changed as a result of device/s un/plugging
+this should be now fixed, as it tries to stop all ASODs running in the scene after 0 device change, releases 0 system and installs new callback on new default
+
+- MediaSourceOutputDeviceDemo : fixed timing issue with resolving asset paths and OnGUI
+
+- tested with FMOD 2.01.06
+- submitted with 2018 LTS as minimal version
+
+## 2.4.4 012021 vaccine#0
+
+### Updates/fixes
+
+- GOAudioSaveToFile : corrected platform save location
+- AudioStreamBase : simple custom HTTP request headers support - call `SetCustomRequestHeader(key, value)` on component before Play()
+- IL2CPP builds : added support for optionally disabling array bounds and null checks in audio loops via ENABLE_IL2CPP #define : please see `Building with turned off IL2CPP runtime checks` in [Documentation.md](Documentation.md)
+- UnityWebRequest usage compatible with 2020.2
+
+- tested with FMOD 2.01.07
+- native plugins compiled against FMOD 2.01.07
+- should properly support and run on Apple Silicon
+
+## 2.5 112021 No/v
+
+### Updates/fixes
+
+- AudioStreamDevicesChangedNotify : significant updates and fixes for outputs/inputs notification component, and all components which use output/record driver id and all demo scenes which display and access system outputs and inputs
+- more user friendly messaging for redirection running
+- excluded DivideByZeroChecks Il2CppSetOption too for callbacks
+- completely decoupled iOS parts of the asset from the rest, so AVAudioSession output/input can be used separately if needed (i.e. no FMOD dependency required)
+
+#### demo scenes
+
+- more scroll areas
+- updates devices lists + selection correctly based on change notifications
+
+- Several bugfixes and refactors, #define updates to reflect changes in recent Unity versions
+- Updated documentation and tooltips where appropriate
+
+- tested with FMOD 2.01.11 (latest Unity Verified),
+- native plugins compiled against FMOD 2.01.11
+
+PSA/WARNING: It looks like sounds created via FMOD networking (i.e. all Legacy components which stream from network) fail with `ERR_FILE_EOF - End of file unexpectedly reached while trying to read essential data (truncated?).` when opening URLs which worked before.
+I'm not sure when this started happening, but it's in 2.01.07 already (the FMOD provided core API network streaming example fails with the same error w/ a common MPEG stream URL which worked before).
+I've replaced legacy components in scenes which were using them as leftover, but at this point there's probably nothing I can do
+[ streaming from network would require new asset without FMOD dependency, will try to figure something out ]
+
+## 2.6 122021 /|\\
+
+### Updates/fixes
+
+concerning mainly latest official FMOD 2.02.04 release for Unity/Asset Store
+
+- fixed AudioStream (main audio streaming component) behaviour - should now be playing/streaming correctly without running out of data
+- updated Resonance interface + demos (no longer compatible with previous FMOD versions)
+- updated mixer effect plugins w/ FMOD 2.02.04
+- small stability fixes
+
+### New
+
+- AudioStreamDownloadRealtimeDemo : shows how to handle progressive playback of audio while it is being downloaded from netradio
+- new `RuntimeSettings` configuration object:
+    - ScriptableObject in `AudioStream\Scripts\AudioStreamSupport\Resources`
+    - has user customizable field `Cache Path` which allows entering a path to a directory which will be used as temporary storage for all components which use disk as cache
+(currently it means AudioStreamDownload, AudioStreamMemory and AudioStream when using DISK as cache).
+
+#### Tested for Unity 2022.1(beta) compatibility
+
+-> please enable non secure HTTP downloads in 2022 (and up) Player settings in order to use links in the demo
+
+- Go to Edit -> Project Settings -> Player -> Other Settings > Configuration and set `Allow downloads over HTTP` to `Always allowed`. Alternatively, use your own secure (HTTPS) links only.
+- demo scenes display notice when running on 2022 and up and not having `Allow downloads over HTTP` enabled
+
+Bumped version to 2.6 since it's submitted w/ 2019 LTS, too.
+
+## 2.6.1 032022 St.Javelin
+
+### Updates/fixes
+
+#### AudioStream
+
+- ignore `too small` Content-Length in some request responses to more likely handle media length correctly
+AudioStreamNetworkSource / AudioStreamNetworkClient
+
+- fixed running under default/system samplerate when samplerates of source and client differ significantly (ex. mobile<->PC)
+- AudioStreamNetworkClient is now using Unity AudioClip for playback, which means it has larger latency than previously, but received stream can be e.g. placed in 3D
+- removed Best latency setting as requirement
+
+## 2.6.2 032022 St.Nilwa
+
+### Updates/fixes
+
+#### AudioStreamInputBase
+
+- system is initialized with FMOD.CONSTANTS.MAX_CHANNEL_WIDTH allowed channels/speakers when initializing it
+this was max./default also before, only now it's explicit - the constant is currently 32 output channels, this is mentioned also in Docs for Audio input.
+
+#### IL2CPP
+
+Marked remaining OnAudioFilterRead and PCMReadCallback callbacks for IL2CPP optimization
+
+### New components
+
+#### Simple (hard) separation of channels of playing input device, AudioSource, and AudioClip
+
+(these were originally intended as demo scenes only, but I added them as separate components, too)
+
+#### AudioStreamInputChannelsSeparation
+
+- splits recording channels of audio being recorded from an AudioStreamInput* into separate single channel AudioSources prefabs and instantiates them in the scene
+please see AudioStreamInputChannelsSeparationDemo for example usage
+
+#### AudioSourceChannelsSeparation
+
+- splits audio of an AudioSource/AudioClip being played on current Unity output into separate single channel AudioSources prefabs and instantiates them in the scene
+please see AudioSourceChannelsSeparationDemo for example usage
+
+#### AudioClipChannelsSeparation
+
+- splits original channels of (a multichannel) AudioSource/AudioClip being played into separate single channel AudioSources prefabs and instantiates them in the scene
+please see AudioClipChannelsSeparationDemo for example usage
+
+- basic usage only is currently implemented, e.g. all components play automatically, they don't have complete user facing API yet, but they're usable even in this state.
+
+For all of the above please see `Separating AudioSource, AudioClip and AudioStreamInput* channels` in Documentation
+
+## 2.6.3 042022 Not a special operation
+
+### Updates/fixes for AudioMixer effect
+
+- built using 2.02.04 - latest Unity verified version
+- updates from Unity official Native Audio Plugins SDK
+- solo/mute/bypass on the effect should now work
+- updated devices/output switching
+- the plugin listens for device changes now and updates its internal outputs as needed when in the mix
+^ see `AudioStreamOutputDevice mixer effect usage instructions` in main documentation (macOS is limited in this regard)
+
+New demo scene for the above
+
+#### OutputDeviceUnityMixerHotpluggingDemo
+
+- displays current output device list and plays audio on user chosen device via mixer effect
+- listens for device changes using AudioStreamDevicesChangedNotify's event in the scene, updates device list accordingly and switches playback to user selected output
+
+## 2.6.4 062022 Three days
+
+### Updates/fixes
+
+#### Added assembly definition files
+
+- the asset's code is now entirely asmdef based /except Demos and its Plugins/
+
+#### Cleaned up usage of web proxy for networking requests
+
+- web proxy usage is removed for all UnityWebRequest - all UWRs should follow system settings for web proxy
+- used now only by FMOD networking - legacy components
+- Note: FMOD networking support is not stable from version to version, right now it looks like it's not functional. All legacy/FMOD networking components most likely won't work, the original sources are being left in the asset for now.
+
+#### Updated demo app
+
+- menu facelift - all scenes are grouped into logical categories by functionality
+
+Fixed AudioStreamStressTest demo scene: was using wrong/old component
+
+#### Removed & updated code
+
+- removed old/unused/obsolete parts, moved parts common with AudioStreamIce asset into separate Scripts/Support assembly.
+
+## 2.6.4.1 062022 Three days
+
+### Updates/fixes
+
+- fixed iOS build
+- moved menu definition for demo into Resources to ensure it's always included in build
+
+## 2.6.5 092022 St. Himars
+
+### Updates/fixes
+
+- updated for FMOD 2.02.08 (currently version on the AssetStore)
+
+#### AudioMixer plugin
+
+- set samplerate of the system to Unity project rate (should help if the output device has different rate than Unity project)
+- built w/ 2.02.08
+- turned off tests - should load faster
+
+#### NetMQSource/Client
+
+- added server channels and endianness to the config payload
+
+### Updates/fixes
+
+- iOS AVAudioSessionWrapper : moved alongside other input components for better/proper asmdef compatibility
+
+### New Components
+
+- AudioSourceCaptureBuffer : to ease the retrieval of filter audio data between game objects (must be in sync with OnAudioFilterRead)
+    not used in demo scenes - needs to be attached on a game object with AudioSource
+
+### New demo scene
+
+- MediaSourcePlaybackDemo : plays an audio file (from StreamingAssets) directly by FMOD via MediaSourceOutputDevice component
+
+## 3.0 102022 annex + 4 bridge - 1
+
+### Updates/fixes
+
+- AudioStreamInput_iOS : component has been renamed to `AudioStreamInput_IOS_ExternalDevices`
+- AudioStreamInput2D : an automatic mix matrix when using Speex resampler is now computed by FMOD
+- ! removed *all* _Legacy components and demos which were using FMOD networking
+- audio MIDI files playback : fixed tags handling
+- Documentation : split into several text files by topic
+    updated to be up to date overall
+
+- tested with latest official FMOD 2.02.09
+
+### Demos
+
+- removed not used Rigidbody component from demo objects -> the package doesn't depend on built-in `Physics` package after importing
+- most scenes which use AudioSource(s) have added audio visualization textures of wave and spectrum data
+- AudioStreamInputDemo scene has AudioStreamInput's Game Object Spatial Blend set to 3D and can be moved in horizontal plane w/ [W/A/S/D], [R] to reset its position
+
+### New
+
+- ASIO support on Windows
+- use `AudioStream\Scripts\Resources\DevicesConfiguration` to enable it
+    - this resource is also the only place in the asset where all (output/input) devices are configured now
+- systems' backend has been rewritten with connection to the above - should be more performant and stable, esp. wrt error recovery (which should be rare)
+- Demo app has a toggle to en/disable ASIO on Windows
+
+## 3.0.1 Watermelon
+
+### Updates/fixes
+
+- renamed events on AudioSourceOutputDevice for future usage: OnRedirectStarted -> OnRoutingStarted, OnRedirectStopped -> OnRoutingStopped
+- few fixes w/ logging + strings/data marshaling for DSP plugins
+- main download handler: ContentLength 0 spam
+- improved AudioTextures source for analysis
+
+### New
+
+- added iOS background mode custom AppController (see [Documentation060_mobiles.md](Documentation060_mobiles.md) for more)
+
+non critical update overall - you don't have to update if iOS background audio is not needed
+
+## 3.0.2 Watermelon
+
+### Updates/fixes
+
+- AudioStreamDevicesChangedNotify : simplified and added (*missing*) processing of devices changed notification for *inputs*
+- error reporting via UnityEvent : fixed invocation to be on main thread only
+- demo application : added zoom/font size for onscreen text
+
+## 3.1 112o22 85k
+
+### Updates/fixes
+
+- AudioStream : added option to download to/playback from local disk cache directly to this main component
+    if Url begins with `http`, `Download To Cache` and `Play From Cache` options become available
+    see `Documentation000_audio_streaming` for more
+    fixed/updated forward/rewind seeking in infinite streams when downloading (when `Download To Cache` is On)
+
+- AudioStreamDownload : removed component and its demos
+    previous functionality of realtime downloads moved to AudioStream and can be seen in AudioStreamDemo - see above
+    for non realtime downloads there's new component AudioStreamRuntimeImport - see below
+
+- cache location/s : added `Download Cache Path` - stores original downloaded media which can be played offline, defaults to Application.persistentDataPath
+    added `Temporary Directory Path` - stores temporary audio PCM data, defaults to Application.temporaryCachePath
+    configurable at `Support\Resources\AudioStreamRuntimeSettings`
+
+### New
+
+- AudioStreamRuntimeImport : imports (streamed) content into an AudioClip - previously done via AudioStreamDownload with `Real Time Decoding` option Off
+    importing should also be faster than previously
+    also see `Documentation000_audio_streaming` for more
+
+- AudioStreamRuntimeImportDemo
+- AudioStreamRuntimeImportStressTest: use the above, similar to now removed AudioStreamDownloadDemo and AudioStreamDownloadStressTest
+
+Updated out of date documentation where needed.
+
+## 3.2 012o23 \>100k
+
+### Updates/fixes
+
+- copyDemoScenesToBuildSettings : asset setting to en/disable populating build settings with its demo scenes when doing a build
+    toggle is present on `Demo\_Support\Editor\AudioStreamDemoMenuDef` scriptable object
+
+- directory for downloading original streamed audio in Application.persistentDataPath is renamed from `AS_DL_Cache` to -> `AudioStream_DownloadCache`
+
+- Inputs components (AudioStreamInputBase, Resonance)
+    significantly enhanced startup to prevent glitches especially with `recordOnStart` ON
+    there were outstanding quality issues - these were fixed
+    fixed recordGain vs. Resonance Gain where necessary (all inputs have direct recordGain)
+
+- more maintenance + improvements refactors for usage internally in other assets
+- used with FMOD 2.02.11
+
+- 3D Input related demo scenes : set Linear Volume Rolloff for 3D AudioSources for their better playback audition
+- more user friendly DEMO UX + default values
+
+## 3.2.1 042023 180k
+
+### Updates/fixes
+
+- AudioStreamBase : `continuosStreaming` is automatically ignored also for AudioStreamRuntimeImport
+
+- AudioStreamRuntimeImport : for some (MPEG) files for which FMOD incorrectly reports their length and their redundant parts are decoded as stream of 0s
+these frames are checked before writing to an AudioClip and aren't included in imported clip
+    added new `OnSamplesCreated` Unity event which is invoked immediately before clip creation with samples to be set for AudioClip
+this also helps in project with Unity audio disabled where AudioClip is not created, but samples can be still retrieved
+
+- projects with Unity audio disabled : fixed several instances relying on Unity audio properties which can be derived from FMOD directly, so projects with Unity audio disabled can run properly now
+see this also mentioned in Documentation
+
+### Demo scenes/assets
+
+- copyDemoScenesToBuildSettings : added more explanation to first README/Docs so it's more noticeable
+    the checkbox now also controls copying all demo assets into `StreamingAssets\AudioStream`
+toggle is present on `Demo\_Support\Editor\AudioStreamDemoMenuDef` scriptable object
+
+- demo scenes with OnPlaybackStopped : was not correctly set in handful of scenes due to its recent change - this was updated
+- RuntimeImportDemo / AudioStreamMemoryDemo : new `OnSamplesCreated` example usage
+- AudioClipChannelsSeparationDemo : added displaying of progress of processing the AudioClip
+
+!! IMPORTANT !!
+
+- since some functionality changed places (assembly), please DELETE previous version of the asset (whole `AudioStream` folder) before importing new update
+- since asset contains native mixer plugin this might not be possible with projects opened in the Editor -
+with project closed, delete `AudioStream` folder normally via OS filesystem, reopen it in Editor and import it afterwards
+
+## 3.2.2 072023 200k+
+
+### Updates/fixes
+
+- AudioStreamBase : more resilient on low network bandwidth and partial network outages
+    - will now wait in Read until the read request from network is satisfied in blocking fashion
+    - it will attempt `starvingRetryCount` times of 100 ms timeout of blocking reads when audio is missing
+
+: all locally played media files are accessible/read via UnityWebRequest now, instead of direct .NET file I/O
+
+- this means that local files should be now playable from Android app archives and asset bundles
+- note that the content of the media is read into memory
+
+- AudioStream : Unity AudioClip channels should be now fixed/following the network stream format
+- AudioStreamInput* : clarified usage of `loopback` interfaces applicable only on Windows
+    fixed ASIO related bug in the Editor
+
+- tested with FMOD 2.02.15
+
+## 3.2.3 082023 Bridge#2
+
+### Updates/fixes
+
+- AudioStreamNetworkSource && AudioStreamNetworkClient :
+    - cleaned up and updated
+    - removed Unity Events for now; they weren't used and proper implementation was left for later
+    - added PCM `codec` option which transports audio buffer without any compression (see docs for more)
+
+- AudioStreamNetMQSource : fixed outstanding scaling issues - multiple sources in a scene should behave properly
+- NetMQ.Unity surfaced an old/er Unity bug in Il2CPP builds - minimum supported Unity version is 2019.4.5 which fixed it
+
+- AudioStreamNetMQSourceDemo : added default microphone to network source
+    - scene's AudioListener is captured
+
+- AudioStreamInput2D and AudioStreamInput_iOS_ExternalDevices:
+    Speex resampler was removed and replaced by simple linear interpolation
+
+    - custom resampler is suitable for all audio and is recommended to use although Unity resampling is still default
+
+- removed Box/Sphere colliders (which got there, again) from demo scenes
+
+## 3.2.4 092023 1Kilo
+
+### Updates/fixes
+
+- tested with latest FMOD 2.02.17
+- fixed end of file bug when streaming/playing remote files
+- added ASIO support to mixer effect output plugin - needs manual setup & care please refer to documentation for more
+
+## 3.2.5 102023 -300kX-
+
+### Updates/fixes
+
+- tested with latest FMOD 2.02.18
+
+- AudioStreamBase : added `attemptToResolveUrlRedirection` option to resolve Url redirects if needed based on System.Net.HttpWebRequest
+    - more rare network playback shutdown fix
+
+- Audio Mixer : new `AudioStream InputDevice` (and `AudioStream ASIO InputDevice`) effect/s which allows recording directly into an AudioMixer group
+    - note: currently Windows only
+    - for details please see [Documentation010_recording_and_inputs.md](Documentation010_recording_and_inputs.md)
+
+- Resonance Source & Soundfield : fixed marshaling/performance for some run cases
+
+### Demo scenes
+
+- moved all Unity AudioMixer related demos to Demo\UnityMixer\
+- new InputDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group
+- and InOutDeviceUnityMixerDemo : AudioStreamInputDevice -> AudioMixer group -> AudioStreamOutputDevice effect
+
+## 3.3 112023 birds can imitate arrivals
+
+### Updates/fixes
+
+- in order to use .NET Standard 2.1 runtime, the asset now requires at least 2021 LTS (2021.3.0) Unity version
+- AudioStream: improved AudioStream streaming under degraded network conditions - it should now handle better situations when network is lost for a short while, but system recovers the connection
+
+    - added logging to memory file system/download handler
+- updated/simplified mixer plugin Xcode project/build
+- fixed/improved PCM aliasing in certain cases
+- small refactoring changes / description / text updates (will/can break existing user code)
+
+### New components
+
+- new AudioStreamNetworkSource/Client components based on OSC messaging: AudioStreamOscSource and AudioStreamOscClient
+- new demo scenes for the above
+- see also [Documentation050_LAN_source_client.md](Documentation050_LAN_source_client.md)
+
+NOTE: removing existing/previous version of the asset is recommended before updating
+
+## 3.3.1 122023 donate socks & gloves
+
+### Updates/fixes
+
+- AudioStreamBase: hotfix for inability to play finite sized media files from network
+- verified w/ FMOD 2.02.13
+
+## 3.4 032024 buy a coffee to increase chances of increasing 400k
+
+Main added feature : *multiple audio listeners*
+
+- these use Resonance for immersive 3D spatialization
+- each listener has its own list of Unity AudioSources which are used as source of the audio
+- each listener can output its spatialized audio to its own system audio output
+
+### Updates/fixes
+
+- AudioStream:
+    - better/corrected handling of Tags strings with various encodings
+    - updated/capped download handler buffer to more sensible (smaller) size
+- Resonance components:
+    - much improved/fixed 3D position updates
+    - much improved multiple Resonances of the same type in scene (previously this didn't scale well - this is now fixed, see Docs for more)
+    - added output device selection to Resonance demo scenes
+
+- many foundational updates across component's common functionality required for new components
+- all demos + their supporting files are put into separate namespace now
+
+NOTE: it's therefore also recommended to remove existing/previous version of the asset before updating
+
+### New components
+
+#### Audio listener for Unity AudioSources
+
+- AudioStreamListener:
+    - takes a list of AudioSources with `AudioStreamListenerSource` attached and produces Resonance spatialized 3D audio of their sound relative to its position
+    - can output to any system audio output
+    - there can be theoretically any number of listeners in scene, each with their own different or same AudioSources and outputs
+though there's currently practical limit of ~7 separate Listeners (depending on scene)
+
+- AudioStreamListenerSource:
+    - requires AudioSource, tags GameObjects as source for listener
+    - allows for setting of all/needed Resonance 3D parameters for this source
+
+See more in [Documentation031_audiolisteners.md](Documentation031_audiolisteners.md)
+
+New demo scene
+
+- AudioStreamListenerDemo:
+    - there are two separate listeners each spatializing two AudioSources
+
+- tested w/ FMOD 02.02.21
+
+## 3.4.1 032024 dogs form packs and run feral
+
+#### Q fix
+
+AudioSourceOutputDevice: fixed sound buffer when driver and sw rate of output differ
+
+## 3.4.2 F16
+
+### Updates/fixes
+
+- AudioStreamRuntimeImport, AudioStreamMemory:
+    - removed heuristic which was detecting 0 filled frames
+/ this was a workaround for FMOD bug for some mp3 (probably) files which decode to double length with 2nd half silent
+/ these files cause FMOD to behave this way even with its "play_sound" native example
+/ please file a bug report to FMOD if you encounter this / reencode file if possible
+
+- AudioStreamRuntimeImportDemo, AudioStreamMemoryDemo:
+    - fixed messaging/events to properly display decoding + AudioClip creation
+    - for downloads increased Blockalign Download Multiplier for better compatibility with some files
+
+- tested w/ FMOD 2.02.22
+
+## 3.4.3 560 km
+
+### Updates/fixes
+
+- more stable when using (rec)input + output device components together on macOS
+
+- tested w/ FMOD 2.02.23
+
+## 3.4.4 NWO2.0
+
+### Updates/fixes
+
+- fixed string format logging while releasing input system
+- don't throw hard errors while waiting for recording device
+
+- tested w/ FMOD 2.02.25
+- Unity 6 tested
+
+## 3.4.5 /\\ for drones
+
+### Updates/fixes
+
+- AudioStreamInput*: fixed small bug in *Input* components where they wouldn't properly create new system to record from after receiving devices change notification
+(they couldn't record immediately after the change only after the scene was restarted)
+
+- removed Editor functionality which automatically copied all demo scenes and their assets for runtime usage
+.please add all demo scenes into Build Settings manually
+.all required runtime demo assets in StreamingAssets should be now properly handled by Asset Store download
+.please see `!!README1ST!! INITIAL IMPORT ERRORS` for further details
+
+- AudioStreamListenerDemo: has new audio track
+
+- (sources (c) maintenance)
+
+- tested w/ FMOD 2.02.27
+
+## 3.4.6 /\\ for drones
+
+Fix for Il2CppSetOption attributes to be properly used in Il2CPP builds
+Updated/changed the process for using Il2CppSetOptionAttribute - please refer to Il2CPP builds in [Documentation.md](Documentation.md)
+
+## 3.5.0 /\\ for drones
+
+Changed to FMOD 2.03 release track - there is one (small) breaking change in FMOD 2.03.
+
+- after reverting back to previous state - see AudioStreamBase+CaptureDSP.cs; Ln 48 - the asset can still be made compatible with FMOD 2.02
+
+### Updates/fixes
+
+- added muting of channel with small timeout when stopping/releasing playing sounds - helps with loud audible pops while stopping the playback/processing
+
+- updated for & tested with FMOD 2.03.06
+
+## 3.5.1 /\\ for drones
+
+### Demo scenes
+
+- enabled listen monitor in IcecastSourceDemo by default
+
+## 3.5.2 even more //\\\\ drones
+
+- fixed default UnityWebRequest User-Agent not being accepted by some internet host(s).
+- fixed few unneeded allocations in several places
+- tested with recently released FMOD 2.03.14
+- submitted with Unity 2022.3.62
+
+## 3.5.3 ///o\\\\\\(\*)
+
+#### Performance/optimization & source fixes/updates
+
+- fixed/removed related/indirect allocations + locks in audio threads/callbacks
+- should yield better audio results when e.g. switching outputs, using channels separation, opening inputs etc..
+- resolved `FindObjectsOfType` obsolescence warnings for newer Unity versions
+
+### Demo scenes
+
+- New Input System support (demo scripts work with both old and new input system)
+- fixed/updated proper .ready flag handling (logging was harmless previously but this now waits properly for all components)
+
+## 3.5.3.w (\*)///o\\\\\\(\*)
+
+- source updates for `FindObjectsOfType` & Inspector serialization obsolescence warnings for Unity 6.5
+
+
+## 3.5.5 \*\*====\>
+
+More large and small optimizations/improvements; the asset should be more responsive and have better error reporting
+Text documentation moved to Markdown files
+
+- web request / http redirects now don't block the main thread
+- components like IcecastSource and networking components moved encoding/decoding to separate task/thread
+- removed / cleaned up few outdated sources
+- internal linear resampler: updated, fixed channel bleeding
+- more callbacks are allocation free with zero-copy reads
+- code was refactored at several places and common functionality brought into a single place
+
+#### AudioStream*
+
+- accessible local files are played directly not going through UnityWebRequest and playback allocates only required amount of memory (not previously default 1GB `fallback`)
+- fixed metadata/albumart/icons for audio tracks and Shoutcast/Icecast streams
+- also fixed metadata text encodings
+- updated&hardened ID3V2 tags parser
++ allowInvalidCertificates: default on, allows to restrict connections only to secure valid certificates
+
+#### AudioStreamOutputDevice
+
+- fixed several bugs related to keeping track of output while it changes its position in the devices list
+- mixer plugin/effect: should allow for proper release and shouldn't block releasing/app quitting on macOS
+
+#### AudioStreamInput*
+
+- fixed two-mic start/stop deadlock on macOS
+
+#### AudioMixer effect
+
+- built w/ FMOD 2.03.15, fixed leaks and hangs on quit on macOS
+
+Tested with FMOD 2.03.15
